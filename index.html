@@ -5896,5 +5896,110 @@
             closeModal('logoModal');
         }
     </script>
+<script>
+    // ==================== CONFIGURATION CLOUDINARY ====================
+    const CLOUDINARY_CONFIG = {
+        cloud_name: 'hxhvynf4',
+        api_key: '442555963344891'
+    };
+
+    // ==================== SUPABASE STORAGE ====================
+    const supabase = createClient(
+        'https://ansfal.github.io.supabase.co',
+        'sb_publishable_Cu364NmwnWvimRiZ1OMGKQ_r-EoVZOe'
+    );
+
+    // ==================== FONCTIONS DE STOCKAGE SUPABASE ====================
+    async function storageGet(key) {
+        try {
+            const type = key.replace('ansfal_', '');
+            const { data, error } = await supabase
+                .from('media')
+                .select('*')
+                .eq('type', type)
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            return data || [];
+        } catch (error) {
+            console.error('Storage get error:', error);
+            return [];
+        }
+    }
+
+    async function storageSet(key, value) {
+        try {
+            const type = key.replace('ansfal_', '');
+            if (type === 'image' || type === 'video' || type === 'pdf') {
+                for (const item of value) {
+                    const { error } = await supabase
+                        .from('media')
+                        .insert({
+                            type: type,
+                            url: item.url,
+                            public_id: item.public_id || null,
+                            name: item.name || 'Fichier'
+                        });
+                    if (error) throw error;
+                }
+            } else if (type === 'text') {
+                for (const item of value) {
+                    const { error } = await supabase
+                        .from('texts')
+                        .insert({
+                            title: item.title,
+                            content: item.content
+                        });
+                    if (error) throw error;
+                }
+            }
+            return true;
+        } catch (error) {
+            console.error('Storage set error:', error);
+            return false;
+        }
+    }
+
+    async function storageRemove(key) {
+        try {
+            const type = key.replace('ansfal_', '');
+            const { error } = await supabase
+                .from('media')
+                .delete()
+                .eq('type', type);
+            if (error) throw error;
+            return true;
+        } catch (error) {
+            console.error('Storage remove error:', error);
+            return false;
+        }
+    }
+
+    async function loadUsers() {
+        try {
+            const { data, error } = await supabase
+                .from('users')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            if (data && data.length > 0) return data;
+            const defaultUsers = [{
+                id: 'admin',
+                username: 'admin',
+                password: '123456',
+                name: 'Administrateur',
+                email: 'admin@ansfal.org',
+                role: 'admin',
+                created_at: new Date().toISOString()
+            }];
+            for (const user of defaultUsers) {
+                await supabase.from('users').insert(user);
+            }
+            return defaultUsers;
+        } catch (error) {
+            console.error('Load users error:', error);
+            return [];
+        }
+    }
+</script>
 </body>
 </html>
