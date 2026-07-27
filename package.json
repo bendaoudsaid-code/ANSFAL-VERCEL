@@ -1,14 +1,9 @@
-
 {
-  "name": "ansfal-vercel",
-  "version": "1.0.0",
-  "description": "Site avec Vercel",
-  "main": "index.html",
-  "scripts": {
-    "start": "vercel dev"
-  },
-  "dependencies": {
-    "cloudinary": "^2.0.0",
-    "formidable": "^3.5.0"
-  }
+    "name": "ansfal-vercel",
+    "version": "1.0.0",
+    "dependencies": {
+        "cloudinary": "^2.0.0",
+        "formidable": "^3.5.0",
+        "@supabase/supabase-js": "^2.45.0"
+    }
 }
