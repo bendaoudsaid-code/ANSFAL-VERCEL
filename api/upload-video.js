@@ -1,12 +1,17 @@
-
 const cloudinary = require('cloudinary').v2;
 const formidable = require('formidable');
+const { createClient } = require('@supabase/supabase-js');
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
+const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 module.exports = async function(req, res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -33,17 +38,40 @@ module.exports = async function(req, res) {
                 return res.status(400).json({ error: 'Aucune vidéo' });
             }
 
+            // 1. Upload vers Cloudinary
             const result = await cloudinary.uploader.upload(file.filepath, {
                 folder: 'ansfal',
                 resource_type: 'video'
             });
 
+            // 2. Enregistrer dans Supabase
+            const { data, error } = await supabase
+                .from('media')
+                .insert({
+                    type: 'video',
+                    url: result.secure_url,
+                    public_id: result.public_id,
+                    name: file.originalFilename || 'Vidéo'
+                })
+                .select();
+
+            if (error) {
+                console.error('Erreur Supabase:', error);
+                return res.status(500).json({ 
+                    error: 'Erreur lors de l\'enregistrement',
+                    cloudinary: result.secure_url 
+                });
+            }
+
             res.status(200).json({
+                success: true,
                 url: result.secure_url,
-                public_id: result.public_id
+                public_id: result.public_id,
+                database: data
             });
         });
     } catch (error) {
+        console.error('Upload error:', error);
         res.status(500).json({ error: error.message });
     }
 };
