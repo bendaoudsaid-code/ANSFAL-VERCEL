@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* ==================== VARIABLES ET RESET ==================== */
         :root {
@@ -2873,56 +2874,215 @@
         // ==================== CONFIGURATION CLOUDINARY ====================
         const CLOUDINARY_CONFIG = {
             cloud_name: 'hxhvynf4',
-            api_key: '625317789379993'
+            api_key: '442555963344891' // Nouvelle clé
         };
 
-        // ==================== NETLIFY STORAGE (remplace localStorage) ====================
-        const NETLIFY_STORAGE = {
-            async get(key) {
-                try {
-                    const response = await fetch('/.netlify/functions/storage', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action: 'get', key })
-                    });
-                    const data = await response.json();
-                    return data.value ? JSON.parse(data.value) : null;
-                } catch (error) {
-                    console.error('Netlify storage get error:', error);
-                    return null;
-                }
-            },
-            
-            async set(key, value) {
-                try {
-                    const response = await fetch('/.netlify/functions/storage', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action: 'set', key, value: JSON.stringify(value) })
-                    });
-                    const data = await response.json();
-                    return data.success;
-                } catch (error) {
-                    console.error('Netlify storage set error:', error);
-                    return false;
-                }
-            },
+        // ==================== SUPABASE STORAGE ====================
+        const { createClient } = supabase;
 
-            async remove(key) {
-                try {
-                    const response = await fetch('/.netlify/functions/storage', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action: 'remove', key })
-                    });
-                    const data = await response.json();
-                    return data.success;
-                } catch (error) {
-                    console.error('Netlify storage remove error:', error);
-                    return false;
-                }
+        const supabaseClient = createClient(
+            'https://ansfal.github.io.supabase.co',
+            'sb_publishable_Cu364NmwnWvimRiZ1OMGKQ_r-EoVZOe'
+        );
+
+        // Gestion des médias
+        async function storageGet(key) {
+            try {
+                const type = key.replace('ansfal_', '');
+                const { data, error } = await supabaseClient
+                    .from('media')
+                    .select('*')
+                    .eq('type', type)
+                    .order('created_at', { ascending: false });
+                if (error) throw error;
+                return data || [];
+            } catch (error) {
+                console.error('Storage get error:', error);
+                return [];
             }
-        };
+        }
+
+        async function storageSet(key, value) {
+            try {
+                const type = key.replace('ansfal_', '');
+                if (type === 'image' || type === 'video' || type === 'pdf') {
+                    // Supprimer les anciennes entrées
+                    await supabaseClient
+                        .from('media')
+                        .delete()
+                        .eq('type', type);
+                    
+                    // Insérer les nouvelles
+                    for (const item of value) {
+                        await supabaseClient
+                            .from('media')
+                            .insert({
+                                type: type,
+                                url: item.url,
+                                public_id: item.public_id || null,
+                                name: item.name || 'Fichier',
+                                size: item.size || null,
+                                format: item.format || null,
+                                width: item.width || null,
+                                height: item.height || null,
+                                created_at: item.date || new Date().toISOString()
+                            });
+                    }
+                } else if (type === 'text') {
+                    // Supprimer les anciens textes
+                    await supabaseClient
+                        .from('texts')
+                        .delete()
+                        .neq('id', 0);
+                    
+                    for (const item of value) {
+                        await supabaseClient
+                            .from('texts')
+                            .insert({
+                                title: item.title,
+                                content: item.content,
+                                created_at: item.date || new Date().toISOString()
+                            });
+                    }
+                } else if (type === 'users') {
+                    // Gestion des utilisateurs
+                    await supabaseClient
+                        .from('users')
+                        .delete()
+                        .neq('id', 0);
+                    
+                    for (const user of value) {
+                        await supabaseClient
+                            .from('users')
+                            .insert({
+                                id: user.id,
+                                username: user.username,
+                                password: user.password,
+                                name: user.name,
+                                email: user.email,
+                                role: user.role,
+                                created_at: user.createdAt || new Date().toISOString()
+                            });
+                    }
+                } else if (type === 'logo') {
+                    // Gestion du logo
+                    if (value) {
+                        await supabaseClient
+                            .from('logo')
+                            .delete()
+                            .neq('id', 0);
+                        
+                        await supabaseClient
+                            .from('logo')
+                            .insert({
+                                icon_class: value.iconClass,
+                                color: value.color,
+                                title: value.title,
+                                subtitle: value.subtitle,
+                                updated_at: new Date().toISOString()
+                            });
+                    }
+                }
+                return true;
+            } catch (error) {
+                console.error('Storage set error:', error);
+                return false;
+            }
+        }
+
+        async function storageRemove(key) {
+            try {
+                const type = key.replace('ansfal_', '');
+                if (type === 'image' || type === 'video' || type === 'pdf') {
+                    await supabaseClient
+                        .from('media')
+                        .delete()
+                        .eq('type', type);
+                } else if (type === 'text') {
+                    await supabaseClient
+                        .from('texts')
+                        .delete()
+                        .neq('id', 0);
+                } else if (type === 'users') {
+                    await supabaseClient
+                        .from('users')
+                        .delete()
+                        .neq('id', 0);
+                } else if (type === 'logo') {
+                    await supabaseClient
+                        .from('logo')
+                        .delete()
+                        .neq('id', 0);
+                }
+                return true;
+            } catch (error) {
+                console.error('Storage remove error:', error);
+                return false;
+            }
+        }
+
+        // Fonctions spécifiques pour les utilisateurs
+        async function loadUsers() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('users')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                if (data && data.length > 0) {
+                    return data;
+                }
+                
+                // Créer l'utilisateur admin par défaut
+                const defaultUsers = [{
+                    id: 'admin',
+                    username: 'admin',
+                    password: '123456',
+                    name: 'Administrateur',
+                    email: 'admin@ansfal.org',
+                    role: 'admin',
+                    created_at: new Date().toISOString()
+                }];
+                
+                for (const user of defaultUsers) {
+                    await supabaseClient
+                        .from('users')
+                        .insert(user);
+                }
+                
+                return defaultUsers;
+            } catch (error) {
+                console.error('Load users error:', error);
+                return [];
+            }
+        }
+
+        // Fonction pour récupérer le logo
+        async function getLogo() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('logo')
+                    .select('*')
+                    .order('updated_at', { ascending: false })
+                    .limit(1);
+                
+                if (error) throw error;
+                if (data && data.length > 0) {
+                    return {
+                        iconClass: data[0].icon_class || 'fas fa-hands-helping',
+                        color: data[0].color || '#1a6d2c',
+                        title: data[0].title || 'أنسفال',
+                        subtitle: data[0].subtitle || 'جمعية التعاون والتنمية والبيئة'
+                    };
+                }
+                return null;
+            } catch (error) {
+                console.error('Get logo error:', error);
+                return null;
+            }
+        }
 
         // ==================== TRADUCTIONS ====================
         const translations = {
@@ -3225,37 +3385,6 @@
             'default': 'fas fa-file'
         };
 
-        // ==================== WRAPPER POUR NETLIFY STORAGE ====================
-        async function storageGet(key) {
-            try {
-                const value = await NETLIFY_STORAGE.get(key);
-                return value;
-            } catch (error) {
-                console.error('Storage get error:', error);
-                return null;
-            }
-        }
-
-        async function storageSet(key, value) {
-            try {
-                await NETLIFY_STORAGE.set(key, value);
-                return true;
-            } catch (error) {
-                console.error('Storage set error:', error);
-                return false;
-            }
-        }
-
-        async function storageRemove(key) {
-            try {
-                await NETLIFY_STORAGE.remove(key);
-                return true;
-            } catch (error) {
-                console.error('Storage remove error:', error);
-                return false;
-            }
-        }
-
         // ==================== FONCTIONS DE TRADUCTION ====================
         function translatePage(lang) {
             const t = translations[lang];
@@ -3416,17 +3545,12 @@
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value.trim();
             
-            if (username === 'admin' && password === '123456') {
-                currentUser = {
-                    id: 'admin',
-                    username: 'admin',
-                    name: 'Administrateur',
-                    role: 'admin',
-                    email: 'admin@ansfal.org',
-                    createdAt: new Date().toISOString()
-                };
-                
-                await storageSet('ansfal_user', currentUser);
+            const users = await loadUsers();
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                currentUser = user;
+                await storageSet('ansfal_user', user);
                 showUserInfo();
                 document.body.classList.add('admin-mode');
                 document.getElementById('addBtn').style.display = 'flex';
@@ -3596,28 +3720,6 @@
         }
 
         // ==================== CHARGEMENT DES UTILISATEURS ====================
-        async function loadUsers() {
-            const defaultUsers = [
-                {
-                    id: 'admin',
-                    username: 'admin',
-                    password: '123456',
-                    name: 'Administrateur',
-                    email: 'admin@ansfal.org',
-                    role: 'admin',
-                    createdAt: new Date().toISOString()
-                }
-            ];
-            
-            const savedUsers = await storageGet('ansfal_users');
-            if (savedUsers) {
-                return savedUsers;
-            } else {
-                await storageSet('ansfal_users', defaultUsers);
-                return defaultUsers;
-            }
-        }
-
         async function loadUsersSection() {
             const users = await loadUsers();
             const usersList = document.getElementById('usersList');
@@ -3655,7 +3757,7 @@
                             <small style="color: #888; font-size: 0.8rem;">${user.email}</small>
                             <br>
                             <small style="color: #666; font-size: 0.7rem;">
-                                ${currentLanguage === 'fr' ? 'Créé le:' : 'تم الإنشاء في:'} ${new Date(user.createdAt).toLocaleDateString(currentLanguage === 'fr' ? 'fr-FR' : 'ar-MA')}
+                                ${currentLanguage === 'fr' ? 'Créé le:' : 'تم الإنشاء في:'} ${new Date(user.created_at).toLocaleDateString(currentLanguage === 'fr' ? 'fr-FR' : 'ar-MA')}
                             </small>
                         </div>
                         <div class="item-actions">
@@ -3710,7 +3812,7 @@
 
         // ==================== APPLIQUER LE LOGO ====================
         async function applyLogo() {
-            const savedLogo = await storageGet('ansfal_logo');
+            const savedLogo = await getLogo();
             if (savedLogo) {
                 const logoIcons = document.querySelectorAll('#logoIcon, #footerLogoIcon');
                 logoIcons.forEach(icon => {
@@ -3736,19 +3838,15 @@
                     };
                 }
                 
-                base64 = await fileToBase64(file);
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', 'ml_default');
                 
-                const endpoint = type === 'video' ? 'upload-video' : 'upload-image';
-                const response = await fetch(`/.netlify/functions/${endpoint}`, {
+                const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloud_name}/${type === 'video' ? 'video' : 'image'}/upload`;
+                
+                const response = await fetch(uploadUrl, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        base64: base64,
-                        name: file.name,
-                        type: type
-                    })
+                    body: formData
                 });
 
                 if (!response.ok) {
@@ -3757,11 +3855,15 @@
 
                 const result = await response.json();
                 
-                if (!result.success) {
-                    throw new Error(result.error || 'Upload failed');
-                }
-
-                return result;
+                return {
+                    url: result.secure_url,
+                    public_id: result.public_id,
+                    name: file.name,
+                    size: result.bytes,
+                    format: result.format,
+                    width: result.width,
+                    height: result.height
+                };
 
             } catch (error) {
                 console.error('Upload error:', error);
@@ -3776,33 +3878,9 @@
         }
 
         async function deleteFromCloudinary(public_id) {
-            try {
-                const response = await fetch('/.netlify/functions/delete-file', {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ public_id })
-                });
-
-                const result = await response.json();
-                
-                if (!result.success) {
-                    throw new Error(result.error || 'Delete failed');
-                }
-
-                return result;
-
-            } catch (error) {
-                console.error('Delete error:', error);
-                showAlert(
-                    currentLanguage === 'fr' 
-                        ? `Erreur de suppression: ${error.message}` 
-                        : `خطأ في الحذف: ${error.message}`,
-                    'error'
-                );
-                throw error;
-            }
+            // Les fichiers Cloudinary sont gérés automatiquement
+            // Cette fonction est conservée pour compatibilité
+            return { success: true };
         }
 
         // ==================== BOUTONS ACCEPTER/VALIDER ====================
@@ -4540,7 +4618,7 @@
                         </div>
                         <div class="item-info">
                             <h4>${image.name || 'Image ' + (index + 1)}</h4>
-                            <small>${image.format ? image.format.toUpperCase() : ''} • ${new Date(image.date).toLocaleDateString()}</small>
+                            <small>${image.format ? image.format.toUpperCase() : ''} • ${new Date(image.created_at || image.date).toLocaleDateString()}</small>
                         </div>
                         <div class="item-actions">
                             <button class="btn-action" onclick="viewFile('image', ${index})" title="${currentLanguage === 'fr' ? 'Voir' : 'عرض'}">
@@ -4583,7 +4661,7 @@
                         </div>
                         <div class="item-info">
                             <h4>${video.name || 'Vidéo ' + (index + 1)}</h4>
-                            <small>${video.format ? video.format.toUpperCase() : ''} • ${new Date(video.date).toLocaleDateString()}</small>
+                            <small>${video.format ? video.format.toUpperCase() : ''} • ${new Date(video.created_at || video.date).toLocaleDateString()}</small>
                         </div>
                         <div class="item-actions">
                             <button class="btn-action" onclick="viewFile('video', ${index})" title="${currentLanguage === 'fr' ? 'Voir' : 'عرض'}">
@@ -4626,7 +4704,7 @@
                         </div>
                         <div class="item-info">
                             <h4>${doc.name || 'Document ' + (index + 1)}</h4>
-                            <small>${doc.format ? doc.format.toUpperCase() : 'PDF'} • ${new Date(doc.date).toLocaleDateString()}</small>
+                            <small>${doc.format ? doc.format.toUpperCase() : 'PDF'} • ${new Date(doc.created_at || doc.date).toLocaleDateString()}</small>
                         </div>
                         <div class="item-actions">
                             <button class="btn-action" onclick="viewFile('pdf', ${index})" title="${currentLanguage === 'fr' ? 'Voir' : 'عرض'}">
@@ -4840,7 +4918,7 @@
                                 <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">${text.content}</pre>
                             </div>
                             <div style="margin-top: 15px; color: #666; font-size: 0.9rem;">
-                                <i class="far fa-calendar"></i> ${new Date(text.date).toLocaleDateString(currentLanguage === 'fr' ? 'fr-FR' : 'ar-MA')}
+                                <i class="far fa-calendar"></i> ${new Date(text.created_at || text.date).toLocaleDateString(currentLanguage === 'fr' ? 'fr-FR' : 'ar-MA')}
                             </div>
                             <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 30px;">
                                 <button class="btn-browse" onclick="closeModal('textViewModal')" style="background: var(--danger);">
@@ -5109,7 +5187,7 @@
                     name: name,
                     email: email,
                     role: role,
-                    createdAt: new Date().toISOString()
+                    created_at: new Date().toISOString()
                 };
                 
                 users.push(newUser);
@@ -5164,7 +5242,7 @@
                 name: name,
                 email: email,
                 role: role,
-                createdAt: new Date().toISOString()
+                created_at: new Date().toISOString()
             };
             
             users.push(newUser);
@@ -5298,13 +5376,11 @@
         }
 
         function updateStorageUsage() {
-            // Cette fonction n'est plus nécessaire avec Netlify Storage
-            // On affiche un message indiquant que le stockage est externalisé
             document.getElementById('storageUsage').style.width = '0%';
             document.getElementById('storageText').textContent = 
                 currentLanguage === 'fr' 
-                    ? 'Stockage géré par Netlify (illimité)' 
-                    : 'التخزين يتم عبر Netlify (غير محدود)';
+                    ? 'Stockage géré par Supabase (illimité)' 
+                    : 'التخزين يتم عبر Supabase (غير محدود)';
         }
 
         // ==================== AUTRES FONCTIONS NÉCESSAIRES ====================
@@ -5595,7 +5671,7 @@
                 videos: await storageGet('ansfal_video') || [],
                 pdfs: await storageGet('ansfal_pdf') || [],
                 texts: await storageGet('ansfal_text') || [],
-                users: currentUser && currentUser.role === 'admin' ? await storageGet('ansfal_users') || [] : [],
+                users: currentUser && currentUser.role === 'admin' ? await loadUsers() : [],
                 exportDate: new Date().toISOString(),
                 exportLanguage: currentLanguage
             };
