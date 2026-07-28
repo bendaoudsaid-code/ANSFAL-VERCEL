@@ -1,82 +1,43 @@
-const cloudinary = require('cloudinary').v2;
-const formidable = require('formidable');
-const { createClient } = require('@supabase/supabase-js');
+import { supabase, STORAGE_BUCKET } from './storage.js';
 
-// Configuration Cloudinary
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
-});
-
-// Configuration Supabase
-const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
-);
-
-module.exports = async function(req, res) {
-    // CORS
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
-
+export default async function handler(req, res) {
     if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Méthode non autorisée' });
+        return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        const form = formidable({ multiples: true });
-        form.parse(req, async (err, fields, files) => {
-            if (err) {
-                return res.status(500).json({ error: err.message });
-            }
+        const file = req.files?.file;
+        if (!file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
 
-            const file = files.image;
-            if (!file) {
-                return res.status(400).json({ error: 'Aucune image' });
-            }
+        const fileExt = file.name.split('.').pop();
+        const fileName = `image/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
-            // 1. Upload vers Cloudinary
-            const result = await cloudinary.uploader.upload(file.filepath, {
-                folder: 'ansfal',
-                resource_type: 'image'
+        const { data, error } = await supabase.storage
+            .from(STORAGE_BUCKET)
+            .upload(fileName, file.data, {
+                cacheControl: '3600',
+                upsert: false
             });
 
-            // 2. Enregistrer dans Supabase
-            const { data, error } = await supabase
-                .from('media')
-                .insert({
-                    type: 'image',
-                    url: result.secure_url,
-                    public_id: result.public_id,
-                    name: file.originalFilename || 'Image'
-                })
-                .select();
+        if (error) throw error;
 
-            if (error) {
-                console.error('Erreur Supabase:', error);
-                // L'image est sur Cloudinary mais pas enregistrée
-                return res.status(500).json({ 
-                    error: 'Erreur lors de l\'enregistrement',
-                    cloudinary: result.secure_url 
-                });
-            }
+        const { data: { publicUrl } } = supabase.storage
+            .from(STORAGE_BUCKET)
+            .getPublicUrl(fileName);
 
-            // 3. Retourner la réponse
-            res.status(200).json({
-                success: true,
-                url: result.secure_url,
-                public_id: result.public_id,
-                database: data
-            });
+        res.status(200).json({
+            url: publicUrl,
+            public_id: fileName,
+            name: file.name,
+            size: file.size,
+            format: fileExt,
+            type: 'image',
+            created_at: new Date().toISOString()
         });
     } catch (error) {
         console.error('Upload error:', error);
         res.status(500).json({ error: error.message });
     }
-};
+}
