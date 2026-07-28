@@ -1834,6 +1834,13 @@
     </button>
 
     <script>
+
+// ============================================================
+// ===== CONFIGURATION SUPABASE =====
+// ============================================================
+const SUPABASE_URL = 'https://kyjjblstxbdkjpzgnvna.supabase.co';
+const SUPABASE_KEY = 'kyjjblstxbdkjpzgnvna';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         // ============================================================
         // ===== VARIABLES GLOBALES =====
         // ============================================================
@@ -2286,13 +2293,20 @@
         // ============================================================
 
         function loadPublicGallery() {
-            const images = JSON.parse(localStorage.getItem('ansfal_image') || '[]');
-            const galleryPublic = document.getElementById('publicGallery');
-            const noGallery = document.getElementById('noGalleryPublic');
-
-            if (images.length === 0) {
-                galleryPublic.innerHTML = `<div class="no-content" id="noGalleryPublic">${currentLanguage === 'fr' ? 'Aucune image disponible pour le moment.' : 'لا توجد صور متاحة حالياً.'}</div>`;
-                return;
+            async function loadPublicGallery() {
+    const { data } = await supabase.from('media').select('*').eq('type', 'image').order('created_at', { ascending: false });
+    const galleryPublic = document.getElementById('publicGallery');
+    if (!data || data.length === 0) {
+        galleryPublic.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune image disponible' : 'لا توجد صور متاحة'}</div>`;
+        return;
+    }
+    let html = '';
+    data.forEach((image, index) => {
+        html += `<div class="gallery-public-item" onclick="viewFile('image', ${index})"><img src="${image.url}" alt="${image.name || 'Image'}" loading="lazy"></div>`;
+    });
+    galleryPublic.innerHTML = html;
+    localStorage.setItem('ansfal_image', JSON.stringify(data));
+}
             }
 
             let html = '';
@@ -2307,13 +2321,36 @@
         }
 
         function loadPublicVideos() {
-            const videos = JSON.parse(localStorage.getItem('ansfal_video') || '[]');
-            const videosPublic = document.getElementById('publicVideos');
-            const noVideos = document.getElementById('noVideosPublic');
-
-            if (videos.length === 0) {
-                videosPublic.innerHTML = `<div class="no-content" id="noVideosPublic">${currentLanguage === 'fr' ? 'Aucune vidéo disponible pour le moment.' : 'لا توجد فيديوهات متاحة حالياً.'}</div>`;
-                return;
+            async function loadPublicVideos() {
+    const { data } = await supabase.from('media').select('*').eq('type', 'video').order('created_at', { ascending: false });
+    const videosPublic = document.getElementById('publicVideos');
+    if (!data || data.length === 0) {
+        videosPublic.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune vidéo disponible' : 'لا توجد فيديوهات متاحة'}</div>`;
+        return;
+    }
+    let html = '';
+    data.forEach((video, index) => {
+        if (video.url) {
+            if (video.url.includes('youtube.com') || video.url.includes('youtu.be')) {
+                let videoId = '';
+                if (video.url.includes('youtube.com/embed/')) {
+                    videoId = video.url.split('youtube.com/embed/')[1];
+                } else if (video.url.includes('youtu.be/')) {
+                    videoId = video.url.split('youtu.be/')[1];
+                } else if (video.url.includes('youtube.com/watch?v=')) {
+                    videoId = video.url.split('v=')[1].split('&')[0];
+                }
+                if (videoId) {
+                    html += `<div class="video-public-item"><div class="youtube-embed"><iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe></div></div>`;
+                }
+            } else {
+                html += `<div class="video-public-item" onclick="viewFile('video', ${index})"><video style="width:100%;height:100%;object-fit:cover;"><source src="${video.url}" type="video/mp4"></video></div>`;
+            }
+        }
+    });
+    videosPublic.innerHTML = html;
+    localStorage.setItem('ansfal_video', JSON.stringify(data));
+}
             }
 
             let html = '';
@@ -2702,26 +2739,32 @@
         }
 
         function finishUpload() {
-            const existing = JSON.parse(localStorage.getItem(`ansfal_${currentUploadType}`) || '[]');
-            const newFiles = selectedFiles.map(f => ({
-                url: f.url || URL.createObjectURL(f),
-                name: f.name || f.url,
-                format: f.name ? f.name.split('.').pop() : 'url',
-                created_at: new Date().toISOString()
-            }));
-            const all = [...existing, ...newFiles];
-            localStorage.setItem(`ansfal_${currentUploadType}`, JSON.stringify(all));
-
-            document.getElementById('uploadProgress').style.display = 'none';
-            document.getElementById('uploadSuccess').style.display = 'block';
-            document.getElementById('actionButtons').style.display = 'none';
-
-            if (currentUploadType === 'image') {
-                loadGalleryDashboard();
-                loadPublicGallery();
-            } else if (currentUploadType === 'video') {
-                loadVideosDashboard();
-                loadPublicVideos();
+           async function finishUpload() {
+    const newFiles = selectedFiles.map(f => ({
+        url: f.url || URL.createObjectURL(f),
+        name: f.name || f.url,
+        format: f.name ? f.name.split('.').pop() : 'url',
+        type: currentUploadType,
+        created_at: new Date().toISOString()
+    }));
+    
+    for (const file of newFiles) {
+        await supabase.from('media').insert([file]);
+    }
+    
+    document.getElementById('uploadProgress').style.display = 'none';
+    document.getElementById('uploadSuccess').style.display = 'block';
+    document.getElementById('actionButtons').style.display = 'none';
+    
+    if (currentUploadType === 'image') {
+        loadGalleryDashboard();
+        loadPublicGallery();
+    } else if (currentUploadType === 'video') {
+        loadVideosDashboard();
+        loadPublicVideos();
+    }
+    updateStats();
+}
             }
             updateStats();
         }
