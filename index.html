@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        /* ==================== VARIABLES ET RESET ==================== */
+        /* ==================== VARIABLES ==================== */
         :root {
             --primary: #1a6d2c;
             --secondary: #2e8b57;
@@ -20,14 +20,12 @@
             --white: #ffffff;
             --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             --admin: #ff9800;
-            --webmaster: #9c27b0;
             --whatsapp: #25D366;
             --warning: #ff9800;
             --success: #4caf50;
             --danger: #f44336;
             --info: #2196F3;
             --dashboard-bg: #f5f5f5;
-            --card-bg: #ffffff;
             --sidebar-bg: #2c3e50;
             --sidebar-text: #ecf0f1;
         }
@@ -124,7 +122,7 @@
             background-color: var(--secondary);
         }
 
-        /* ==================== BARRE D'AUTHENTIFICATION ==================== */
+        /* ==================== BARRE D'AUTH ==================== */
         .auth-bar {
             position: fixed;
             top: 40px;
@@ -233,7 +231,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            position: relative;
         }
 
         .logo i {
@@ -253,7 +250,6 @@
             margin-top: -5px;
         }
 
-        /* ==================== MENU ==================== */
         nav ul {
             display: flex;
             list-style: none;
@@ -278,7 +274,7 @@
             border-bottom: 2px solid var(--primary);
         }
 
-        /* ==================== HERO SECTION ==================== */
+        /* ==================== HERO ==================== */
         .hero {
             background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
                         url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
@@ -334,25 +330,17 @@
             margin-bottom: 50px;
         }
 
-        .section-title {
-            position: relative;
-            display: inline-block;
-            padding-bottom: 15px;
-        }
-
         .section-title h2 {
             font-size: 2.5rem;
         }
 
         .section-title h2:after {
             content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
+            display: block;
             width: 80px;
             height: 4px;
             background-color: var(--accent);
+            margin: 10px auto 0;
         }
 
         /* ==================== GALERIE ==================== */
@@ -615,7 +603,6 @@
             height: 35px;
             border-radius: 50%;
             border: none;
-            background: var(--info);
             color: white;
             cursor: pointer;
             display: flex;
@@ -628,11 +615,11 @@
             transform: scale(1.1);
         }
 
-        .btn-action:nth-child(1) {
+        .btn-action.view {
             background: var(--success);
         }
 
-        .btn-action:nth-child(2) {
+        .btn-action.delete {
             background: var(--danger);
         }
 
@@ -962,27 +949,6 @@
             50% { transform: translateY(-10px); }
         }
 
-        .btn-ok {
-            background: var(--success);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s;
-        }
-
-        .btn-ok:hover {
-            background: #219653;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(33, 150, 83, 0.3);
-        }
-
         .size-warning {
             background: var(--warning);
             color: white;
@@ -1049,7 +1015,8 @@
             overflow-y: auto;
         }
 
-        .file-viewer-body img, .file-viewer-body video {
+        .file-viewer-body img,
+        .file-viewer-body video {
             max-width: 100%;
             max-height: 60vh;
             border-radius: 10px;
@@ -1251,61 +1218,61 @@
                 flex-direction: column;
                 gap: 5px;
             }
-            
+
             .header-container {
                 flex-direction: column;
                 gap: 15px;
             }
-            
+
             nav ul {
                 flex-wrap: wrap;
                 justify-content: center;
                 gap: 15px;
             }
-            
+
             .hero {
                 padding: 120px 0 60px;
                 margin-top: 95px;
             }
-            
+
             .hero h2 {
                 font-size: 2rem;
             }
-            
+
             .dashboard-container {
                 grid-template-columns: 1fr;
             }
-            
+
             .dashboard-sidebar {
                 border-radius: 0;
                 padding: 20px 0;
             }
-            
+
             .auth-bar {
                 flex-direction: column;
                 gap: 10px;
                 padding: 15px;
             }
-            
+
             .auth-form {
                 flex-direction: column;
                 width: 100%;
             }
-            
+
             .auth-form input {
                 width: 100%;
             }
-            
+
             .user-info {
                 flex-direction: column;
                 gap: 10px;
             }
-            
+
             .footer-container {
                 grid-template-columns: 1fr;
                 text-align: center;
             }
-            
+
             .upload-choice {
                 grid-template-columns: 1fr;
             }
@@ -1322,7 +1289,7 @@
         </div>
     </div>
 
-    <!-- ==================== BARRE D'AUTHENTIFICATION ==================== -->
+    <!-- ==================== BARRE D'AUTH ==================== -->
     <div id="authBar" class="auth-bar">
         <div id="loginForm" class="auth-form">
             <input type="text" id="username" placeholder="اسم المستخدم">
@@ -1358,7 +1325,7 @@
                     <p id="logoSubtitle">جمعية التعاون والتنمية والبيئة</p>
                 </div>
             </div>
-            
+
             <nav>
                 <ul id="mainMenu">
                     <li><a href="#home" class="active" onclick="showSection('home')">الرئيسية</a></li>
@@ -1366,7 +1333,6 @@
                     <li><a href="#gallery" onclick="showSection('gallery')">معرض الصور</a></li>
                     <li><a href="#videos" onclick="showSection('videos')">الفيديوهات</a></li>
                     <li><a href="#projects" onclick="showSection('projects')">المشاريع</a></li>
-                    <li><a href="#publications" onclick="showSection('publications')">المنشورات</a></li>
                     <li><a href="#contact" onclick="showSection('contact')">اتصل بنا</a></li>
                     <li><a href="#dashboard" onclick="showSection('dashboard')">لوحة التحكم</a></li>
                 </ul>
@@ -1422,12 +1388,12 @@
                             </span>
                         </div>
                     </div>
-                    
+
                     <div class="url-input-group">
                         <label id="mediaTitleLabel">عنوان الوسائط (اختياري)</label>
                         <input type="text" id="mediaTitle" placeholder="مشروع التشجير 2024" autocomplete="off">
                     </div>
-                    
+
                     <button class="btn-browse" onclick="addUrlMedia()" style="width: 100%;">
                         <i class="fas fa-plus"></i> إضافة الرابط
                     </button>
@@ -1557,7 +1523,7 @@
         </div>
     </div>
 
-    <!-- MODALE VISUALISATION DE FICHIER -->
+    <!-- MODALE VISUALISATION -->
     <div class="file-viewer" id="fileViewer">
         <div class="file-viewer-content">
             <div class="file-viewer-header">
@@ -1568,7 +1534,7 @@
         </div>
     </div>
 
-    <!-- ==================== SECTIONS DU SITE ==================== -->
+    <!-- ==================== SECTIONS ==================== -->
     <section class="hero active" id="home">
         <div class="container">
             <h2>جمعية أنسفال</h2>
@@ -1579,9 +1545,6 @@
                 <a href="#gallery" class="btn" style="background-color: var(--info); border-color: var(--info);" onclick="showSection('gallery')">
                     <i class="fas fa-images"></i> معرض الصور
                 </a>
-                <a href="#publications" class="btn" style="background-color: var(--warning); border-color: var(--warning);" onclick="showSection('publications')">
-                    <i class="fas fa-file-alt"></i> المنشورات
-                </a>
             </div>
         </div>
     </section>
@@ -1591,13 +1554,13 @@
             <div class="section-header">
                 <h2>مـن نحـن</h2>
             </div>
-            <div class="about-content" style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
-                <div class="about-text">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
+                <div>
                     <h3>تـاريخـنــا</h3>
                     <p>تأسست سنة 2023، جمعية أنسفال للتعاون والتنمية والبيئة انبثقت من قناعة أن التنمية البشرية وحماية البيئة يجب أن يسيرا جنباً إلى جنب.</p>
                     <p>اسم "أنسفال" يرمز لالتزامنا من أجل مستقبل أفضل، مبني على التضامن، التنمية المستدامة والحفاظ على بيئتنا.</p>
                 </div>
-                <div class="about-img">
+                <div>
                     <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" alt="فريق أنسفال" style="width: 100%; border-radius: 10px;">
                 </div>
             </div>
@@ -1631,12 +1594,12 @@
             <div class="section-header">
                 <h2>مشاريعنا</h2>
             </div>
-            <div class="projects-container" id="projectsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
-                <div class="project-card" style="border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s;">
-                    <div class="project-img" style="height: 200px; overflow: hidden;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <div style="border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s;">
+                    <div style="height: 200px; overflow: hidden;">
                         <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80" alt="مشروع البيئة" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <div class="project-info" style="padding: 25px; background-color: var(--white);">
+                    <div style="padding: 25px; background-color: var(--white);">
                         <h3>حماية الغابات</h3>
                         <p>حملة تشجير وتوعية بحماية النظم البيئية الغابوية.</p>
                     </div>
@@ -1645,32 +1608,21 @@
         </div>
     </section>
 
-    <section class="publications" id="publications">
-        <div class="container">
-            <div class="section-header">
-                <h2>المنشورات</h2>
-            </div>
-            <div class="publications-grid" id="publicPublications" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;">
-                <div class="no-content" id="noPublicationsPublic">لا توجد منشورات متاحة حالياً.</div>
-            </div>
-        </div>
-    </section>
-
     <section class="contact" id="contact">
         <div class="container">
             <h2>اتصل بنا</h2>
-            <div class="contact-info" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px;">
-                <div class="contact-item" style="text-align: center; padding: 20px; background: var(--light); border-radius: 10px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px;">
+                <div style="text-align: center; padding: 20px; background: var(--light); border-radius: 10px;">
                     <i class="fas fa-map-marker-alt" style="font-size: 2rem; color: var(--primary); margin-bottom: 15px;"></i>
                     <h3>العنوان</h3>
                     <p>المغرب</p>
                 </div>
-                <div class="contact-item" style="text-align: center; padding: 20px; background: var(--light); border-radius: 10px;">
+                <div style="text-align: center; padding: 20px; background: var(--light); border-radius: 10px;">
                     <i class="fas fa-phone" style="font-size: 2rem; color: var(--primary); margin-bottom: 15px;"></i>
                     <h3>الهاتف</h3>
                     <p>+212 6 12 34 56 78</p>
                 </div>
-                <div class="contact-item" style="text-align: center; padding: 20px; background: var(--light); border-radius: 10px;">
+                <div style="text-align: center; padding: 20px; background: var(--light); border-radius: 10px;">
                     <i class="fas fa-envelope" style="font-size: 2rem; color: var(--primary); margin-bottom: 15px;"></i>
                     <h3>البريد الإلكتروني</h3>
                     <p>contact@ansfal.org</p>
@@ -1679,10 +1631,11 @@
         </div>
     </section>
 
+    <!-- ==================== DASHBOARD ==================== -->
     <section id="dashboard" class="dashboard-section">
         <div class="dashboard-container">
             <div class="dashboard-sidebar">
-                <ul class="sidebar-menu" id="sidebarMenu">
+                <ul class="sidebar-menu">
                     <li><a href="#" data-page="dashboard" class="active" onclick="showDashboardSection('dashboard')"><i class="fas fa-tachometer-alt"></i> لوحة التحكم</a></li>
                     <li><a href="#" data-section="gallery" onclick="showDashboardSection('gallery')"><i class="fas fa-images"></i> معرض الصور</a></li>
                     <li><a href="#" data-section="videos" onclick="showDashboardSection('videos')"><i class="fas fa-video"></i> الفيديوهات</a></li>
@@ -1692,7 +1645,7 @@
             </div>
             <div class="dashboard-content">
                 <h1 class="page-title">لوحة تحكم أنسفال</h1>
-                
+
                 <div id="dashboardDashboard" class="dashboard-section-content active">
                     <div class="stats-grid">
                         <div class="stat-card">
@@ -1705,7 +1658,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div id="galleryDashboard" class="dashboard-section-content">
                     <h2>إدارة الصور</h2>
                     <div class="section-actions">
@@ -1715,7 +1668,7 @@
                     </div>
                     <div class="items-grid" id="galleryList"></div>
                 </div>
-                
+
                 <div id="videosDashboard" class="dashboard-section-content">
                     <h2>إدارة الفيديوهات</h2>
                     <div class="section-actions">
@@ -1725,7 +1678,7 @@
                     </div>
                     <div class="items-grid" id="videosList"></div>
                 </div>
-                
+
                 <div id="textDashboard" class="dashboard-section-content">
                     <h2>إدارة النصوص</h2>
                     <div class="section-actions">
@@ -1735,7 +1688,7 @@
                     </div>
                     <div class="items-grid" id="textList"></div>
                 </div>
-                
+
                 <div id="settingsDashboard" class="dashboard-section-content">
                     <h2>الإعدادات</h2>
                     <div class="section-actions">
@@ -1800,7 +1753,7 @@
         // ============================================================
         const SUPABASE_URL = 'https://supabasansfal.supabase.co';
         const SUPABASE_KEY = 'kyjjblstxbdkjpzgnvna';
-        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const STORAGE_BUCKET = 'media';
 
         // ============================================================
@@ -1821,7 +1774,6 @@
                 gallery: "Galerie",
                 videos: "Vidéos",
                 projects: "Projets",
-                publications: "Publications",
                 contact: "Contact",
                 dashboard: "Dashboard",
                 heroTitle: "أنسفال",
@@ -1839,8 +1791,6 @@
                 projectsTitle: "Nos Projets",
                 project1Title: "Protection des Forêts",
                 project1Desc: "Campagne de reboisement et sensibilisation à la protection des écosystèmes forestiers.",
-                publicationsTitle: "Publications",
-                noPublications: "Aucune publication disponible pour le moment.",
                 contactTitle: "Contactez-nous",
                 address: "Adresse",
                 phone: "Téléphone",
@@ -1849,7 +1799,6 @@
                 dashboardTitle: "Tableau de Bord أنسفال",
                 totalVisitors: "Visiteurs Totaux",
                 media: "Médias",
-                users: "Utilisateurs",
                 uploadFiles: "Téléverser des fichiers",
                 uploadFromPC: "Upload depuis PC",
                 uploadFromPCDesc: "Téléverser des fichiers depuis votre ordinateur",
@@ -1906,7 +1855,6 @@
                 gallery: "معرض الصور",
                 videos: "الفيديوهات",
                 projects: "المشاريع",
-                publications: "المنشورات",
                 contact: "اتصل بنا",
                 dashboard: "لوحة التحكم",
                 heroTitle: "جمعية أنسفال",
@@ -1924,8 +1872,6 @@
                 projectsTitle: "مشاريعنا",
                 project1Title: "حماية الغابات",
                 project1Desc: "حملة تشجير وتوعية بحماية النظم البيئية الغابوية.",
-                publicationsTitle: "المنشورات",
-                noPublications: "لا توجد منشورات متاحة حالياً.",
                 contactTitle: "اتصل بنا",
                 address: "العنوان",
                 phone: "الهاتف",
@@ -1934,7 +1880,6 @@
                 dashboardTitle: "لوحة تحكم أنسفال",
                 totalVisitors: "إجمالي الزوار",
                 media: "الوسائط",
-                users: "المستخدمين",
                 uploadFiles: "رفع الملفات",
                 uploadFromPC: "الرفع من الكمبيوتر",
                 uploadFromPCDesc: "رفع الملفات من جهازك",
@@ -1998,13 +1943,13 @@
                     .from('users')
                     .select('*')
                     .order('created_at', { ascending: false });
-                
+
                 if (error) throw error;
-                
+
                 if (data && data.length > 0) {
                     return data;
                 }
-                
+
                 const { error: insertError } = await supabase
                     .from('users')
                     .insert({
@@ -2014,9 +1959,9 @@
                         email: 'admin@ansfal.org',
                         role: 'admin'
                     });
-                    
+
                 if (insertError) throw insertError;
-                
+
                 return [{
                     id: 'admin',
                     username: 'admin',
@@ -2038,7 +1983,7 @@
                     .select('*')
                     .eq('type', type)
                     .order('created_at', { ascending: false });
-                
+
                 if (error) throw error;
                 return data || [];
             } catch (error) {
@@ -2053,7 +1998,7 @@
                     .from('media')
                     .delete()
                     .eq('type', type);
-                
+
                 if (mediaItems && mediaItems.length > 0) {
                     const { error } = await supabase
                         .from('media')
@@ -2074,7 +2019,7 @@
                     .from('texts')
                     .select('*')
                     .order('created_at', { ascending: false });
-                
+
                 if (error) throw error;
                 return data || [];
             } catch (error) {
@@ -2086,7 +2031,7 @@
         async function saveTextsToDB(texts) {
             try {
                 await supabase.from('texts').delete().neq('id', '');
-                
+
                 if (texts && texts.length > 0) {
                     const { error } = await supabase
                         .from('texts')
@@ -2107,42 +2052,42 @@
                     .from('visitors')
                     .select('*')
                     .limit(1);
-                
+
                 if (error) throw error;
-                
+
                 let currentCount = 0;
                 let visitorId = null;
-                
+
                 if (data && data.length > 0) {
                     currentCount = data[0].count || 0;
                     visitorId = data[0].id;
-                    
+
                     const { error: updateError } = await supabase
                         .from('visitors')
-                        .update({ 
+                        .update({
                             count: currentCount + 1,
                             last_visit: new Date().toISOString()
                         })
                         .eq('id', visitorId);
-                        
+
                     if (updateError) throw updateError;
                 } else {
                     const { error: insertError } = await supabase
                         .from('visitors')
                         .insert({ count: 1, last_visit: new Date().toISOString() });
-                        
+
                     if (insertError) throw insertError;
                 }
-                
+
                 const totalVisitors = currentCount + 1;
                 const onlineVisitors = Math.floor(Math.random() * 50) + 1;
                 const lastVisit = new Date().toLocaleString();
-                
+
                 document.getElementById('totalVisitors').textContent = totalVisitors;
                 document.getElementById('onlineVisitors').textContent = onlineVisitors;
                 document.getElementById('lastVisit').textContent = lastVisit;
                 document.getElementById('totalVisitorsStat').textContent = totalVisitors;
-                
+
                 return totalVisitors;
             } catch (error) {
                 console.error('Update visitor count error:', error);
@@ -2167,7 +2112,7 @@
 
                 const fileExt = file.name.split('.').pop();
                 const fileName = `${type}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-                
+
                 const { data, error } = await supabase.storage
                     .from(STORAGE_BUCKET)
                     .upload(fileName, file, {
@@ -2194,9 +2139,9 @@
             } catch (error) {
                 console.error('Upload to Supabase error:', error);
                 showAlert(
-                    currentLanguage === 'fr' 
-                        ? `Erreur d'upload: ${error.message}` 
-                        : `خطأ في الرفع: ${error.message}`,
+                    currentLanguage === 'fr' ?
+                    `Erreur d'upload: ${error.message}` :
+                    `خطأ في الرفع: ${error.message}`,
                     'error'
                 );
                 throw error;
@@ -2220,7 +2165,7 @@
 
         async function storageGet(key) {
             const type = key.replace('ansfal_', '');
-            
+
             if (type === 'image' || type === 'video') {
                 return await getMediaByType(type);
             } else if (type === 'text') {
@@ -2231,13 +2176,13 @@
                 const user = localStorage.getItem('ansfal_current_user');
                 return user ? [JSON.parse(user)] : [];
             }
-            
+
             return [];
         }
 
         async function storageSet(key, value) {
             const type = key.replace('ansfal_', '');
-            
+
             if (type === 'image' || type === 'video') {
                 return await saveMediaToDB(type, value);
             } else if (type === 'text') {
@@ -2248,13 +2193,13 @@
                 localStorage.setItem('ansfal_current_user', JSON.stringify(value));
                 return true;
             }
-            
+
             return false;
         }
 
         async function storageRemove(key) {
             const type = key.replace('ansfal_', '');
-            
+
             try {
                 if (type === 'image' || type === 'video') {
                     await supabase.from('media').delete().eq('type', type);
@@ -2277,7 +2222,7 @@
         async function saveUsersToDB(users) {
             try {
                 await supabase.from('users').delete().neq('username', 'admin');
-                
+
                 const usersToInsert = users.filter(u => u.username !== 'admin');
                 if (usersToInsert.length > 0) {
                     const { error } = await supabase.from('users').insert(usersToInsert);
@@ -2310,7 +2255,7 @@
             const progressDiv = document.getElementById('uploadProgress');
             const progressFill = document.getElementById('progressFill');
             const progressText = document.getElementById('progressText');
-            
+
             progressDiv.style.display = 'block';
             progressFill.style.width = '0%';
             progressText.textContent = '0%';
@@ -2320,7 +2265,7 @@
 
             for (let i = 0; i < selectedFiles.length; i++) {
                 const file = selectedFiles[i];
-                
+
                 try {
                     await simulateUpload(i, totalFiles, progressFill, progressText);
 
@@ -2351,14 +2296,14 @@
             if (uploadedFiles.length > 0) {
                 const existingFiles = await storageGet(`ansfal_${currentUploadType}`) || [];
                 const allFiles = [...existingFiles, ...uploadedFiles];
-                
+
                 const maxFiles = currentUploadType === 'video' ? 50 : 100;
                 if (allFiles.length > maxFiles) {
                     allFiles.splice(0, allFiles.length - maxFiles);
                 }
-                
+
                 await storageSet(`ansfal_${currentUploadType}`, allFiles);
-                
+
                 showSuccessMessage(uploadedFiles.length);
 
                 if (currentUploadType === 'image') {
@@ -2368,14 +2313,14 @@
                     loadVideosDashboard();
                     loadPublicVideos();
                 }
-                
+
                 updateStats();
             }
 
             document.getElementById('validateBtn').disabled = false;
             document.getElementById('acceptBtn').style.display = 'flex';
             document.getElementById('validateBtn').style.display = 'none';
-            
+
             selectedFiles = [];
             document.getElementById('filesGrid').innerHTML = '';
             document.getElementById('noFiles').style.display = 'block';
@@ -2389,17 +2334,17 @@
 
             if (currentUser.role !== 'admin') {
                 showAlert(
-                    currentLanguage === 'fr' 
-                        ? 'Vous n\'avez pas les permissions nécessaires' 
-                        : 'ليس لديك الصلاحيات اللازمة',
+                    currentLanguage === 'fr' ?
+                    'Vous n\'avez pas les permissions nécessaires' :
+                    'ليس لديك الصلاحيات اللازمة',
                     'error'
                 );
                 return;
             }
 
-            const confirmationMessage = currentLanguage === 'fr' 
-                ? 'Voulez-vous vraiment supprimer ce fichier ?' 
-                : 'هل تريد حقاً حذف هذا الملف؟';
+            const confirmationMessage = currentLanguage === 'fr' ?
+                'Voulez-vous vraiment supprimer ce fichier ?' :
+                'هل تريد حقاً حذف هذا الملف؟';
 
             if (!confirm(confirmationMessage)) return;
 
@@ -2440,9 +2385,9 @@
             } catch (error) {
                 console.error('Delete error:', error);
                 showAlert(
-                    currentLanguage === 'fr' 
-                        ? `Erreur lors de la suppression: ${error.message}` 
-                        : `خطأ أثناء الحذف: ${error.message}`,
+                    currentLanguage === 'fr' ?
+                    `Erreur lors de la suppression: ${error.message}` :
+                    `خطأ أثناء الحذف: ${error.message}`,
                     'error'
                 );
             }
@@ -2468,7 +2413,8 @@
                 let currentStep = 0;
                 const timer = setInterval(() => {
                     currentStep++;
-                    const currentProgress = ((index / total) * 100) + ((currentStep / steps) * (100 / total));
+                    const currentProgress = ((index / total) * 100) + ((currentStep / steps) * (100 /
+                    total));
                     progressFill.style.width = `${currentProgress}%`;
                     progressText.textContent = `${Math.round(currentProgress)}%`;
                     if (currentStep >= steps) {
@@ -2483,11 +2429,11 @@
             const successDiv = document.getElementById('uploadSuccess');
             const successMessage = document.getElementById('successMessage');
             const actionButtons = document.getElementById('actionButtons');
-            
-            successMessage.textContent = currentLanguage === 'fr' 
-                ? `${count} fichier(s) téléversé(s) avec succès !` 
-                : `تم رفع ${count} ملف بنجاح!`;
-            
+
+            successMessage.textContent = currentLanguage === 'fr' ?
+                `${count} fichier(s) téléversé(s) avec succès !` :
+                `تم رفع ${count} ملف بنجاح!`;
+
             successDiv.style.display = 'block';
             actionButtons.style.display = 'none';
         }
@@ -2495,16 +2441,16 @@
         function showAlert(message, type = 'info') {
             const existingAlerts = document.querySelectorAll('.alert');
             existingAlerts.forEach(alert => alert.remove());
-            
+
             const alertDiv = document.createElement('div');
             alertDiv.className = `alert ${type}`;
             alertDiv.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-                <span>${message}</span>
-            `;
-            
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    <span>${message}</span>
+                `;
+
             document.body.appendChild(alertDiv);
-            
+
             setTimeout(() => {
                 alertDiv.style.opacity = '0';
                 setTimeout(() => alertDiv.remove(), 300);
@@ -2518,80 +2464,80 @@
         function changeLanguage(lang) {
             currentLanguage = lang;
             localStorage.setItem('ansfal_language', lang);
-            
+
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            
+
             const activeBtn = document.querySelector(`.lang-btn[onclick*="changeLanguage('${lang}')"]`);
             if (activeBtn) {
                 activeBtn.classList.add('active');
             }
-            
+
             translatePage(lang);
         }
 
         function translatePage(lang) {
             const t = translations[lang];
-            
-            document.getElementById('visitorsLabel').innerHTML = `${t.visitors}: <span class="visitor-count" id="totalVisitors">0</span>`;
-            document.getElementById('onlineLabel').innerHTML = `${t.online}: <span class="visitor-count" id="onlineVisitors">0</span>`;
-            document.getElementById('lastVisitLabel').innerHTML = `${t.lastVisit}: <span id="lastVisit">--/--/---- --:--:--</span>`;
-            
+
+            document.getElementById('visitorsLabel').innerHTML =
+                `${t.visitors}: <span class="visitor-count" id="totalVisitors">0</span>`;
+            document.getElementById('onlineLabel').innerHTML =
+                `${t.online}: <span class="visitor-count" id="onlineVisitors">0</span>`;
+            document.getElementById('lastVisitLabel').innerHTML =
+                `${t.lastVisit}: <span id="lastVisit">--/--/---- --:--:--</span>`;
+
             document.getElementById('username').placeholder = t.username;
             document.getElementById('password').placeholder = t.password;
             document.querySelector('#loginForm button').textContent = t.login;
             document.getElementById('logoutBtn').textContent = t.logout;
-            
+
             const menuItems = document.querySelectorAll('#mainMenu a');
             menuItems[0].textContent = t.home;
             menuItems[1].textContent = t.about;
             menuItems[2].textContent = t.gallery;
             menuItems[3].textContent = t.videos;
             menuItems[4].textContent = t.projects;
-            menuItems[5].textContent = t.publications;
-            menuItems[6].textContent = t.contact;
-            menuItems[7].textContent = t.dashboard;
-            
+            menuItems[5].textContent = t.contact;
+            menuItems[6].textContent = t.dashboard;
+
             document.querySelector('#home h2').textContent = t.heroTitle;
             document.querySelector('#home h3').textContent = t.heroSubtitle;
             document.querySelector('#home p').textContent = t.heroText;
             document.querySelector('#home .btn').textContent = t.discover;
-            
+
             document.querySelector('#about .section-header h2').textContent = t.aboutTitle;
             document.querySelector('#about .about-text h3').textContent = t.aboutHistory;
             document.querySelector('#about .about-text p:nth-child(2)').textContent = t.aboutText1;
             document.querySelector('#about .about-text p:nth-child(3)').textContent = t.aboutText2;
-            
+
             document.querySelector('#gallery .section-header h2').textContent = t.galleryTitle;
             document.querySelector('#noGalleryPublic').textContent = t.noGallery;
-            
+
             document.querySelector('#videos .section-header h2').textContent = t.videosTitle;
             document.querySelector('#noVideosPublic').textContent = t.noVideos;
-            
+
             document.querySelector('#projects .section-header h2').textContent = t.projectsTitle;
             document.querySelector('#projects .project-info h3').textContent = t.project1Title;
             document.querySelector('#projects .project-info p').textContent = t.project1Desc;
-            
-            document.querySelector('#publications .section-header h2').textContent = t.publicationsTitle;
-            document.querySelector('#noPublicationsPublic').textContent = t.noPublications;
-            
+
             document.querySelector('#contact h2').textContent = t.contactTitle;
             const contactItems = document.querySelectorAll('#contact .contact-item h3');
             contactItems[0].textContent = t.address;
             contactItems[1].textContent = t.phone;
             contactItems[2].textContent = t.email;
             document.querySelector('#contact .contact-item:nth-child(1) p').textContent = t.location;
-            
+
             document.querySelector('#dashboard .page-title').textContent = t.dashboardTitle;
             const statCards = document.querySelectorAll('#dashboard .stat-card h3');
             statCards[0].textContent = t.totalVisitors;
             statCards[1].textContent = t.media;
-            
+
             document.getElementById('footerLogoTitle').textContent = t.heroTitle;
             document.getElementById('footerLogoSubtitle').textContent = t.heroSubtitle;
             document.querySelector('footer .footer-social h4').textContent = t.followUs;
-            document.querySelector('footer .copyright p').innerHTML = `&copy; 2024 ${t.heroTitle}. ${t.rights}.`;
+            document.querySelector('footer .copyright p').innerHTML =
+                `&copy; 2024 ${t.heroTitle}. ${t.rights}.`;
         }
 
         // ============================================================
@@ -2601,10 +2547,10 @@
         async function login() {
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value.trim();
-            
+
             const users = await loadUsers();
             const user = users.find(u => u.username === username && u.password === password);
-            
+
             if (user) {
                 currentUser = user;
                 await storageSet('ansfal_user', user);
@@ -2614,14 +2560,14 @@
                 showAlert(translations[currentLanguage].loginSuccess, 'success');
                 document.getElementById('loginForm').classList.add('hidden');
                 document.getElementById('userInfo').classList.remove('hidden');
-                
+
                 loadGalleryDashboard();
                 loadVideosDashboard();
                 loadTextDashboard();
                 loadPublicGallery();
                 loadPublicVideos();
                 updateStats();
-                
+
             } else {
                 showAlert(translations[currentLanguage].loginError, 'error');
                 document.getElementById('password').value = '';
@@ -2631,10 +2577,10 @@
 
         async function logout() {
             if (confirm(
-                currentLanguage === 'fr' 
-                    ? 'Voulez-vous vraiment vous déconnecter ?' 
-                    : 'هل تريد حقاً تسجيل الخروج؟'
-            )) {
+                    currentLanguage === 'fr' ?
+                    'Voulez-vous vraiment vous déconnecter ?' :
+                    'هل تريد حقاً تسجيل الخروج؟'
+                )) {
                 currentUser = null;
                 await storageRemove('ansfal_user');
                 document.body.classList.remove('admin-mode');
@@ -2653,9 +2599,10 @@
                 const roleNames = {
                     'admin': translations[currentLanguage].admin
                 };
-                
+
                 document.getElementById('userName').textContent = currentUser.name;
-                document.getElementById('userRole').textContent = roleNames[currentUser.role] || currentUser.role;
+                document.getElementById('userRole').textContent = roleNames[currentUser.role] || currentUser
+                .role;
                 document.getElementById('loginForm').classList.add('hidden');
                 document.getElementById('userInfo').classList.remove('hidden');
             }
@@ -2669,31 +2616,31 @@
             document.querySelectorAll('section').forEach(section => {
                 section.classList.remove('active');
             });
-            
+
             const targetSection = document.getElementById(sectionId);
             if (targetSection) {
                 targetSection.classList.add('active');
             }
-            
+
             if (sectionId === 'dashboard') {
-                loadDashboardSection('dashboard');
+                showDashboardSection('dashboard');
             }
-            
+
             if (sectionId === 'gallery') {
                 loadPublicGallery();
             }
-            
+
             if (sectionId === 'videos') {
                 loadPublicVideos();
             }
-            
+
             document.querySelectorAll('nav a').forEach(link => {
                 link.classList.remove('active');
                 if (link.getAttribute('href') === `#${sectionId}`) {
                     link.classList.add('active');
                 }
             });
-            
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -2701,19 +2648,19 @@
             document.querySelectorAll('.dashboard-section-content').forEach(section => {
                 section.classList.remove('active');
             });
-            
+
             const targetSection = document.getElementById(`${type}Dashboard`);
             if (targetSection) {
                 targetSection.classList.add('active');
             }
-            
+
             document.querySelectorAll('.sidebar-menu a').forEach(link => {
                 link.classList.remove('active');
                 if (link.getAttribute('data-page') === type || link.getAttribute('data-section') === type) {
                     link.classList.add('active');
                 }
             });
-            
+
             if (type === 'gallery') {
                 loadGalleryDashboard();
             } else if (type === 'videos') {
@@ -2730,129 +2677,129 @@
         async function loadGalleryDashboard() {
             const images = await storageGet('ansfal_image') || [];
             const galleryList = document.getElementById('galleryList');
-            
+
             if (!galleryList) return;
-            
+
             if (images.length === 0) {
                 galleryList.innerHTML = `
-                    <div class="no-content">
-                        <i class="fas fa-images"></i>
-                        <p>${currentLanguage === 'fr' ? 'Aucune image' : 'لا توجد صور'}</p>
-                    </div>
-                `;
+                        <div class="no-content">
+                            <i class="fas fa-images"></i>
+                            <p>${currentLanguage === 'fr' ? 'Aucune image' : 'لا توجد صور'}</p>
+                        </div>
+                    `;
                 return;
             }
-            
+
             let galleryHTML = '';
-            
+
             images.forEach((image, index) => {
                 galleryHTML += `
-                    <div class="dashboard-item">
-                        <div class="item-icon" style="background: var(--primary);">
-                            <i class="fas fa-image"></i>
+                        <div class="dashboard-item">
+                            <div class="item-icon" style="background: var(--primary);">
+                                <i class="fas fa-image"></i>
+                            </div>
+                            <div class="item-info">
+                                <h4>${image.name || 'Image ' + (index + 1)}</h4>
+                                <small>${image.format ? image.format.toUpperCase() : ''} • ${new Date(image.created_at).toLocaleDateString()}</small>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn-action view" onclick="viewFile('image', ${index})" title="${currentLanguage === 'fr' ? 'Voir' : 'عرض'}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-action delete" onclick="deleteFile('image', ${index})" title="${currentLanguage === 'fr' ? 'Supprimer' : 'حذف'}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="item-info">
-                            <h4>${image.name || 'Image ' + (index + 1)}</h4>
-                            <small>${image.format ? image.format.toUpperCase() : ''} • ${new Date(image.created_at).toLocaleDateString()}</small>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn-action" onclick="viewFile('image', ${index})" title="${currentLanguage === 'fr' ? 'Voir' : 'عرض'}">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn-action" onclick="deleteFile('image', ${index})" title="${currentLanguage === 'fr' ? 'Supprimer' : 'حذف'}" style="background: var(--danger);">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
+                    `;
             });
-            
+
             galleryList.innerHTML = galleryHTML;
         }
 
         async function loadVideosDashboard() {
             const videos = await storageGet('ansfal_video') || [];
             const videosList = document.getElementById('videosList');
-            
+
             if (!videosList) return;
-            
+
             if (videos.length === 0) {
                 videosList.innerHTML = `
-                    <div class="no-content">
-                        <i class="fas fa-video"></i>
-                        <p>${currentLanguage === 'fr' ? 'Aucune vidéo' : 'لا توجد فيديوهات'}</p>
-                    </div>
-                `;
+                        <div class="no-content">
+                            <i class="fas fa-video"></i>
+                            <p>${currentLanguage === 'fr' ? 'Aucune vidéo' : 'لا توجد فيديوهات'}</p>
+                        </div>
+                    `;
                 return;
             }
-            
+
             let videosHTML = '';
-            
+
             videos.forEach((video, index) => {
                 videosHTML += `
-                    <div class="dashboard-item">
-                        <div class="item-icon" style="background: var(--info);">
-                            <i class="fas fa-video"></i>
+                        <div class="dashboard-item">
+                            <div class="item-icon" style="background: var(--info);">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <div class="item-info">
+                                <h4>${video.name || 'Vidéo ' + (index + 1)}</h4>
+                                <small>${video.format ? video.format.toUpperCase() : ''} • ${new Date(video.created_at).toLocaleDateString()}</small>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn-action view" onclick="viewFile('video', ${index})" title="${currentLanguage === 'fr' ? 'Voir' : 'عرض'}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-action delete" onclick="deleteFile('video', ${index})" title="${currentLanguage === 'fr' ? 'Supprimer' : 'حذف'}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="item-info">
-                            <h4>${video.name || 'Vidéo ' + (index + 1)}</h4>
-                            <small>${video.format ? video.format.toUpperCase() : ''} • ${new Date(video.created_at).toLocaleDateString()}</small>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn-action" onclick="viewFile('video', ${index})" title="${currentLanguage === 'fr' ? 'Voir' : 'عرض'}">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn-action" onclick="deleteFile('video', ${index})" title="${currentLanguage === 'fr' ? 'Supprimer' : 'حذف'}" style="background: var(--danger);">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
+                    `;
             });
-            
+
             videosList.innerHTML = videosHTML;
         }
 
         async function loadTextDashboard() {
             const texts = await storageGet('ansfal_text') || [];
             const textList = document.getElementById('textList');
-            
+
             if (!textList) return;
-            
+
             if (texts.length === 0) {
                 textList.innerHTML = `
-                    <div class="no-content">
-                        <i class="fas fa-file-alt"></i>
-                        <p>${currentLanguage === 'fr' ? 'Aucun texte' : 'لا توجد نصوص'}</p>
-                    </div>
-                `;
+                        <div class="no-content">
+                            <i class="fas fa-file-alt"></i>
+                            <p>${currentLanguage === 'fr' ? 'Aucun texte' : 'لا توجد نصوص'}</p>
+                        </div>
+                    `;
                 return;
             }
-            
+
             let textHTML = '';
-            
+
             texts.forEach((text, index) => {
                 textHTML += `
-                    <div class="dashboard-item">
-                        <div class="item-icon" style="background: var(--success);">
-                            <i class="fas fa-file-alt"></i>
+                        <div class="dashboard-item">
+                            <div class="item-icon" style="background: var(--success);">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="item-info">
+                                <h4>${text.title || 'Texte ' + (index + 1)}</h4>
+                                <small>${text.content.substring(0, 50)}...</small>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn-action view" onclick="viewText(${index})" title="${currentLanguage === 'fr' ? 'Voir' : 'عرض'}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn-action delete" onclick="deleteText(${index})" title="${currentLanguage === 'fr' ? 'Supprimer' : 'حذف'}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="item-info">
-                            <h4>${text.title || 'Texte ' + (index + 1)}</h4>
-                            <small>${text.content.substring(0, 50)}...</small>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn-action" onclick="viewText(${index})" title="${currentLanguage === 'fr' ? 'Voir' : 'عرض'}">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn-action" onclick="deleteText(${index})" title="${currentLanguage === 'fr' ? 'Supprimer' : 'حذف'}" style="background: var(--danger);">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                `;
+                    `;
             });
-            
+
             textList.innerHTML = textHTML;
         }
 
@@ -2863,24 +2810,24 @@
         async function viewFile(type, index) {
             const files = await storageGet(`ansfal_${type}`) || [];
             const file = files[index];
-            
+
             if (!file) {
                 showAlert(currentLanguage === 'fr' ? 'Fichier non trouvé' : 'الملف غير موجود', 'error');
                 return;
             }
-            
+
             const viewer = document.getElementById('fileViewer');
             const viewerTitle = document.getElementById('viewerTitle');
             const viewerContent = document.getElementById('viewerContent');
-            
+
             viewerTitle.textContent = file.name || file.title || `Fichier ${type}`;
-            
+
             if (type === 'image') {
                 viewerContent.innerHTML = `
-                    <img src="${file.url}" alt="${file.name || 'Image'}" 
-                         style="max-width: 100%; max-height: 70vh; border-radius: 10px;"
-                         onerror="this.src='https://via.placeholder.com/400x300?text=Image+non+disponible'">
-                `;
+                        <img src="${file.url}" alt="${file.name || 'Image'}" 
+                             style="max-width: 100%; max-height: 70vh; border-radius: 10px;"
+                             onerror="this.src='https://via.placeholder.com/400x300?text=Image+non+disponible'">
+                    `;
             } else if (type === 'video') {
                 if (file.url.includes('youtube.com') || file.url.includes('youtu.be')) {
                     let videoId = '';
@@ -2891,30 +2838,30 @@
                     } else if (file.url.includes('youtube.com/watch?v=')) {
                         videoId = file.url.split('v=')[1].split('&')[0];
                     }
-                    
+
                     if (videoId) {
                         viewerContent.innerHTML = `
-                            <iframe 
-                                width="100%" 
-                                height="500" 
-                                src="https://www.youtube.com/embed/${videoId}" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen
-                                style="border-radius: 10px;">
-                            </iframe>
-                        `;
+                                <iframe 
+                                    width="100%" 
+                                    height="500" 
+                                    src="https://www.youtube.com/embed/${videoId}" 
+                                    frameborder="0" 
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                    allowfullscreen
+                                    style="border-radius: 10px;">
+                                </iframe>
+                            `;
                     }
                 } else {
                     viewerContent.innerHTML = `
-                        <video controls style="max-width: 100%; max-height: 70vh; border-radius: 10px;">
-                            <source src="${file.url}" type="video/mp4">
-                            ${currentLanguage === 'fr' ? 'Votre navigateur ne supporte pas la lecture vidéo.' : 'متصفحك لا يدعم تشغيل الفيديو.'}
-                        </video>
-                    `;
+                            <video controls style="max-width: 100%; max-height: 70vh; border-radius: 10px;">
+                                <source src="${file.url}" type="video/mp4">
+                                ${currentLanguage === 'fr' ? 'Votre navigateur ne supporte pas la lecture vidéo.' : 'متصفحك لا يدعم تشغيل الفيديو.'}
+                            </video>
+                        `;
                 }
             }
-            
+
             viewer.classList.add('active');
         }
 
@@ -2925,41 +2872,41 @@
         async function viewText(index) {
             const texts = await storageGet('ansfal_text') || [];
             const text = texts[index];
-            
+
             if (!text) {
                 showAlert(currentLanguage === 'fr' ? 'Texte non trouvé' : 'النص غير موجود', 'error');
                 return;
             }
-            
+
             const modalHTML = `
-                <div class="modal-overlay" id="textViewModal" style="display: flex;">
-                    <div class="modal">
-                        <div class="modal-header">
-                            <h3 class="modal-title">
-                                <i class="fas fa-file-alt"></i> ${text.title || (currentLanguage === 'fr' ? 'Texte sans titre' : 'نص بدون عنوان')}
-                            </h3>
-                            <button class="close-modal" onclick="closeModal('textViewModal')">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; max-height: 500px; overflow-y: auto;">
-                                <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">${text.content}</pre>
+                    <div class="modal-overlay" id="textViewModal" style="display: flex;">
+                        <div class="modal">
+                            <div class="modal-header">
+                                <h3 class="modal-title">
+                                    <i class="fas fa-file-alt"></i> ${text.title || (currentLanguage === 'fr' ? 'Texte sans titre' : 'نص بدون عنوان')}
+                                </h3>
+                                <button class="close-modal" onclick="closeModal('textViewModal')">&times;</button>
                             </div>
-                            <div style="margin-top: 15px; color: #666; font-size: 0.9rem;">
-                                <i class="far fa-calendar"></i> ${new Date(text.created_at).toLocaleDateString(currentLanguage === 'fr' ? 'fr-FR' : 'ar-MA')}
-                            </div>
-                            <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 30px;">
-                                <button class="btn-browse" onclick="closeModal('textViewModal')" style="background: var(--danger);">
-                                    <i class="fas fa-times"></i> ${currentLanguage === 'fr' ? 'Fermer' : 'إغلاق'}
-                                </button>
-                                <button class="btn-browse" onclick="deleteText(${index})" style="background: var(--danger);">
-                                    <i class="fas fa-trash"></i> ${currentLanguage === 'fr' ? 'Supprimer' : 'حذف'}
-                                </button>
+                            <div class="modal-body">
+                                <div style="background: #f5f5f5; padding: 20px; border-radius: 10px; max-height: 500px; overflow-y: auto;">
+                                    <pre style="white-space: pre-wrap; font-family: inherit; margin: 0;">${text.content}</pre>
+                                </div>
+                                <div style="margin-top: 15px; color: #666; font-size: 0.9rem;">
+                                    <i class="far fa-calendar"></i> ${new Date(text.created_at).toLocaleDateString(currentLanguage === 'fr' ? 'fr-FR' : 'ar-MA')}
+                                </div>
+                                <div style="display: flex; gap: 15px; justify-content: flex-end; margin-top: 30px;">
+                                    <button class="btn-browse" onclick="closeModal('textViewModal')" style="background: var(--danger);">
+                                        <i class="fas fa-times"></i> ${currentLanguage === 'fr' ? 'Fermer' : 'إغلاق'}
+                                    </button>
+                                    <button class="btn-browse" onclick="deleteText(${index})" style="background: var(--danger);">
+                                        <i class="fas fa-trash"></i> ${currentLanguage === 'fr' ? 'Supprimer' : 'حذف'}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            `;
-            
+                `;
+
             document.body.insertAdjacentHTML('beforeend', modalHTML);
         }
 
@@ -2979,30 +2926,30 @@
                 showAlert(translations[currentLanguage].pleaseLogin, 'error');
                 return;
             }
-            
+
             currentUploadType = type;
             uploadMode = 'pc';
-            
+
             const t = translations[currentLanguage];
-            document.getElementById('uploadModalTitle').innerHTML = 
+            document.getElementById('uploadModalTitle').innerHTML =
                 `<i class="fas fa-cloud-upload-alt"></i> ${t.uploadFiles}`;
-            
+
             document.getElementById('uploadPcTitle').textContent = t.uploadFromPC;
             document.getElementById('uploadPcDesc').textContent = t.uploadFromPCDesc;
             document.getElementById('uploadUrlTitle').textContent = t.uploadFromURL;
             document.getElementById('uploadUrlDesc').textContent = t.uploadFromURLDesc;
-            
+
             if (type === 'text') {
                 showTextModal();
                 return;
             }
-            
+
             resetUploadInterface();
             document.getElementById('uploadModal').classList.add('active');
             document.getElementById('acceptBtn').style.display = 'flex';
             document.getElementById('validateBtn').style.display = 'none';
             document.getElementById('validateBtn').disabled = false;
-            
+
             setupFileInput();
         }
 
@@ -3016,11 +2963,11 @@
             document.getElementById('actionButtons').style.display = 'flex';
             document.getElementById('progressFill').style.width = '0%';
             document.getElementById('progressText').textContent = '0%';
-            
+
             document.getElementById('acceptBtn').style.display = 'flex';
             document.getElementById('validateBtn').style.display = 'none';
             document.getElementById('validateBtn').disabled = false;
-            
+
             document.getElementById('uploadFromPC').classList.add('active');
             document.getElementById('uploadFromURL').classList.remove('active');
             document.getElementById('pcUploadArea').style.display = 'block';
@@ -3038,11 +2985,11 @@
             uploadMode = mode;
             document.getElementById('uploadFromPC').classList.toggle('active', mode === 'pc');
             document.getElementById('uploadFromURL').classList.toggle('active', mode === 'url');
-            
+
             const pcUploadArea = document.getElementById('pcUploadArea');
             const urlUploadArea = document.getElementById('urlUploadArea');
             const previewTitle = document.getElementById('previewTitle');
-            
+
             if (mode === 'pc') {
                 pcUploadArea.style.display = 'block';
                 urlUploadArea.classList.remove('active');
@@ -3052,33 +2999,33 @@
                 urlUploadArea.classList.add('active');
                 previewTitle.textContent = currentLanguage === 'fr' ? 'Liens ajoutés' : 'الروابط المضافة';
             }
-            
+
             updateUrlPreview();
         }
 
         function setupFileInput() {
             const fileInput = document.getElementById('fileInput');
             const uploadArea = document.querySelector('.upload-area');
-            
+
             if (!fileInput || !uploadArea) return;
-            
+
             const acceptedTypes = {
                 'image': '.jpg,.jpeg,.png,.gif,.webp,.bmp',
                 'video': '.mp4,.webm,.avi,.mov,.mkv'
             };
-            
+
             fileInput.accept = acceptedTypes[currentUploadType] || '*';
             fileInput.onchange = handleFileSelect;
-            
+
             uploadArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 uploadArea.classList.add('drag-over');
             });
-            
+
             uploadArea.addEventListener('dragleave', () => {
                 uploadArea.classList.remove('drag-over');
             });
-            
+
             uploadArea.addEventListener('drop', (e) => {
                 e.preventDefault();
                 uploadArea.classList.remove('drag-over');
@@ -3086,11 +3033,11 @@
                     handleFiles(e.dataTransfer.files);
                 }
             });
-            
+
             uploadArea.addEventListener('click', () => {
                 fileInput.click();
             });
-            
+
             const browseBtn = uploadArea.querySelector('.btn-browse');
             if (browseBtn) {
                 browseBtn.addEventListener('click', (e) => {
@@ -3110,101 +3057,101 @@
                 'image': 20 * 1024 * 1024,
                 'video': 100 * 1024 * 1024
             };
-            
+
             const maxSize = maxSizes[currentUploadType] || 20 * 1024 * 1024;
-            
+
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
-                
+
                 if (file.size > maxSize) {
                     showAlert(
-                        currentLanguage === 'fr' 
-                            ? `Le fichier ${file.name} dépasse la taille maximale de ${formatFileSize(maxSize)}` 
-                            : `الملف ${file.name} يتجاوز الحد الأقصى للحجم ${formatFileSize(maxSize)}`,
+                        currentLanguage === 'fr' ?
+                        `Le fichier ${file.name} dépasse la taille maximale de ${formatFileSize(maxSize)}` :
+                        `الملف ${file.name} يتجاوز الحد الأقصى للحجم ${formatFileSize(maxSize)}`,
                         'error'
                     );
                     continue;
                 }
-                
+
                 const fileExtension = file.name.split('.').pop().toLowerCase();
                 const acceptedExtensions = {
                     'image': ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp'],
                     'video': ['mp4', 'webm', 'avi', 'mov', 'mkv']
                 };
-                
+
                 const allowedExts = acceptedExtensions[currentUploadType] || [];
-                
+
                 if (allowedExts.length > 0 && !allowedExts.includes(fileExtension)) {
                     showAlert(
-                        currentLanguage === 'fr' 
-                            ? `Le fichier ${file.name} n'est pas un format valide pour cette section` 
-                            : `الملف ${file.name} ليس بصيغة صالحة لهذا القسم`,
+                        currentLanguage === 'fr' ?
+                        `Le fichier ${file.name} n'est pas un format valide pour cette section` :
+                        `الملف ${file.name} ليس بصيغة صالحة لهذا القسم`,
                         'error'
                     );
                     continue;
                 }
-                
+
                 file.id = Date.now() + i;
                 selectedFiles.push(file);
             }
-            
+
             if (selectedFiles.length > 0) {
                 document.getElementById('acceptBtn').style.display = 'flex';
                 document.getElementById('validateBtn').style.display = 'none';
             }
-            
+
             updateFilePreview();
         }
 
         function updateFilePreview() {
             const filesGrid = document.getElementById('filesGrid');
             const noFiles = document.getElementById('noFiles');
-            
+
             filesGrid.innerHTML = '';
-            
+
             if (selectedFiles.length === 0) {
                 noFiles.style.display = 'block';
                 return;
             }
-            
+
             noFiles.style.display = 'none';
-            
+
             selectedFiles.forEach((file, index) => {
                 const fileItem = document.createElement('div');
                 fileItem.className = 'file-item';
-                
+
                 let icon = 'fas fa-file';
                 if (currentUploadType === 'image') icon = 'fas fa-image';
                 else if (currentUploadType === 'video') icon = 'fas fa-video';
-                
+
                 fileItem.innerHTML = `
-                    <div class="file-icon">
-                        <i class="${icon}"></i>
-                    </div>
-                    <div class="file-name" title="${file.name}">
-                        ${file.name.length > 20 ? file.name.substring(0, 17) + '...' : file.name}
-                    </div>
-                    <div class="file-size">
-                        ${formatFileSize(file.size)}
-                    </div>
-                    <button class="remove-file" onclick="removeFile(${index})">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `;
-                
+                        <div class="file-icon">
+                            <i class="${icon}"></i>
+                        </div>
+                        <div class="file-name" title="${file.name}">
+                            ${file.name.length > 20 ? file.name.substring(0, 17) + '...' : file.name}
+                        </div>
+                        <div class="file-size">
+                            ${formatFileSize(file.size)}
+                        </div>
+                        <button class="remove-file" onclick="removeFile(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+
                 filesGrid.appendChild(fileItem);
             });
         }
 
         function removeFile(index) {
             selectedFiles.splice(index, 1);
-            
+
             if (uploadMode === 'pc') {
                 updateFilePreview();
             } else {
                 updateUrlPreview();
             }
-            
+
             if (selectedFiles.length === 0) {
                 document.getElementById('acceptBtn').style.display = 'flex';
                 document.getElementById('validateBtn').style.display = 'none';
@@ -3214,22 +3161,22 @@
         function addUrlMedia() {
             const url = document.getElementById('mediaUrl').value.trim();
             const title = document.getElementById('mediaTitle').value.trim();
-            
+
             if (!url) {
                 showAlert(translations[currentLanguage].invalidUrl, 'error');
                 return;
             }
-            
+
             try {
                 new URL(url);
             } catch (e) {
                 showAlert(translations[currentLanguage].invalidUrl, 'error');
                 return;
             }
-            
+
             let type = 'url';
             let icon = 'fas fa-link';
-            
+
             if (url.includes('i.imgur.com') || url.includes('imgur.com')) {
                 type = 'image';
                 icon = 'fas fa-image';
@@ -3243,61 +3190,62 @@
                 type = 'video';
                 icon = 'fas fa-video';
             }
-            
+
             const mediaItem = {
                 id: Date.now(),
                 url: url,
-                title: title || (type === 'image' ? 'صورة من Imgur' : type === 'video' ? 'فيديو من YouTube' : 'رابط خارجي'),
+                title: title || (type === 'image' ? 'صورة من Imgur' : type === 'video' ? 'فيديو من YouTube' :
+                    'رابط خارجي'),
                 type: type,
                 date: new Date().toISOString(),
                 source: 'url',
                 icon: icon
             };
-            
+
             selectedFiles.push(mediaItem);
             updateUrlPreview();
-            
+
             document.getElementById('mediaUrl').value = '';
             document.getElementById('mediaTitle').value = '';
-            
+
             showAlert(translations[currentLanguage].urlAdded, 'success');
         }
 
         function updateUrlPreview() {
             const filesGrid = document.getElementById('filesGrid');
             const noFiles = document.getElementById('noFiles');
-            
+
             filesGrid.innerHTML = '';
-            
+
             if (selectedFiles.length === 0) {
                 noFiles.style.display = 'block';
                 return;
             }
-            
+
             noFiles.style.display = 'none';
-            
+
             selectedFiles.forEach((file, index) => {
                 const fileItem = document.createElement('div');
                 fileItem.className = 'file-item';
-                
+
                 const icon = file.icon || 'fas fa-link';
                 const title = file.title || file.url.substring(0, 30);
-                
+
                 fileItem.innerHTML = `
-                    <div class="file-icon">
-                        <i class="${icon}"></i>
-                    </div>
-                    <div class="file-name" title="${file.url}">
-                        ${title}
-                    </div>
-                    <div class="file-size">
-                        ${file.source === 'url' ? 'رابط خارجي' : formatFileSize(file.size)}
-                    </div>
-                    <button class="remove-file" onclick="removeFile(${index})">
-                        <i class="fas fa-times"></i>
-                    </button>
-                `;
-                
+                        <div class="file-icon">
+                            <i class="${icon}"></i>
+                        </div>
+                        <div class="file-name" title="${file.url}">
+                            ${title}
+                        </div>
+                        <div class="file-size">
+                            ${file.source === 'url' ? 'رابط خارجي' : formatFileSize(file.size)}
+                        </div>
+                        <button class="remove-file" onclick="removeFile(${index})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+
                 filesGrid.appendChild(fileItem);
             });
         }
@@ -3307,14 +3255,14 @@
                 showAlert(translations[currentLanguage].selectFile, 'error');
                 return;
             }
-            
+
             document.getElementById('acceptBtn').style.display = 'none';
             document.getElementById('validateBtn').style.display = 'flex';
-            
+
             showAlert(
-                currentLanguage === 'fr' 
-                    ? 'Fichiers acceptés. Cliquez sur "Valider" pour terminer l\'upload.' 
-                    : 'تم قبول الملفات. انقر على "تأكيد" لإنهاء التحميل.',
+                currentLanguage === 'fr' ?
+                'Fichiers acceptés. Cliquez sur "Valider" pour terminer l\'upload.' :
+                'تم قبول الملفات. انقر على "تأكيد" لإنهاء التحميل.',
                 'info'
             );
         }
@@ -3341,44 +3289,44 @@
         async function saveTextContent() {
             const title = document.getElementById('textTitle').value.trim();
             const content = document.getElementById('textContent').value.trim();
-            
+
             if (!title || !content) {
                 showAlert(translations[currentLanguage].textRequired, 'error');
                 return;
             }
-            
+
             const texts = await storageGet('ansfal_text') || [];
-            texts.push({ 
-                title: title, 
-                content: content, 
-                created_at: new Date().toISOString() 
+            texts.push({
+                title: title,
+                content: content,
+                created_at: new Date().toISOString()
             });
-            
+
             await storageSet('ansfal_text', texts);
-            
+
             showAlert(translations[currentLanguage].textSaved, 'success');
             hideTextModal();
             loadTextDashboard();
         }
 
         async function deleteText(index) {
-            const confirmationMessage = currentLanguage === 'fr' 
-                ? 'Voulez-vous vraiment supprimer ce texte ?' 
-                : 'هل تريد حقاً حذف هذا النص؟';
-            
+            const confirmationMessage = currentLanguage === 'fr' ?
+                'Voulez-vous vraiment supprimer ce texte ?' :
+                'هل تريد حقاً حذف هذا النص؟';
+
             if (!confirm(confirmationMessage)) return;
-            
+
             const texts = await storageGet('ansfal_text') || [];
-            
+
             if (index >= 0 && index < texts.length) {
                 texts.splice(index, 1);
                 await storageSet('ansfal_text', texts);
-                
+
                 showAlert(
-                    currentLanguage === 'fr' ? 'Texte supprimé avec succès' : 'تم حذف النص بنجاح', 
+                    currentLanguage === 'fr' ? 'Texte supprimé avec succès' : 'تم حذف النص بنجاح',
                     'success'
                 );
-                
+
                 closeModal('textViewModal');
                 loadTextDashboard();
             }
@@ -3403,32 +3351,34 @@
             const currentPassword = document.getElementById('currentPassword').value;
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-            
+
             const users = await loadUsers();
             const user = users.find(u => u.id === currentUser.id);
-            
+
             if (!user || user.password !== currentPassword) {
                 showAlert(translations[currentLanguage].currentPasswordWrong, 'error');
                 return;
             }
-            
+
             if (newPassword !== confirmPassword) {
                 showAlert(translations[currentLanguage].passwordMismatch, 'error');
                 return;
             }
-            
+
             if (newPassword.length < 6) {
-                showAlert(currentLanguage === 'fr' ? 'Le mot de passe doit contenir au moins 6 caractères' : 'يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل', 'error');
+                showAlert(currentLanguage === 'fr' ?
+                    'Le mot de passe doit contenir au moins 6 caractères' :
+                    'يجب أن تحتوي كلمة المرور على 6 أحرف على الأقل', 'error');
                 return;
             }
-            
+
             const userIndex = users.findIndex(u => u.id === currentUser.id);
-            
+
             if (userIndex !== -1) {
                 users[userIndex].password = newPassword;
                 await storageSet('ansfal_users', users);
                 currentUser.password = newPassword;
-                
+
                 showAlert(translations[currentLanguage].passwordChanged, 'success');
                 hidePasswordModal();
             }
@@ -3446,11 +3396,11 @@
                 exportDate: new Date().toISOString(),
                 exportLanguage: currentLanguage
             };
-            
+
             const jsonString = JSON.stringify(data, null, 2);
             const blob = new Blob([jsonString], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
-            
+
             const a = document.createElement('a');
             a.href = url;
             a.download = `ansfal-backup-${new Date().toISOString().split('T')[0]}.json`;
@@ -3458,29 +3408,29 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            
+
             showAlert(translations[currentLanguage].exportSuccess, 'success');
         }
 
         async function resetAllData() {
-            const confirmationMessage = currentLanguage === 'fr' 
-                ? 'Voulez-vous vraiment supprimer TOUTES les données ? Cette action est irréversible.' 
-                : 'هل تريد حقاً حذف جميع البيانات؟ هذا الإجراء لا يمكن التراجع عنه.';
-            
+            const confirmationMessage = currentLanguage === 'fr' ?
+                'Voulez-vous vraiment supprimer TOUTES les données ? Cette action est irréversible.' :
+                'هل تريد حقاً حذف جميع البيانات؟ هذا الإجراء لا يمكن التراجع عنه.';
+
             if (!confirm(confirmationMessage)) return;
-            
+
             const keysToRemove = [
                 'ansfal_image',
                 'ansfal_video',
                 'ansfal_text'
             ];
-            
+
             for (const key of keysToRemove) {
                 await storageRemove(key);
             }
-            
+
             showAlert(translations[currentLanguage].allDataCleared, 'success');
-            
+
             loadGalleryDashboard();
             loadVideosDashboard();
             loadTextDashboard();
@@ -3496,27 +3446,27 @@
             const images = await storageGet('ansfal_image') || [];
             const galleryPublic = document.getElementById('publicGallery');
             const noGallery = document.getElementById('noGalleryPublic');
-            
+
             if (!galleryPublic) return;
-            
+
             if (images.length === 0) {
                 noGallery.style.display = 'block';
                 return;
             }
-            
+
             noGallery.style.display = 'none';
             let galleryHTML = '';
-            
+
             images.forEach((image, index) => {
                 if (image.url) {
                     galleryHTML += `
-                        <div class="gallery-public-item" onclick="viewFile('image', ${index})">
-                            <img src="${image.url}" alt="${image.name || 'Image'}" loading="lazy">
-                        </div>
-                    `;
+                            <div class="gallery-public-item" onclick="viewFile('image', ${index})">
+                                <img src="${image.url}" alt="${image.name || 'Image'}" loading="lazy">
+                            </div>
+                        `;
                 }
             });
-            
+
             galleryPublic.innerHTML = galleryHTML;
         }
 
@@ -3524,17 +3474,17 @@
             const videos = await storageGet('ansfal_video') || [];
             const videosPublic = document.getElementById('publicVideos');
             const noVideos = document.getElementById('noVideosPublic');
-            
+
             if (!videosPublic) return;
-            
+
             if (videos.length === 0) {
                 noVideos.style.display = 'block';
                 return;
             }
-            
+
             noVideos.style.display = 'none';
             let videosHTML = '';
-            
+
             videos.forEach((video, index) => {
                 if (video.url) {
                     if (video.url.includes('youtube.com') || video.url.includes('youtu.be')) {
@@ -3546,34 +3496,34 @@
                         } else if (video.url.includes('youtube.com/watch?v=')) {
                             videoId = video.url.split('v=')[1].split('&')[0];
                         }
-                        
+
                         if (videoId) {
                             videosHTML += `
-                                <div class="video-public-item">
-                                    <div class="youtube-embed">
-                                        <iframe 
-                                            src="https://www.youtube.com/embed/${videoId}" 
-                                            frameborder="0" 
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                            allowfullscreen>
-                                        </iframe>
+                                    <div class="video-public-item">
+                                        <div class="youtube-embed">
+                                            <iframe 
+                                                src="https://www.youtube.com/embed/${videoId}" 
+                                                frameborder="0" 
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                                allowfullscreen>
+                                            </iframe>
+                                        </div>
                                     </div>
-                                </div>
-                            `;
+                                `;
                         }
                     } else {
                         videosHTML += `
-                            <div class="video-public-item" onclick="viewFile('video', ${index})">
-                                <video style="width: 100%; height: 100%; object-fit: cover;">
-                                    <source src="${video.url}" type="video/mp4">
-                                    ${currentLanguage === 'fr' ? 'Votre navigateur ne supporte pas la lecture vidéo.' : 'متصفحك لا يدعم تشغيل الفيديو.'}
-                                </video>
-                            </div>
-                        `;
+                                <div class="video-public-item" onclick="viewFile('video', ${index})">
+                                    <video style="width: 100%; height: 100%; object-fit: cover;">
+                                        <source src="${video.url}" type="video/mp4">
+                                        ${currentLanguage === 'fr' ? 'Votre navigateur ne supporte pas la lecture vidéo.' : 'متصفحك لا يدعم تشغيل الفيديو.'}
+                                    </video>
+                                </div>
+                            `;
                     }
                 }
             });
-            
+
             videosPublic.innerHTML = videosHTML;
         }
 
@@ -3582,9 +3532,9 @@
                 const images = await storageGet('ansfal_image') || [];
                 const videos = await storageGet('ansfal_video') || [];
                 const texts = await storageGet('ansfal_text') || [];
-                
+
                 const totalMedia = images.length + videos.length + texts.length;
-                
+
                 document.getElementById('totalMediaStat').textContent = totalMedia;
             } catch (error) {
                 console.error('Update stats error:', error);
@@ -3597,14 +3547,14 @@
 
         document.addEventListener('DOMContentLoaded', async function() {
             await updateVisitorCount();
-            
+
             const savedLang = localStorage.getItem('ansfal_language');
             if (savedLang) {
                 changeLanguage(savedLang);
             } else {
                 changeLanguage('fr');
             }
-            
+
             const savedUser = await storageGet('ansfal_user');
             if (savedUser && savedUser.length > 0) {
                 currentUser = savedUser[0];
@@ -3612,7 +3562,7 @@
                 document.body.classList.add('admin-mode');
                 document.getElementById('addBtn').style.display = 'flex';
             }
-            
+
             document.querySelectorAll('nav a').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -3622,13 +3572,14 @@
                     this.classList.add('active');
                 });
             });
-            
+
             const phone = "+212612345678";
-            const message = currentLanguage === 'fr' 
-                ? "Bonjour, je voudrais des informations sur l'association أنسفال" 
-                : "مرحباً، أود الحصول على معلومات حول جمعية أنسفال";
-            document.getElementById('whatsappBtn').href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-            
+            const message = currentLanguage === 'fr' ?
+                "Bonjour, je voudrais des informations sur l'association أنسفال" :
+                "مرحباً، أود الحصول على معلومات حول جمعية أنسفال";
+            document.getElementById('whatsappBtn').href =
+                `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
             document.getElementById('addBtn').addEventListener('click', function() {
                 if (currentUser) {
                     showUploadModal('image');
@@ -3636,7 +3587,7 @@
                     showAlert(translations[currentLanguage].pleaseLogin, 'error');
                 }
             });
-            
+
             showSection('home');
             setupFileInput();
             loadPublicGallery();
