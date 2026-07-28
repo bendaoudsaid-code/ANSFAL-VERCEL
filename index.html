@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* ==================== STYLES ==================== */
         :root {
@@ -1834,6 +1835,13 @@
 
     <script>
         // ============================================================
+        // ===== CONFIGURATION SUPABASE =====
+        // ============================================================
+        const SUPABASE_URL = 'https://kyjjblstxbdkjpzgnvna.supabase.co';
+        const SUPABASE_KEY = 'kyjjblstxbdkjpzgnvna';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // ============================================================
         // ===== VARIABLES GLOBALES =====
         // ============================================================
         let currentUser = null;
@@ -2080,18 +2088,15 @@
         function translatePage(lang) {
             const t = translations[lang];
 
-            // Compteur
             document.getElementById('visitorsLabel').innerHTML = `${t.visitors}: <span class="visitor-count" id="totalVisitors">0</span>`;
             document.getElementById('onlineLabel').innerHTML = `${t.online}: <span class="visitor-count" id="onlineVisitors">0</span>`;
             document.getElementById('lastVisitLabel').innerHTML = `${t.lastVisit}: <span id="lastVisit">--/--/---- --:--:--</span>`;
 
-            // Auth
             document.getElementById('username').placeholder = t.username;
             document.getElementById('password').placeholder = t.password;
             document.querySelector('#loginForm button').textContent = t.login;
             document.getElementById('logoutBtn').textContent = t.logout;
 
-            // Menu
             document.getElementById('menuHome').textContent = t.home;
             document.getElementById('menuAbout').textContent = t.about;
             document.getElementById('menuGallery').textContent = t.gallery;
@@ -2100,58 +2105,48 @@
             document.getElementById('menuContact').textContent = t.contact;
             document.getElementById('menuDashboard').textContent = t.dashboard;
 
-            // Hero
             document.getElementById('heroTitle').textContent = t.heroTitle;
             document.getElementById('heroSubtitle').textContent = t.heroSubtitle;
             document.getElementById('heroText').textContent = t.heroText;
             document.getElementById('heroBtn1').textContent = t.heroBtn1;
             document.getElementById('heroBtn2').innerHTML = `<i class="fas fa-images"></i> ${t.heroBtn2}`;
 
-            // About
             document.getElementById('aboutTitle').textContent = t.aboutTitle;
             document.getElementById('aboutHistory').textContent = t.aboutHistory;
             document.getElementById('aboutText1').textContent = t.aboutText1;
             document.getElementById('aboutText2').textContent = t.aboutText2;
 
-            // Gallery
             document.getElementById('galleryTitle').textContent = t.galleryTitle;
             document.getElementById('noGalleryPublic').textContent = t.noGallery;
 
-            // Videos
             document.getElementById('videosTitle').textContent = t.videosTitle;
             document.getElementById('noVideosPublic').textContent = t.noVideos;
 
-            // Projects
             document.getElementById('projectsTitle').textContent = t.projectsTitle;
             document.getElementById('project1Title').textContent = t.project1Title;
             document.getElementById('project1Desc').textContent = t.project1Desc;
 
-            // Contact
             document.getElementById('contactTitle').textContent = t.contactTitle;
             document.getElementById('contactAddress').textContent = t.contactAddress;
             document.getElementById('contactPhone').textContent = t.contactPhone;
             document.getElementById('contactEmail').textContent = t.contactEmail;
             document.getElementById('contactLocation').textContent = t.contactLocation;
 
-            // Dashboard
             document.getElementById('dashboardTitle').textContent = t.dashboardTitle;
             document.getElementById('statVisitors').textContent = t.statVisitors;
             document.getElementById('statMedia').textContent = t.statMedia;
 
-            // Sidebar
             document.getElementById('sidebarDashboard').innerHTML = `<i class="fas fa-tachometer-alt"></i> ${t.sidebarDashboard}`;
             document.getElementById('sidebarGallery').innerHTML = `<i class="fas fa-images"></i> ${t.sidebarGallery}`;
             document.getElementById('sidebarVideos').innerHTML = `<i class="fas fa-video"></i> ${t.sidebarVideos}`;
             document.getElementById('sidebarText').innerHTML = `<i class="fas fa-file-alt"></i> ${t.sidebarText}`;
             document.getElementById('sidebarSettings').innerHTML = `<i class="fas fa-cog"></i> ${t.sidebarSettings}`;
 
-            // Dashboard sections
             document.getElementById('galleryDashboardTitle').textContent = t.galleryDashboardTitle;
             document.getElementById('videosDashboardTitle').textContent = t.videosDashboardTitle;
             document.getElementById('textDashboardTitle').textContent = t.textDashboardTitle;
             document.getElementById('settingsTitle').textContent = t.settingsTitle;
 
-            // Buttons
             document.getElementById('galleryAddBtn').innerHTML = `<i class="fas fa-cloud-upload-alt"></i> ${t.galleryAddBtn}`;
             document.getElementById('videosAddBtn').innerHTML = `<i class="fas fa-cloud-upload-alt"></i> ${t.videosAddBtn}`;
             document.getElementById('textAddBtn').innerHTML = `<i class="fas fa-file-alt"></i> ${t.textAddBtn}`;
@@ -2159,7 +2154,6 @@
             document.getElementById('settingsExportBtn').innerHTML = `<i class="fas fa-file-export"></i> ${t.settingsExportBtn}`;
             document.getElementById('settingsResetBtn').innerHTML = `<i class="fas fa-trash"></i> ${t.settingsResetBtn}`;
 
-            // Upload modal
             document.getElementById('uploadModalTitle').innerHTML = `<i class="fas fa-cloud-upload-alt"></i> ${t.uploadTitle}`;
             document.getElementById('uploadPcTitle').textContent = t.uploadFromPC;
             document.getElementById('uploadPcDesc').textContent = t.uploadFromPCDesc;
@@ -2180,14 +2174,12 @@
             document.getElementById('acceptBtn').innerHTML = `<i class="fas fa-check-circle"></i> ${t.accept}`;
             document.getElementById('validateBtn').innerHTML = `<i class="fas fa-check-double"></i> ${t.validate}`;
 
-            // Text modal
             document.getElementById('textModalTitle').innerHTML = `<i class="fas fa-file-alt"></i> ${t.textModalTitle}`;
             document.getElementById('textTitleLabel').innerHTML = `<i class="fas fa-heading"></i> ${t.textTitleLabel}`;
             document.getElementById('textContentLabel').innerHTML = `<i class="fas fa-align-left"></i> ${t.textContentLabel}`;
             document.getElementById('textCancelBtn').innerHTML = `<i class="fas fa-times"></i> ${t.textCancel}`;
             document.getElementById('textSaveBtn').innerHTML = `<i class="fas fa-save"></i> ${t.textSave}`;
 
-            // Password modal
             document.getElementById('passwordModalTitle').innerHTML = `<i class="fas fa-key"></i> ${t.passwordModalTitle}`;
             document.getElementById('currentPasswordLabel').innerHTML = `<i class="fas fa-lock"></i> ${t.currentPasswordLabel}`;
             document.getElementById('newPasswordLabel').innerHTML = `<i class="fas fa-lock"></i> ${t.newPasswordLabel}`;
@@ -2195,11 +2187,9 @@
             document.getElementById('passwordCancelBtn').innerHTML = `<i class="fas fa-times"></i> ${t.passwordCancel}`;
             document.getElementById('passwordSaveBtn').innerHTML = `<i class="fas fa-save"></i> ${t.passwordSave}`;
 
-            // Footer
             document.getElementById('footerFollow').textContent = t.footerFollow;
             document.getElementById('footerCopyright').textContent = t.footerCopyright;
 
-            // Logo
             document.getElementById('logoTitle').textContent = t.heroTitle;
             document.getElementById('logoSubtitle').textContent = t.heroSubtitle;
             document.getElementById('footerLogoTitle').textContent = t.heroTitle;
@@ -2211,18 +2201,15 @@
         // ============================================================
 
         function showSection(sectionId) {
-            // Cacher toutes les sections
             document.querySelectorAll('section').forEach(section => {
                 section.classList.remove('active');
             });
 
-            // Afficher la section cible
             const targetSection = document.getElementById(sectionId);
             if (targetSection) {
                 targetSection.classList.add('active');
             }
 
-            // Mettre à jour le menu
             document.querySelectorAll('#mainMenu a').forEach(link => {
                 link.classList.remove('active');
             });
@@ -2241,10 +2228,8 @@
                 document.getElementById(menuMap[sectionId]).classList.add('active');
             }
 
-            // Scroll en haut
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            // Charger les données si besoin
             if (sectionId === 'gallery') {
                 loadPublicGallery();
             } else if (sectionId === 'videos') {
@@ -2281,129 +2266,183 @@
         }
 
         // ============================================================
-        // ===== FONCTIONS DE CHARGEMENT =====
+        // ===== FONCTIONS SUPABASE =====
         // ============================================================
 
-        function loadPublicGallery() {
-            const images = JSON.parse(localStorage.getItem('ansfal_image') || '[]');
-            const galleryPublic = document.getElementById('publicGallery');
-            const noGallery = document.getElementById('noGalleryPublic');
-
-            if (images.length === 0) {
-                galleryPublic.innerHTML = `<div class="no-content" id="noGalleryPublic">${currentLanguage === 'fr' ? 'Aucune image disponible pour le moment.' : 'لا توجد صور متاحة حالياً.'}</div>`;
-                return;
+        async function loadPublicGallery() {
+            try {
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('*')
+                    .eq('type', 'image')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                const galleryPublic = document.getElementById('publicGallery');
+                
+                if (!data || data.length === 0) {
+                    galleryPublic.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune image disponible' : 'لا توجد صور متاحة'}</div>`;
+                    return;
+                }
+                
+                let html = '';
+                data.forEach((image, index) => {
+                    html += `
+                        <div class="gallery-public-item" onclick="viewFile('image', ${index})">
+                            <img src="${image.url}" alt="${image.name || 'Image'}" loading="lazy">
+                        </div>
+                    `;
+                });
+                galleryPublic.innerHTML = html;
+                
+                localStorage.setItem('ansfal_image', JSON.stringify(data));
+                
+            } catch (error) {
+                console.error('Erreur loadPublicGallery:', error);
             }
-
-            let html = '';
-            images.forEach((image, index) => {
-                html += `
-                    <div class="gallery-public-item" onclick="viewFile('image', ${index})">
-                        <img src="${image.url}" alt="${image.name || 'Image'}" loading="lazy">
-                    </div>
-                `;
-            });
-            galleryPublic.innerHTML = html;
         }
 
-        function loadPublicVideos() {
-            const videos = JSON.parse(localStorage.getItem('ansfal_video') || '[]');
-            const videosPublic = document.getElementById('publicVideos');
-            const noVideos = document.getElementById('noVideosPublic');
-
-            if (videos.length === 0) {
-                videosPublic.innerHTML = `<div class="no-content" id="noVideosPublic">${currentLanguage === 'fr' ? 'Aucune vidéo disponible pour le moment.' : 'لا توجد فيديوهات متاحة حالياً.'}</div>`;
-                return;
-            }
-
-            let html = '';
-            videos.forEach((video, index) => {
-                if (video.url) {
-                    if (video.url.includes('youtube.com') || video.url.includes('youtu.be')) {
-                        let videoId = '';
-                        if (video.url.includes('youtube.com/embed/')) {
-                            videoId = video.url.split('youtube.com/embed/')[1];
-                        } else if (video.url.includes('youtu.be/')) {
-                            videoId = video.url.split('youtu.be/')[1];
-                        } else if (video.url.includes('youtube.com/watch?v=')) {
-                            videoId = video.url.split('v=')[1].split('&')[0];
-                        }
-                        if (videoId) {
-                            html += `
-                                <div class="video-public-item">
-                                    <div class="youtube-embed">
-                                        <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+        async function loadPublicVideos() {
+            try {
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('*')
+                    .eq('type', 'video')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                const videosPublic = document.getElementById('publicVideos');
+                
+                if (!data || data.length === 0) {
+                    videosPublic.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune vidéo disponible' : 'لا توجد فيديوهات متاحة'}</div>`;
+                    return;
+                }
+                
+                let html = '';
+                data.forEach((video, index) => {
+                    if (video.url) {
+                        if (video.url.includes('youtube.com') || video.url.includes('youtu.be')) {
+                            let videoId = '';
+                            if (video.url.includes('youtube.com/embed/')) {
+                                videoId = video.url.split('youtube.com/embed/')[1];
+                            } else if (video.url.includes('youtu.be/')) {
+                                videoId = video.url.split('youtu.be/')[1];
+                            } else if (video.url.includes('youtube.com/watch?v=')) {
+                                videoId = video.url.split('v=')[1].split('&')[0];
+                            }
+                            if (videoId) {
+                                html += `
+                                    <div class="video-public-item">
+                                        <div class="youtube-embed">
+                                            <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+                                        </div>
                                     </div>
+                                `;
+                            }
+                        } else {
+                            html += `
+                                <div class="video-public-item" onclick="viewFile('video', ${index})">
+                                    <video style="width: 100%; height: 100%; object-fit: cover;">
+                                        <source src="${video.url}" type="video/mp4">
+                                    </video>
                                 </div>
                             `;
                         }
-                    } else {
-                        html += `
-                            <div class="video-public-item" onclick="viewFile('video', ${index})">
-                                <video style="width: 100%; height: 100%; object-fit: cover;">
-                                    <source src="${video.url}" type="video/mp4">
-                                </video>
-                            </div>
-                        `;
                     }
+                });
+                videosPublic.innerHTML = html;
+                
+                localStorage.setItem('ansfal_video', JSON.stringify(data));
+                
+            } catch (error) {
+                console.error('Erreur loadPublicVideos:', error);
+            }
+        }
+
+        async function loadGalleryDashboard() {
+            try {
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('*')
+                    .eq('type', 'image')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                const galleryList = document.getElementById('galleryList');
+                
+                if (!data || data.length === 0) {
+                    galleryList.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune image' : 'لا توجد صور'}</div>`;
+                    return;
                 }
-            });
-            videosPublic.innerHTML = html;
+                
+                let html = '';
+                data.forEach((image, index) => {
+                    html += `
+                        <div class="dashboard-item">
+                            <div class="item-icon"><i class="fas fa-image"></i></div>
+                            <div class="item-info">
+                                <h4>${image.name || 'Image ' + (index + 1)}</h4>
+                                <small>${image.format || ''} • ${new Date(image.created_at).toLocaleDateString()}</small>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn-action view" onclick="viewFile('image', ${index})"><i class="fas fa-eye"></i></button>
+                                <button class="btn-action delete" onclick="deleteFile('image', ${index})"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+                galleryList.innerHTML = html;
+                
+                localStorage.setItem('ansfal_image', JSON.stringify(data));
+                
+            } catch (error) {
+                console.error('Erreur loadGalleryDashboard:', error);
+            }
         }
 
-        function loadGalleryDashboard() {
-            const images = JSON.parse(localStorage.getItem('ansfal_image') || '[]');
-            const galleryList = document.getElementById('galleryList');
-
-            if (images.length === 0) {
-                galleryList.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune image' : 'لا توجد صور'}</div>`;
-                return;
+        async function loadVideosDashboard() {
+            try {
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('*')
+                    .eq('type', 'video')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                const videosList = document.getElementById('videosList');
+                
+                if (!data || data.length === 0) {
+                    videosList.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune vidéo' : 'لا توجد فيديوهات'}</div>`;
+                    return;
+                }
+                
+                let html = '';
+                data.forEach((video, index) => {
+                    html += `
+                        <div class="dashboard-item">
+                            <div class="item-icon"><i class="fas fa-video"></i></div>
+                            <div class="item-info">
+                                <h4>${video.name || 'Vidéo ' + (index + 1)}</h4>
+                                <small>${video.format || ''} • ${new Date(video.created_at).toLocaleDateString()}</small>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn-action view" onclick="viewFile('video', ${index})"><i class="fas fa-eye"></i></button>
+                                <button class="btn-action delete" onclick="deleteFile('video', ${index})"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+                videosList.innerHTML = html;
+                
+                localStorage.setItem('ansfal_video', JSON.stringify(data));
+                
+            } catch (error) {
+                console.error('Erreur loadVideosDashboard:', error);
             }
-
-            let html = '';
-            images.forEach((image, index) => {
-                html += `
-                    <div class="dashboard-item">
-                        <div class="item-icon"><i class="fas fa-image"></i></div>
-                        <div class="item-info">
-                            <h4>${image.name || 'Image ' + (index + 1)}</h4>
-                            <small>${image.format || ''} • ${new Date(image.created_at || Date.now()).toLocaleDateString()}</small>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn-action view" onclick="viewFile('image', ${index})"><i class="fas fa-eye"></i></button>
-                            <button class="btn-action delete" onclick="deleteFile('image', ${index})"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            });
-            galleryList.innerHTML = html;
-        }
-
-        function loadVideosDashboard() {
-            const videos = JSON.parse(localStorage.getItem('ansfal_video') || '[]');
-            const videosList = document.getElementById('videosList');
-
-            if (videos.length === 0) {
-                videosList.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune vidéo' : 'لا توجد فيديوهات'}</div>`;
-                return;
-            }
-
-            let html = '';
-            videos.forEach((video, index) => {
-                html += `
-                    <div class="dashboard-item">
-                        <div class="item-icon"><i class="fas fa-video"></i></div>
-                        <div class="item-info">
-                            <h4>${video.name || 'Vidéo ' + (index + 1)}</h4>
-                            <small>${video.format || ''} • ${new Date(video.created_at || Date.now()).toLocaleDateString()}</small>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn-action view" onclick="viewFile('video', ${index})"><i class="fas fa-eye"></i></button>
-                            <button class="btn-action delete" onclick="deleteFile('video', ${index})"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            });
-            videosList.innerHTML = html;
         }
 
         function loadTextDashboard() {
@@ -2510,21 +2549,44 @@
         // ===== FONCTIONS DELETE =====
         // ============================================================
 
-        function deleteFile(type, index) {
+        async function deleteFile(type, index) {
             if (!confirm(currentLanguage === 'fr' ? 'Supprimer ce fichier ?' : 'حذف هذا الملف؟')) return;
-
-            const files = JSON.parse(localStorage.getItem(`ansfal_${type}`) || '[]');
-            files.splice(index, 1);
-            localStorage.setItem(`ansfal_${type}`, JSON.stringify(files));
-
-            if (type === 'image') {
-                loadGalleryDashboard();
-                loadPublicGallery();
-            } else if (type === 'video') {
-                loadVideosDashboard();
-                loadPublicVideos();
+            
+            try {
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('*')
+                    .eq('type', type);
+                
+                if (error) throw error;
+                
+                if (!data || data.length === 0) return;
+                
+                const fileToDelete = data[index];
+                if (!fileToDelete) return;
+                
+                const { error: deleteError } = await supabase
+                    .from('media')
+                    .delete()
+                    .eq('id', fileToDelete.id);
+                
+                if (deleteError) throw deleteError;
+                
+                showAlert(currentLanguage === 'fr' ? 'Fichier supprimé' : 'تم حذف الملف', 'success');
+                
+                if (type === 'image') {
+                    await loadGalleryDashboard();
+                    await loadPublicGallery();
+                } else if (type === 'video') {
+                    await loadVideosDashboard();
+                    await loadPublicVideos();
+                }
+                await updateStats();
+                
+            } catch (error) {
+                console.error('Erreur suppression:', error);
+                showAlert('Erreur lors de la suppression', 'error');
             }
-            updateStats();
         }
 
         function deleteText(index) {
@@ -2700,29 +2762,49 @@
             }, 100);
         }
 
-        function finishUpload() {
-            const existing = JSON.parse(localStorage.getItem(`ansfal_${currentUploadType}`) || '[]');
+        async function finishUpload() {
             const newFiles = selectedFiles.map(f => ({
                 url: f.url || URL.createObjectURL(f),
                 name: f.name || f.url,
                 format: f.name ? f.name.split('.').pop() : 'url',
+                type: currentUploadType,
                 created_at: new Date().toISOString()
             }));
-            const all = [...existing, ...newFiles];
-            localStorage.setItem(`ansfal_${currentUploadType}`, JSON.stringify(all));
-
+            
+            for (const file of newFiles) {
+                try {
+                    const { data, error } = await supabase
+                        .from('media')
+                        .insert([file]);
+                    
+                    if (error) {
+                        console.error('Erreur insertion:', error);
+                        showAlert('Erreur lors de l\'upload', 'error');
+                        document.getElementById('validateBtn').disabled = false;
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Erreur:', error);
+                    showAlert('Erreur: ' + error.message, 'error');
+                    document.getElementById('validateBtn').disabled = false;
+                    return;
+                }
+            }
+            
             document.getElementById('uploadProgress').style.display = 'none';
             document.getElementById('uploadSuccess').style.display = 'block';
             document.getElementById('actionButtons').style.display = 'none';
-
+            
             if (currentUploadType === 'image') {
-                loadGalleryDashboard();
-                loadPublicGallery();
+                await loadGalleryDashboard();
+                await loadPublicGallery();
             } else if (currentUploadType === 'video') {
-                loadVideosDashboard();
-                loadPublicVideos();
+                await loadVideosDashboard();
+                await loadPublicVideos();
             }
-            updateStats();
+            await updateStats();
+            
+            document.getElementById('validateBtn').disabled = false;
         }
 
         function saveTextContent() {
@@ -2839,11 +2921,23 @@
             showAlert(currentLanguage === 'fr' ? 'Données effacées' : 'تم حذف البيانات', 'success');
         }
 
-        function updateStats() {
-            const images = JSON.parse(localStorage.getItem('ansfal_image') || '[]');
-            const videos = JSON.parse(localStorage.getItem('ansfal_video') || '[]');
-            const texts = JSON.parse(localStorage.getItem('ansfal_text') || '[]');
-            document.getElementById('totalMediaStat').textContent = images.length + videos.length + texts.length;
+        async function updateStats() {
+            try {
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('type');
+                
+                if (error) throw error;
+                
+                const images = data?.filter(m => m.type === 'image') || [];
+                const videos = data?.filter(m => m.type === 'video') || [];
+                const texts = JSON.parse(localStorage.getItem('ansfal_text') || '[]');
+                
+                document.getElementById('totalMediaStat').textContent = images.length + videos.length + texts.length;
+                
+            } catch (error) {
+                console.error('Erreur updateStats:', error);
+            }
         }
 
         function showAlert(message, type = 'info') {
@@ -2875,13 +2969,11 @@
                 } catch (e) {}
             }
 
-            // WhatsApp
             document.getElementById('whatsappBtn').href = 'https://wa.me/212612345678?text=' + encodeURIComponent(
                 currentLanguage === 'fr' ? 'Bonjour, je souhaite des informations sur ANSFAL' :
                 'مرحباً، أود الحصول على معلومات حول جمعية أنسفال'
             );
 
-            // Bouton ajout
             document.getElementById('addBtn').addEventListener('click', function() {
                 if (currentUser) {
                     showUploadModal('image');
@@ -2894,7 +2986,6 @@
             loadPublicVideos();
             updateStats();
             
-            // Afficher la section home par défaut
             showSection('home');
         });
     </script>
