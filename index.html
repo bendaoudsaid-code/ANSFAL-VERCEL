@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         /* ==================== STYLES ==================== */
         :root {
@@ -1834,6 +1835,13 @@
 
     <script>
         // ============================================================
+        // ===== CONFIGURATION SUPABASE =====
+        // ============================================================
+        const SUPABASE_URL = 'https://kyjjblstxbdkjpzgnvna.supabase.co';
+        const SUPABASE_KEY = 'kyjjblstxbdkjpzgnvna';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // ============================================================
         // ===== VARIABLES GLOBALES =====
         // ============================================================
         let currentUser = null;
@@ -2281,129 +2289,183 @@
         }
 
         // ============================================================
-        // ===== FONCTIONS DE CHARGEMENT =====
+        // ===== FONCTIONS SUPABASE =====
         // ============================================================
 
-        function loadPublicGallery() {
-            const images = JSON.parse(localStorage.getItem('ansfal_image') || '[]');
-            const galleryPublic = document.getElementById('publicGallery');
-            const noGallery = document.getElementById('noGalleryPublic');
-
-            if (images.length === 0) {
-                galleryPublic.innerHTML = `<div class="no-content" id="noGalleryPublic">${currentLanguage === 'fr' ? 'Aucune image disponible pour le moment.' : 'لا توجد صور متاحة حالياً.'}</div>`;
-                return;
+        async function loadPublicGallery() {
+            try {
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('*')
+                    .eq('type', 'image')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                const galleryPublic = document.getElementById('publicGallery');
+                
+                if (!data || data.length === 0) {
+                    galleryPublic.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune image disponible' : 'لا توجد صور متاحة'}</div>`;
+                    return;
+                }
+                
+                let html = '';
+                data.forEach((image, index) => {
+                    html += `
+                        <div class="gallery-public-item" onclick="viewFile('image', ${index})">
+                            <img src="${image.url}" alt="${image.name || 'Image'}" loading="lazy">
+                        </div>
+                    `;
+                });
+                galleryPublic.innerHTML = html;
+                
+                localStorage.setItem('ansfal_image', JSON.stringify(data));
+                
+            } catch (error) {
+                console.error('Erreur loadPublicGallery:', error);
             }
-
-            let html = '';
-            images.forEach((image, index) => {
-                html += `
-                    <div class="gallery-public-item" onclick="viewFile('image', ${index})">
-                        <img src="${image.url}" alt="${image.name || 'Image'}" loading="lazy">
-                    </div>
-                `;
-            });
-            galleryPublic.innerHTML = html;
         }
 
-        function loadPublicVideos() {
-            const videos = JSON.parse(localStorage.getItem('ansfal_video') || '[]');
-            const videosPublic = document.getElementById('publicVideos');
-            const noVideos = document.getElementById('noVideosPublic');
-
-            if (videos.length === 0) {
-                videosPublic.innerHTML = `<div class="no-content" id="noVideosPublic">${currentLanguage === 'fr' ? 'Aucune vidéo disponible pour le moment.' : 'لا توجد فيديوهات متاحة حالياً.'}</div>`;
-                return;
-            }
-
-            let html = '';
-            videos.forEach((video, index) => {
-                if (video.url) {
-                    if (video.url.includes('youtube.com') || video.url.includes('youtu.be')) {
-                        let videoId = '';
-                        if (video.url.includes('youtube.com/embed/')) {
-                            videoId = video.url.split('youtube.com/embed/')[1];
-                        } else if (video.url.includes('youtu.be/')) {
-                            videoId = video.url.split('youtu.be/')[1];
-                        } else if (video.url.includes('youtube.com/watch?v=')) {
-                            videoId = video.url.split('v=')[1].split('&')[0];
-                        }
-                        if (videoId) {
-                            html += `
-                                <div class="video-public-item">
-                                    <div class="youtube-embed">
-                                        <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+        async function loadPublicVideos() {
+            try {
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('*')
+                    .eq('type', 'video')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                const videosPublic = document.getElementById('publicVideos');
+                
+                if (!data || data.length === 0) {
+                    videosPublic.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune vidéo disponible' : 'لا توجد فيديوهات متاحة'}</div>`;
+                    return;
+                }
+                
+                let html = '';
+                data.forEach((video, index) => {
+                    if (video.url) {
+                        if (video.url.includes('youtube.com') || video.url.includes('youtu.be')) {
+                            let videoId = '';
+                            if (video.url.includes('youtube.com/embed/')) {
+                                videoId = video.url.split('youtube.com/embed/')[1];
+                            } else if (video.url.includes('youtu.be/')) {
+                                videoId = video.url.split('youtu.be/')[1];
+                            } else if (video.url.includes('youtube.com/watch?v=')) {
+                                videoId = video.url.split('v=')[1].split('&')[0];
+                            }
+                            if (videoId) {
+                                html += `
+                                    <div class="video-public-item">
+                                        <div class="youtube-embed">
+                                            <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+                                        </div>
                                     </div>
+                                `;
+                            }
+                        } else {
+                            html += `
+                                <div class="video-public-item" onclick="viewFile('video', ${index})">
+                                    <video style="width: 100%; height: 100%; object-fit: cover;">
+                                        <source src="${video.url}" type="video/mp4">
+                                    </video>
                                 </div>
                             `;
                         }
-                    } else {
-                        html += `
-                            <div class="video-public-item" onclick="viewFile('video', ${index})">
-                                <video style="width: 100%; height: 100%; object-fit: cover;">
-                                    <source src="${video.url}" type="video/mp4">
-                                </video>
-                            </div>
-                        `;
                     }
+                });
+                videosPublic.innerHTML = html;
+                
+                localStorage.setItem('ansfal_video', JSON.stringify(data));
+                
+            } catch (error) {
+                console.error('Erreur loadPublicVideos:', error);
+            }
+        }
+
+        async function loadGalleryDashboard() {
+            try {
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('*')
+                    .eq('type', 'image')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                const galleryList = document.getElementById('galleryList');
+                
+                if (!data || data.length === 0) {
+                    galleryList.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune image' : 'لا توجد صور'}</div>`;
+                    return;
                 }
-            });
-            videosPublic.innerHTML = html;
+                
+                let html = '';
+                data.forEach((image, index) => {
+                    html += `
+                        <div class="dashboard-item">
+                            <div class="item-icon"><i class="fas fa-image"></i></div>
+                            <div class="item-info">
+                                <h4>${image.name || 'Image ' + (index + 1)}</h4>
+                                <small>${image.format || ''} • ${new Date(image.created_at).toLocaleDateString()}</small>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn-action view" onclick="viewFile('image', ${index})"><i class="fas fa-eye"></i></button>
+                                <button class="btn-action delete" onclick="deleteFile('image', ${index})"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+                galleryList.innerHTML = html;
+                
+                localStorage.setItem('ansfal_image', JSON.stringify(data));
+                
+            } catch (error) {
+                console.error('Erreur loadGalleryDashboard:', error);
+            }
         }
 
-        function loadGalleryDashboard() {
-            const images = JSON.parse(localStorage.getItem('ansfal_image') || '[]');
-            const galleryList = document.getElementById('galleryList');
-
-            if (images.length === 0) {
-                galleryList.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune image' : 'لا توجد صور'}</div>`;
-                return;
+        async function loadVideosDashboard() {
+            try {
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('*')
+                    .eq('type', 'video')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                const videosList = document.getElementById('videosList');
+                
+                if (!data || data.length === 0) {
+                    videosList.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune vidéo' : 'لا توجد فيديوهات'}</div>`;
+                    return;
+                }
+                
+                let html = '';
+                data.forEach((video, index) => {
+                    html += `
+                        <div class="dashboard-item">
+                            <div class="item-icon"><i class="fas fa-video"></i></div>
+                            <div class="item-info">
+                                <h4>${video.name || 'Vidéo ' + (index + 1)}</h4>
+                                <small>${video.format || ''} • ${new Date(video.created_at).toLocaleDateString()}</small>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn-action view" onclick="viewFile('video', ${index})"><i class="fas fa-eye"></i></button>
+                                <button class="btn-action delete" onclick="deleteFile('video', ${index})"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+                videosList.innerHTML = html;
+                
+                localStorage.setItem('ansfal_video', JSON.stringify(data));
+                
+            } catch (error) {
+                console.error('Erreur loadVideosDashboard:', error);
             }
-
-            let html = '';
-            images.forEach((image, index) => {
-                html += `
-                    <div class="dashboard-item">
-                        <div class="item-icon"><i class="fas fa-image"></i></div>
-                        <div class="item-info">
-                            <h4>${image.name || 'Image ' + (index + 1)}</h4>
-                            <small>${image.format || ''} • ${new Date(image.created_at || Date.now()).toLocaleDateString()}</small>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn-action view" onclick="viewFile('image', ${index})"><i class="fas fa-eye"></i></button>
-                            <button class="btn-action delete" onclick="deleteFile('image', ${index})"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            });
-            galleryList.innerHTML = html;
-        }
-
-        function loadVideosDashboard() {
-            const videos = JSON.parse(localStorage.getItem('ansfal_video') || '[]');
-            const videosList = document.getElementById('videosList');
-
-            if (videos.length === 0) {
-                videosList.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune vidéo' : 'لا توجد فيديوهات'}</div>`;
-                return;
-            }
-
-            let html = '';
-            videos.forEach((video, index) => {
-                html += `
-                    <div class="dashboard-item">
-                        <div class="item-icon"><i class="fas fa-video"></i></div>
-                        <div class="item-info">
-                            <h4>${video.name || 'Vidéo ' + (index + 1)}</h4>
-                            <small>${video.format || ''} • ${new Date(video.created_at || Date.now()).toLocaleDateString()}</small>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn-action view" onclick="viewFile('video', ${index})"><i class="fas fa-eye"></i></button>
-                            <button class="btn-action delete" onclick="deleteFile('video', ${index})"><i class="fas fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            });
-            videosList.innerHTML = html;
         }
 
         function loadTextDashboard() {
@@ -2510,21 +2572,44 @@
         // ===== FONCTIONS DELETE =====
         // ============================================================
 
-        function deleteFile(type, index) {
+        async function deleteFile(type, index) {
             if (!confirm(currentLanguage === 'fr' ? 'Supprimer ce fichier ?' : 'حذف هذا الملف؟')) return;
-
-            const files = JSON.parse(localStorage.getItem(`ansfal_${type}`) || '[]');
-            files.splice(index, 1);
-            localStorage.setItem(`ansfal_${type}`, JSON.stringify(files));
-
-            if (type === 'image') {
-                loadGalleryDashboard();
-                loadPublicGallery();
-            } else if (type === 'video') {
-                loadVideosDashboard();
-                loadPublicVideos();
+            
+            try {
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('*')
+                    .eq('type', type);
+                
+                if (error) throw error;
+                
+                if (!data || data.length === 0) return;
+                
+                const fileToDelete = data[index];
+                if (!fileToDelete) return;
+                
+                const { error: deleteError } = await supabase
+                    .from('media')
+                    .delete()
+                    .eq('id', fileToDelete.id);
+                
+                if (deleteError) throw deleteError;
+                
+                showAlert(currentLanguage === 'fr' ? 'Fichier supprimé' : 'تم حذف الملف', 'success');
+                
+                if (type === 'image') {
+                    await loadGalleryDashboard();
+                    await loadPublicGallery();
+                } else if (type === 'video') {
+                    await loadVideosDashboard();
+                    await loadPublicVideos();
+                }
+                await updateStats();
+                
+            } catch (error) {
+                console.error('Erreur suppression:', error);
+                showAlert('Erreur lors de la suppression', 'error');
             }
-            updateStats();
         }
 
         function deleteText(index) {
@@ -2700,29 +2785,49 @@
             }, 100);
         }
 
-        function finishUpload() {
-            const existing = JSON.parse(localStorage.getItem(`ansfal_${currentUploadType}`) || '[]');
+        async function finishUpload() {
             const newFiles = selectedFiles.map(f => ({
                 url: f.url || URL.createObjectURL(f),
                 name: f.name || f.url,
                 format: f.name ? f.name.split('.').pop() : 'url',
+                type: currentUploadType,
                 created_at: new Date().toISOString()
             }));
-            const all = [...existing, ...newFiles];
-            localStorage.setItem(`ansfal_${currentUploadType}`, JSON.stringify(all));
-
+            
+            for (const file of newFiles) {
+                try {
+                    const { data, error } = await supabase
+                        .from('media')
+                        .insert([file]);
+                    
+                    if (error) {
+                        console.error('Erreur insertion:', error);
+                        showAlert('Erreur lors de l\'upload', 'error');
+                        document.getElementById('validateBtn').disabled = false;
+                        return;
+                    }
+                } catch (error) {
+                    console.error('Erreur:', error);
+                    showAlert('Erreur: ' + error.message, 'error');
+                    document.getElementById('validateBtn').disabled = false;
+                    return;
+                }
+            }
+            
             document.getElementById('uploadProgress').style.display = 'none';
             document.getElementById('uploadSuccess').style.display = 'block';
             document.getElementById('actionButtons').style.display = 'none';
-
+            
             if (currentUploadType === 'image') {
-                loadGalleryDashboard();
-                loadPublicGallery();
+                await loadGalleryDashboard();
+                await loadPublicGallery();
             } else if (currentUploadType === 'video') {
-                loadVideosDashboard();
-                loadPublicVideos();
+                await loadVideosDashboard();
+                await loadPublicVideos();
             }
-            updateStats();
+            await updateStats();
+            
+            document.getElementById('validateBtn').disabled = false;
         }
 
         function saveTextContent() {
@@ -2839,11 +2944,23 @@
             showAlert(currentLanguage === 'fr' ? 'Données effacées' : 'تم حذف البيانات', 'success');
         }
 
-        function updateStats() {
-            const images = JSON.parse(localStorage.getItem('ansfal_image') || '[]');
-            const videos = JSON.parse(localStorage.getItem('ansfal_video') || '[]');
-            const texts = JSON.parse(localStorage.getItem('ansfal_text') || '[]');
-            document.getElementById('totalMediaStat').textContent = images.length + videos.length + texts.length;
+        async function updateStats() {
+            try {
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('type');
+                
+                if (error) throw error;
+                
+                const images = data?.filter(m => m.type === 'image') || [];
+                const videos = data?.filter(m => m.type === 'video') || [];
+                const texts = JSON.parse(localStorage.getItem('ansfal_text') || '[]');
+                
+                document.getElementById('totalMediaStat').textContent = images.length + videos.length + texts.length;
+                
+            } catch (error) {
+                console.error('Erreur updateStats:', error);
+            }
         }
 
         function showAlert(message, type = 'info') {
@@ -2875,13 +2992,11 @@
                 } catch (e) {}
             }
 
-            // WhatsApp
             document.getElementById('whatsappBtn').href = 'https://wa.me/212612345678?text=' + encodeURIComponent(
                 currentLanguage === 'fr' ? 'Bonjour, je souhaite des informations sur ANSFAL' :
                 'مرحباً، أود الحصول على معلومات حول جمعية أنسفال'
             );
 
-            // Bouton ajout
             document.getElementById('addBtn').addEventListener('click', function() {
                 if (currentUser) {
                     showUploadModal('image');
@@ -2894,7 +3009,6 @@
             loadPublicVideos();
             updateStats();
             
-            // Afficher la section home par défaut
             showSection('home');
         });
     </script>
