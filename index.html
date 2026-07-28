@@ -35,7 +35,300 @@
             padding: 0;
             box-sizing: border-box;
         }
+<script>
+// ============================================================
+// ===== FIX COMPLET - ARABE + LOGIN =====
+// ============================================================
 
+// === CORRECTION DES MENUS ===
+// Remplacer la fonction showSection existante
+function showSection(sectionId, event) {
+    if (event) {
+        event.preventDefault();
+    }
+    
+    // Cacher toutes les sections
+    document.querySelectorAll('section').forEach(section => {
+        section.classList.remove('active');
+    });
+
+    // Afficher la section cible
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.classList.add('active');
+    }
+
+    // Mettre à jour le menu
+    document.querySelectorAll('#mainMenu a').forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    const menuMap = {
+        'home': 'menuHome',
+        'about': 'menuAbout',
+        'gallery': 'menuGallery',
+        'videos': 'menuVideos',
+        'projects': 'menuProjects',
+        'contact': 'menuContact',
+        'dashboard': 'menuDashboard'
+    };
+    
+    if (menuMap[sectionId]) {
+        document.getElementById(menuMap[sectionId]).classList.add('active');
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (sectionId === 'gallery') {
+        if (typeof loadPublicGallery === 'function') loadPublicGallery();
+    } else if (sectionId === 'videos') {
+        if (typeof loadPublicVideos === 'function') loadPublicVideos();
+    } else if (sectionId === 'dashboard') {
+        if (typeof showDashboardSection === 'function') showDashboardSection('dashboard');
+    }
+}
+
+// === CORRECTION DU CHANGEMENT DE LANGUE ===
+function changeLanguage(lang) {
+    // Mettre à jour la variable
+    currentLanguage = lang;
+    localStorage.setItem('ansfal_language', lang);
+
+    // Mettre à jour les boutons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    if (lang === 'fr') {
+        document.getElementById('langFrBtn').classList.add('active');
+    } else {
+        document.getElementById('langArBtn').classList.add('active');
+    }
+
+    // RTL
+    if (lang === 'ar') {
+        document.body.classList.add('rtl');
+    } else {
+        document.body.classList.remove('rtl');
+    }
+
+    // Traduire
+    translatePage(lang);
+}
+
+// === CORRECTION DU LOGIN ===
+function login() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    if (username === 'admin' && password === '123456') {
+        currentUser = { username: 'admin', name: 'Administrateur', role: 'admin' };
+        localStorage.setItem('ansfal_user', JSON.stringify(currentUser));
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('userInfo').classList.remove('hidden');
+        document.getElementById('userName').textContent = 'Administrateur';
+        document.getElementById('userRole').textContent = 'Admin';
+        document.body.classList.add('admin-mode');
+        document.getElementById('addBtn').style.display = 'flex';
+        showAlert(
+            currentLanguage === 'fr' ? 'Connexion réussie !' : 'تم تسجيل الدخول بنجاح !',
+            'success'
+        );
+        // Recharger la langue
+        changeLanguage(currentLanguage);
+    } else {
+        showAlert(
+            currentLanguage === 'fr' ? 'Identifiants incorrects' : 'بيانات الدخول غير صحيحة',
+            'error'
+        );
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+    }
+}
+
+// === CORRECTION DE TRANSLATEPAGE ===
+function translatePage(lang) {
+    const t = translations[lang];
+    if (!t) return;
+
+    // Compteur
+    document.getElementById('visitorsLabel').innerHTML = `${t.visitors}: <span class="visitor-count" id="totalVisitors">0</span>`;
+    document.getElementById('onlineLabel').innerHTML = `${t.online}: <span class="visitor-count" id="onlineVisitors">0</span>`;
+    document.getElementById('lastVisitLabel').innerHTML = `${t.lastVisit}: <span id="lastVisit">--/--/---- --:--:--</span>`;
+
+    // Auth
+    document.getElementById('username').placeholder = t.username;
+    document.getElementById('password').placeholder = t.password;
+    document.querySelector('#loginForm button').textContent = t.login;
+    document.getElementById('logoutBtn').textContent = t.logout;
+
+    // Menu principal
+    document.getElementById('menuHome').textContent = t.home;
+    document.getElementById('menuAbout').textContent = t.about;
+    document.getElementById('menuGallery').textContent = t.gallery;
+    document.getElementById('menuVideos').textContent = t.videos;
+    document.getElementById('menuProjects').textContent = t.projects;
+    document.getElementById('menuContact').textContent = t.contact;
+    document.getElementById('menuDashboard').textContent = t.dashboard;
+
+    // Hero
+    document.getElementById('heroTitle').textContent = t.heroTitle;
+    document.getElementById('heroSubtitle').textContent = t.heroSubtitle;
+    document.getElementById('heroText').textContent = t.heroText;
+    document.getElementById('heroBtn1').textContent = t.heroBtn1;
+    document.getElementById('heroBtn2').innerHTML = `<i class="fas fa-images"></i> ${t.heroBtn2}`;
+
+    // About
+    document.getElementById('aboutTitle').textContent = t.aboutTitle;
+    document.getElementById('aboutHistory').textContent = t.aboutHistory;
+    document.getElementById('aboutText1').textContent = t.aboutText1;
+    document.getElementById('aboutText2').textContent = t.aboutText2;
+
+    // Gallery
+    document.getElementById('galleryTitle').textContent = t.galleryTitle;
+    document.getElementById('noGalleryPublic').textContent = t.noGallery;
+
+    // Videos
+    document.getElementById('videosTitle').textContent = t.videosTitle;
+    document.getElementById('noVideosPublic').textContent = t.noVideos;
+
+    // Projects
+    document.getElementById('projectsTitle').textContent = t.projectsTitle;
+    document.getElementById('project1Title').textContent = t.project1Title;
+    document.getElementById('project1Desc').textContent = t.project1Desc;
+
+    // Contact
+    document.getElementById('contactTitle').textContent = t.contactTitle;
+    document.getElementById('contactAddress').textContent = t.contactAddress;
+    document.getElementById('contactPhone').textContent = t.contactPhone;
+    document.getElementById('contactEmail').textContent = t.contactEmail;
+    document.getElementById('contactLocation').textContent = t.contactLocation;
+
+    // Dashboard
+    document.getElementById('dashboardTitle').textContent = t.dashboardTitle;
+    document.getElementById('statVisitors').textContent = t.statVisitors;
+    document.getElementById('statMedia').textContent = t.statMedia;
+
+    // Sidebar
+    document.getElementById('sidebarDashboard').innerHTML = `<i class="fas fa-tachometer-alt"></i> ${t.sidebarDashboard}`;
+    document.getElementById('sidebarGallery').innerHTML = `<i class="fas fa-images"></i> ${t.sidebarGallery}`;
+    document.getElementById('sidebarVideos').innerHTML = `<i class="fas fa-video"></i> ${t.sidebarVideos}`;
+    document.getElementById('sidebarText').innerHTML = `<i class="fas fa-file-alt"></i> ${t.sidebarText}`;
+    document.getElementById('sidebarSettings').innerHTML = `<i class="fas fa-cog"></i> ${t.sidebarSettings}`;
+
+    // Dashboard sections
+    document.getElementById('galleryDashboardTitle').textContent = t.galleryDashboardTitle;
+    document.getElementById('videosDashboardTitle').textContent = t.videosDashboardTitle;
+    document.getElementById('textDashboardTitle').textContent = t.textDashboardTitle;
+    document.getElementById('settingsTitle').textContent = t.settingsTitle;
+
+    // Buttons dashboard
+    document.getElementById('galleryAddBtn').innerHTML = `<i class="fas fa-cloud-upload-alt"></i> ${t.galleryAddBtn}`;
+    document.getElementById('videosAddBtn').innerHTML = `<i class="fas fa-cloud-upload-alt"></i> ${t.videosAddBtn}`;
+    document.getElementById('textAddBtn').innerHTML = `<i class="fas fa-file-alt"></i> ${t.textAddBtn}`;
+    document.getElementById('settingsPasswordBtn').innerHTML = `<i class="fas fa-key"></i> ${t.settingsPasswordBtn}`;
+    document.getElementById('settingsExportBtn').innerHTML = `<i class="fas fa-file-export"></i> ${t.settingsExportBtn}`;
+    document.getElementById('settingsResetBtn').innerHTML = `<i class="fas fa-trash"></i> ${t.settingsResetBtn}`;
+
+    // Upload modal
+    document.getElementById('uploadModalTitle').innerHTML = `<i class="fas fa-cloud-upload-alt"></i> ${t.uploadTitle}`;
+    document.getElementById('uploadPcTitle').textContent = t.uploadFromPC;
+    document.getElementById('uploadPcDesc').textContent = t.uploadFromPCDesc;
+    document.getElementById('uploadUrlTitle').textContent = t.uploadFromURL;
+    document.getElementById('uploadUrlDesc').textContent = t.uploadFromURLDesc;
+    document.getElementById('urlInputLabel').textContent = t.urlInputLabel;
+    document.getElementById('urlExamples').innerHTML = t.urlExamples.replace(/\n/g, '<br>');
+    document.getElementById('mediaTitleLabel').textContent = t.mediaTitleLabel;
+    document.getElementById('addUrlBtn').innerHTML = `<i class="fas fa-plus"></i> ${t.addUrlButton}`;
+    document.getElementById('uploadAreaText').textContent = t.dragDrop;
+    document.getElementById('uploadAreaSubtext').textContent = t.orClick;
+    document.getElementById('browseBtn').innerHTML = `<i class="fas fa-folder-open"></i> ${t.browseFiles}`;
+    document.getElementById('previewTitle').textContent = t.selectedFiles;
+    document.getElementById('noFiles').textContent = t.noFilesSelected;
+    document.getElementById('uploadingText').textContent = t.uploading;
+    document.getElementById('cancelBtn').innerHTML = `<i class="fas fa-times"></i> ${t.cancel}`;
+    document.getElementById('okBtn').innerHTML = `<i class="fas fa-check"></i> ${t.ok}`;
+    document.getElementById('acceptBtn').innerHTML = `<i class="fas fa-check-circle"></i> ${t.accept}`;
+    document.getElementById('validateBtn').innerHTML = `<i class="fas fa-check-double"></i> ${t.validate}`;
+
+    // Text modal
+    document.getElementById('textModalTitle').innerHTML = `<i class="fas fa-file-alt"></i> ${t.textModalTitle}`;
+    document.getElementById('textTitleLabel').innerHTML = `<i class="fas fa-heading"></i> ${t.textTitleLabel}`;
+    document.getElementById('textContentLabel').innerHTML = `<i class="fas fa-align-left"></i> ${t.textContentLabel}`;
+    document.getElementById('textCancelBtn').innerHTML = `<i class="fas fa-times"></i> ${t.textCancel}`;
+    document.getElementById('textSaveBtn').innerHTML = `<i class="fas fa-save"></i> ${t.textSave}`;
+
+    // Password modal
+    document.getElementById('passwordModalTitle').innerHTML = `<i class="fas fa-key"></i> ${t.passwordModalTitle}`;
+    document.getElementById('currentPasswordLabel').innerHTML = `<i class="fas fa-lock"></i> ${t.currentPasswordLabel}`;
+    document.getElementById('newPasswordLabel').innerHTML = `<i class="fas fa-lock"></i> ${t.newPasswordLabel}`;
+    document.getElementById('confirmPasswordLabel').innerHTML = `<i class="fas fa-lock"></i> ${t.confirmPasswordLabel}`;
+    document.getElementById('passwordCancelBtn').innerHTML = `<i class="fas fa-times"></i> ${t.passwordCancel}`;
+    document.getElementById('passwordSaveBtn').innerHTML = `<i class="fas fa-save"></i> ${t.passwordSave}`;
+
+    // Footer
+    document.getElementById('footerFollow').textContent = t.footerFollow;
+    document.getElementById('footerCopyright').textContent = t.footerCopyright;
+
+    // Logo
+    document.getElementById('logoTitle').textContent = t.heroTitle;
+    document.getElementById('logoSubtitle').textContent = t.heroSubtitle;
+    document.getElementById('footerLogoTitle').textContent = t.heroTitle;
+    document.getElementById('footerLogoSubtitle').textContent = t.heroSubtitle;
+}
+
+// === S'assurer que les boutons de langue fonctionnent ===
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialiser la langue depuis localStorage
+    const savedLang = localStorage.getItem('ansfal_language') || 'fr';
+    if (typeof changeLanguage === 'function') {
+        changeLanguage(savedLang);
+    }
+
+    // S'assurer que les boutons de langue fonctionnent
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const lang = this.getAttribute('onclick').match(/'([^']+)'/);
+            if (lang) {
+                if (typeof changeLanguage === 'function') {
+                    changeLanguage(lang[1]);
+                }
+            }
+        });
+    });
+
+    // S'assurer que le login fonctionne
+    const loginBtn = document.querySelector('#loginForm button');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (typeof login === 'function') {
+                login();
+            }
+        });
+    }
+
+    // S'assurer que le logout fonctionne
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (typeof logout === 'function') {
+                logout();
+            }
+        });
+    }
+
+    // Forcer le rechargement des sections
+    if (document.querySelector('#home.active')) {
+        showSection('home');
+    }
+});
+
+console.log('✅ FIX APPLIQUÉ - Menus, Arabe et Login corrigés !');
+console.log('🔑 Login: admin / 123456');
+</script>
+        
         body {
             font-family: 'Roboto', 'Cairo', sans-serif;
             line-height: 1.6;
