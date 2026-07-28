@@ -36,7 +36,17 @@
             box-sizing: border-box;
         }
 
-        body {
+        body <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// ============================================================
+// CONFIGURATION SUPABASE - À AJOUTER DANS VOTRE CODE
+// ============================================================
+const SUPABASE_URL = 'https://kyjjblstxbdkjpzgnvna.supabase.co';
+const SUPABASE_KEY = 'kyjjblstxbdkjpzgnvna';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+</script>
+        
+        {
             font-family: 'Roboto', 'Cairo', sans-serif;
             line-height: 1.6;
             color: var(--text);
@@ -2989,5 +2999,322 @@
             showSection('home');
         });
     </script>
+    <script>
+// ============================================================
+// AJOUT SUPABASE - STOCKAGE DES IMAGES ET VIDÉOS
+// ============================================================
+
+// 1. CONFIGURATION SUPABASE
+const SUPABASE_URL = 'https://kyjjblstxbdkjpzgnvna.supabase.co';
+const SUPABASE_KEY = 'kyjjblstxbdkjpzgnvna';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// 2. REMPLACER loadPublicGallery
+async function loadPublicGallery() {
+    try {
+        const { data, error } = await supabase
+            .from('media')
+            .select('*')
+            .eq('type', 'image')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        const galleryPublic = document.getElementById('publicGallery');
+        
+        if (!data || data.length === 0) {
+            galleryPublic.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune image disponible' : 'لا توجد صور متاحة'}</div>`;
+            return;
+        }
+        
+        let html = '';
+        data.forEach((image, index) => {
+            html += `
+                <div class="gallery-public-item" onclick="viewFile('image', ${index})">
+                    <img src="${image.url}" alt="${image.name || 'Image'}" loading="lazy">
+                </div>
+            `;
+        });
+        galleryPublic.innerHTML = html;
+        localStorage.setItem('ansfal_image', JSON.stringify(data));
+    } catch (error) {
+        console.error('Erreur loadPublicGallery:', error);
+    }
+}
+
+// 3. REMPLACER loadPublicVideos
+async function loadPublicVideos() {
+    try {
+        const { data, error } = await supabase
+            .from('media')
+            .select('*')
+            .eq('type', 'video')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        const videosPublic = document.getElementById('publicVideos');
+        
+        if (!data || data.length === 0) {
+            videosPublic.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune vidéo disponible' : 'لا توجد فيديوهات متاحة'}</div>`;
+            return;
+        }
+        
+        let html = '';
+        data.forEach((video, index) => {
+            if (video.url) {
+                if (video.url.includes('youtube.com') || video.url.includes('youtu.be')) {
+                    let videoId = '';
+                    if (video.url.includes('youtube.com/embed/')) {
+                        videoId = video.url.split('youtube.com/embed/')[1];
+                    } else if (video.url.includes('youtu.be/')) {
+                        videoId = video.url.split('youtu.be/')[1];
+                    } else if (video.url.includes('youtube.com/watch?v=')) {
+                        videoId = video.url.split('v=')[1].split('&')[0];
+                    }
+                    if (videoId) {
+                        html += `
+                            <div class="video-public-item">
+                                <div class="youtube-embed">
+                                    <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        `;
+                    }
+                } else {
+                    html += `
+                        <div class="video-public-item" onclick="viewFile('video', ${index})">
+                            <video style="width: 100%; height: 100%; object-fit: cover;">
+                                <source src="${video.url}" type="video/mp4">
+                            </video>
+                        </div>
+                    `;
+                }
+            }
+        });
+        videosPublic.innerHTML = html;
+        localStorage.setItem('ansfal_video', JSON.stringify(data));
+    } catch (error) {
+        console.error('Erreur loadPublicVideos:', error);
+    }
+}
+
+// 4. REMPLACER loadGalleryDashboard
+async function loadGalleryDashboard() {
+    try {
+        const { data, error } = await supabase
+            .from('media')
+            .select('*')
+            .eq('type', 'image')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        const galleryList = document.getElementById('galleryList');
+        
+        if (!data || data.length === 0) {
+            galleryList.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune image' : 'لا توجد صور'}</div>`;
+            return;
+        }
+        
+        let html = '';
+        data.forEach((image, index) => {
+            html += `
+                <div class="dashboard-item">
+                    <div class="item-icon"><i class="fas fa-image"></i></div>
+                    <div class="item-info">
+                        <h4>${image.name || 'Image ' + (index + 1)}</h4>
+                        <small>${image.format || ''} • ${new Date(image.created_at).toLocaleDateString()}</small>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-action view" onclick="viewFile('image', ${index})"><i class="fas fa-eye"></i></button>
+                        <button class="btn-action delete" onclick="deleteFile('image', ${index})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `;
+        });
+        galleryList.innerHTML = html;
+        localStorage.setItem('ansfal_image', JSON.stringify(data));
+    } catch (error) {
+        console.error('Erreur loadGalleryDashboard:', error);
+    }
+}
+
+// 5. REMPLACER loadVideosDashboard
+async function loadVideosDashboard() {
+    try {
+        const { data, error } = await supabase
+            .from('media')
+            .select('*')
+            .eq('type', 'video')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        const videosList = document.getElementById('videosList');
+        
+        if (!data || data.length === 0) {
+            videosList.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune vidéo' : 'لا توجد فيديوهات'}</div>`;
+            return;
+        }
+        
+        let html = '';
+        data.forEach((video, index) => {
+            html += `
+                <div class="dashboard-item">
+                    <div class="item-icon"><i class="fas fa-video"></i></div>
+                    <div class="item-info">
+                        <h4>${video.name || 'Vidéo ' + (index + 1)}</h4>
+                        <small>${video.format || ''} • ${new Date(video.created_at).toLocaleDateString()}</small>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-action view" onclick="viewFile('video', ${index})"><i class="fas fa-eye"></i></button>
+                        <button class="btn-action delete" onclick="deleteFile('video', ${index})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `;
+        });
+        videosList.innerHTML = html;
+        localStorage.setItem('ansfal_video', JSON.stringify(data));
+    } catch (error) {
+        console.error('Erreur loadVideosDashboard:', error);
+    }
+}
+
+// 6. REMPLACER finishUpload
+async function finishUpload() {
+    const newFiles = selectedFiles.map(f => ({
+        url: f.url || URL.createObjectURL(f),
+        name: f.name || f.url,
+        format: f.name ? f.name.split('.').pop() : 'url',
+        type: currentUploadType,
+        created_at: new Date().toISOString()
+    }));
+    
+    for (const file of newFiles) {
+        try {
+            const { error } = await supabase.from('media').insert([file]);
+            if (error) {
+                console.error('Erreur insertion:', error);
+                showAlert('Erreur lors de l\'upload', 'error');
+                document.getElementById('validateBtn').disabled = false;
+                return;
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+            showAlert('Erreur: ' + error.message, 'error');
+            document.getElementById('validateBtn').disabled = false;
+            return;
+        }
+    }
+    
+    document.getElementById('uploadProgress').style.display = 'none';
+    document.getElementById('uploadSuccess').style.display = 'block';
+    document.getElementById('actionButtons').style.display = 'none';
+    
+    if (currentUploadType === 'image') {
+        await loadGalleryDashboard();
+        await loadPublicGallery();
+    } else if (currentUploadType === 'video') {
+        await loadVideosDashboard();
+        await loadPublicVideos();
+    }
+    await updateStats();
+    document.getElementById('validateBtn').disabled = false;
+}
+
+// 7. REMPLACER deleteFile
+async function deleteFile(type, index) {
+    if (!confirm(currentLanguage === 'fr' ? 'Supprimer ce fichier ?' : 'حذف هذا الملف؟')) return;
+    
+    try {
+        const { data, error } = await supabase
+            .from('media')
+            .select('*')
+            .eq('type', type);
+        
+        if (error) throw error;
+        if (!data || data.length === 0) return;
+        
+        const fileToDelete = data[index];
+        if (!fileToDelete) return;
+        
+        const { error: deleteError } = await supabase
+            .from('media')
+            .delete()
+            .eq('id', fileToDelete.id);
+        
+        if (deleteError) throw deleteError;
+        
+        showAlert(currentLanguage === 'fr' ? 'Fichier supprimé' : 'تم حذف الملف', 'success');
+        
+        if (type === 'image') {
+            await loadGalleryDashboard();
+            await loadPublicGallery();
+        } else if (type === 'video') {
+            await loadVideosDashboard();
+            await loadPublicVideos();
+        }
+        await updateStats();
+    } catch (error) {
+        console.error('Erreur suppression:', error);
+        showAlert('Erreur lors de la suppression', 'error');
+    }
+}
+
+// 8. REMPLACER updateStats
+async function updateStats() {
+    try {
+        const { data, error } = await supabase.from('media').select('type');
+        if (error) throw error;
+        const images = data?.filter(m => m.type === 'image') || [];
+        const videos = data?.filter(m => m.type === 'video') || [];
+        const texts = JSON.parse(localStorage.getItem('ansfal_text') || '[]');
+        document.getElementById('totalMediaStat').textContent = images.length + videos.length + texts.length;
+    } catch (error) {
+        console.error('Erreur updateStats:', error);
+    }
+}
+
+// 9. Remplacer la fonction loadTextDashboard (pour garder la compatibilité)
+function loadTextDashboard() {
+    const texts = JSON.parse(localStorage.getItem('ansfal_text') || '[]');
+    const textList = document.getElementById('textList');
+    if (texts.length === 0) {
+        textList.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucun texte' : 'لا توجد نصوص'}</div>`;
+        return;
+    }
+    let html = '';
+    texts.forEach((text, index) => {
+        html += `
+            <div class="dashboard-item">
+                <div class="item-icon"><i class="fas fa-file-alt"></i></div>
+                <div class="item-info">
+                    <h4>${text.title || 'Texte ' + (index + 1)}</h4>
+                    <small>${text.content.substring(0, 50)}...</small>
+                </div>
+                <div class="item-actions">
+                    <button class="btn-action view" onclick="viewText(${index})"><i class="fas fa-eye"></i></button>
+                    <button class="btn-action delete" onclick="deleteText(${index})"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        `;
+    });
+    textList.innerHTML = html;
+}
+
+// 10. Ajouter cette ligne dans l'initialisation pour charger Supabase au démarrage
+document.addEventListener('DOMContentLoaded', function() {
+    // ... votre code existant ...
+    
+    // AJOUTER CET APPEL
+    loadPublicGallery();
+    loadPublicVideos();
+    updateStats();
+});
+
+console.log('✅ Supabase activé !');
+console.log('🔑 Login: admin / 123456');
+</script>
 </body>
 </html>
