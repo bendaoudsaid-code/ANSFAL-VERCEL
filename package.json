@@ -1,4 +1,16 @@
 {
+  "name": "ansfal",
+  "version": "1.0.0",
+  "description": "Association ANSFAL - Site web",
+  "main": "index.html",
+  "scripts": {
+    "start": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}{
     "name": "ansfal-vercel",
     "version": "1.0.0",
     "dependencies": {
