@@ -3001,5 +3001,54 @@
             showSection('home');
         });
     </script>
+<script>
+// FIX MENUS - Solution rapide
+document.addEventListener('DOMContentLoaded', function() {
+    // Récupérer tous les liens du menu
+    const menuLinks = document.querySelectorAll('#mainMenu a');
+    
+    menuLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Trouver l'ID de la section
+            const onclickAttr = this.getAttribute('onclick');
+            if (onclickAttr) {
+                const match = onclickAttr.match(/['"](\w+)['"]/);
+                if (match) {
+                    const sectionId = match[1];
+                    if (typeof showSection === 'function') {
+                        showSection(sectionId);
+                    } else {
+                        // Fallback simple
+                        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+                        const target = document.getElementById(sectionId);
+                        if (target) target.classList.add('active');
+                        document.querySelectorAll('#mainMenu a').forEach(a => a.classList.remove('active'));
+                        this.classList.add('active');
+                    }
+                }
+            }
+        });
+    });
+    
+    // Correction pour les boutons Hero
+    document.querySelectorAll('.hero .btn, .hero a').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const onclickAttr = this.getAttribute('onclick');
+            if (onclickAttr) {
+                const match = onclickAttr.match(/['"](\w+)['"]/);
+                if (match) {
+                    const sectionId = match[1];
+                    if (typeof showSection === 'function') {
+                        showSection(sectionId);
+                    }
+                }
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>
