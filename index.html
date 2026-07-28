@@ -5897,109 +5897,862 @@
         }
     </script>
 <script>
-    // ==================== CONFIGURATION CLOUDINARY ====================
-    const CLOUDINARY_CONFIG = {
-        cloud_name: 'hxhvynf4',
-        api_key: '442555963344891'
-    };
+// ============================================================
+// ===== CONFIGURATION SUPABASE =====
+// ============================================================
+const SUPABASE_URL = 'https://supabasansfal.supabase.co';
+const SUPABASE_KEY = 'kyjjblstxbdkjpzgnvna';
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const STORAGE_BUCKET = 'media';
 
-    // ==================== SUPABASE STORAGE ====================
-    const supabase = createClient(
-        'https://ansfal.github.io.supabase.co',
-        'sb_publishable_Cu364NmwnWvimRiZ1OMGKQ_r-EoVZOe'
-    );
+// ============================================================
+// ===== FONCTIONS DE STOCKAGE SUPABASE =====
+// ============================================================
 
-    // ==================== FONCTIONS DE STOCKAGE SUPABASE ====================
-    async function storageGet(key) {
-        try {
-            const type = key.replace('ansfal_', '');
-            const { data, error } = await supabase
-                .from('media')
-                .select('*')
-                .eq('type', type)
-                .order('created_at', { ascending: false });
-            if (error) throw error;
-            return data || [];
-        } catch (error) {
-            console.error('Storage get error:', error);
-            return [];
+// === GESTION DES UTILISATEURS ===
+async function loadUsers() {
+    try {
+        const { data, error } = await supabase
+            .from('users')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+            return data;
         }
-    }
-
-    async function storageSet(key, value) {
-        try {
-            const type = key.replace('ansfal_', '');
-            if (type === 'image' || type === 'video' || type === 'pdf') {
-                for (const item of value) {
-                    const { error } = await supabase
-                        .from('media')
-                        .insert({
-                            type: type,
-                            url: item.url,
-                            public_id: item.public_id || null,
-                            name: item.name || 'Fichier'
-                        });
-                    if (error) throw error;
-                }
-            } else if (type === 'text') {
-                for (const item of value) {
-                    const { error } = await supabase
-                        .from('texts')
-                        .insert({
-                            title: item.title,
-                            content: item.content
-                        });
-                    if (error) throw error;
-                }
-            }
-            return true;
-        } catch (error) {
-            console.error('Storage set error:', error);
-            return false;
-        }
-    }
-
-    async function storageRemove(key) {
-        try {
-            const type = key.replace('ansfal_', '');
-            const { error } = await supabase
-                .from('media')
-                .delete()
-                .eq('type', type);
-            if (error) throw error;
-            return true;
-        } catch (error) {
-            console.error('Storage remove error:', error);
-            return false;
-        }
-    }
-
-    async function loadUsers() {
-        try {
-            const { data, error } = await supabase
-                .from('users')
-                .select('*')
-                .order('created_at', { ascending: false });
-            if (error) throw error;
-            if (data && data.length > 0) return data;
-            const defaultUsers = [{
-                id: 'admin',
+        
+        // Créer l'utilisateur admin par défaut
+        const { error: insertError } = await supabase
+            .from('users')
+            .insert({
                 username: 'admin',
                 password: '123456',
                 name: 'Administrateur',
                 email: 'admin@ansfal.org',
-                role: 'admin',
-                created_at: new Date().toISOString()
-            }];
-            for (const user of defaultUsers) {
-                await supabase.from('users').insert(user);
+                role: 'admin'
+            });
+            
+        if (insertError) throw insertError;
+        
+        return [{
+            id: 'admin',
+            username: 'admin',
+            password: '123456',
+            name: 'Administrateur',
+            email: 'admin@ansfal.org',
+            role: 'admin'
+        }];
+    } catch (error) {
+        console.error('Load users error:', error);
+        return JSON.parse(localStorage.getItem('ansfal_users') || '[{"id":"admin","username":"admin","password":"123456","name":"Administrateur","email":"admin@ansfal.org","role":"admin"}]');
+    }
+}
+
+async function saveUsers(users) {
+    try {
+        // Supprimer tous les utilisateurs sauf admin
+        await supabase
+            .from('users')
+            .delete()
+            .neq('username', 'admin');
+        
+        // Insérer les nouveaux utilisateurs
+        const usersToInsert = users.filter(u => u.username !== 'admin');
+        if (usersToInsert.length > 0) {
+            const { error } = await supabase
+                .from('users')
+                .insert(usersToInsert);
+            if (error) throw error;
+        }
+        return true;
+    } catch (error) {
+        console.error('Save users error:', error);
+        localStorage.setItem('ansfal_users', JSON.stringify(users));
+        return false;
+    }
+}
+
+// === GESTION DES MÉDIAS ===
+async function getMediaByType(type) {
+    try {
+        const { data, error } = await supabase
+            .from('media')
+            .select('*')
+            .eq('type', type)
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        return data || [];
+    } catch (error) {
+        console.error('Get media error:', error);
+        return JSON.parse(localStorage.getItem(`ansfal_${type}`) || '[]');
+    }
+}
+
+async function saveMediaToDB(type, mediaItems) {
+    try {
+        // Supprimer les anciens médias du même type
+        await supabase
+            .from('media')
+            .delete()
+            .eq('type', type);
+        
+        // Insérer les nouveaux
+        if (mediaItems && mediaItems.length > 0) {
+            const { error } = await supabase
+                .from('media')
+                .insert(mediaItems);
+            if (error) throw error;
+        }
+        return true;
+    } catch (error) {
+        console.error('Save media error:', error);
+        localStorage.setItem(`ansfal_${type}`, JSON.stringify(mediaItems));
+        return false;
+    }
+}
+
+// === GESTION DES TEXTES ===
+async function getTexts() {
+    try {
+        const { data, error } = await supabase
+            .from('texts')
+            .select('*')
+            .order('created_at', { ascending: false });
+        
+        if (error) throw error;
+        return data || [];
+    } catch (error) {
+        console.error('Get texts error:', error);
+        return JSON.parse(localStorage.getItem('ansfal_text') || '[]');
+    }
+}
+
+async function saveTextsToDB(texts) {
+    try {
+        await supabase.from('texts').delete().neq('id', '');
+        
+        if (texts && texts.length > 0) {
+            const { error } = await supabase
+                .from('texts')
+                .insert(texts);
+            if (error) throw error;
+        }
+        return true;
+    } catch (error) {
+        console.error('Save texts error:', error);
+        localStorage.setItem('ansfal_text', JSON.stringify(texts));
+        return false;
+    }
+}
+
+// === GESTION DU LOGO ===
+async function getLogo() {
+    try {
+        const { data, error } = await supabase
+            .from('logo')
+            .select('*')
+            .order('updated_at', { ascending: false })
+            .limit(1);
+        
+        if (error) throw error;
+        
+        if (data && data.length > 0) {
+            return {
+                iconClass: data[0].icon_class || 'fas fa-hands-helping',
+                color: data[0].color || '#1a6d2c',
+                title: data[0].title || 'أنسفال',
+                subtitle: data[0].subtitle || 'جمعية التعاون والتنمية والبيئة'
+            };
+        }
+        return null;
+    } catch (error) {
+        console.error('Get logo error:', error);
+        return JSON.parse(localStorage.getItem('ansfal_logo') || 'null');
+    }
+}
+
+async function saveLogoToDB(logoData) {
+    try {
+        await supabase.from('logo').delete().neq('id', '');
+        
+        const { error } = await supabase
+            .from('logo')
+            .insert({
+                icon_class: logoData.iconClass,
+                color: logoData.color,
+                title: logoData.title,
+                subtitle: logoData.subtitle,
+                updated_at: new Date().toISOString()
+            });
+            
+        if (error) throw error;
+        return true;
+    } catch (error) {
+        console.error('Save logo error:', error);
+        localStorage.setItem('ansfal_logo', JSON.stringify(logoData));
+        return false;
+    }
+}
+
+// === GESTION DES VISITEURS ===
+async function updateVisitorCount() {
+    try {
+        // Récupérer le compteur actuel
+        const { data, error } = await supabase
+            .from('visitors')
+            .select('*')
+            .limit(1);
+        
+        if (error) throw error;
+        
+        let currentCount = 0;
+        let visitorId = null;
+        
+        if (data && data.length > 0) {
+            currentCount = data[0].count || 0;
+            visitorId = data[0].id;
+            
+            // Mettre à jour
+            const { error: updateError } = await supabase
+                .from('visitors')
+                .update({ 
+                    count: currentCount + 1,
+                    last_visit: new Date().toISOString()
+                })
+                .eq('id', visitorId);
+                
+            if (updateError) throw updateError;
+        } else {
+            // Créer la première entrée
+            const { error: insertError } = await supabase
+                .from('visitors')
+                .insert({ count: 1, last_visit: new Date().toISOString() });
+                
+            if (insertError) throw insertError;
+        }
+        
+        const totalVisitors = currentCount + 1;
+        const onlineVisitors = Math.floor(Math.random() * 50) + 1;
+        const lastVisit = new Date().toLocaleString();
+        
+        document.getElementById('totalVisitors').textContent = totalVisitors;
+        document.getElementById('onlineVisitors').textContent = onlineVisitors;
+        document.getElementById('lastVisit').textContent = lastVisit;
+        document.getElementById('totalVisitorsStat').textContent = totalVisitors;
+        
+        return totalVisitors;
+    } catch (error) {
+        console.error('Update visitor count error:', error);
+        let totalVisitors = parseInt(localStorage.getItem('ansfal_total_visitors') || '0') + 1;
+        localStorage.setItem('ansfal_total_visitors', totalVisitors);
+        document.getElementById('totalVisitors').textContent = totalVisitors;
+        document.getElementById('totalVisitorsStat').textContent = totalVisitors;
+        return totalVisitors;
+    }
+}
+
+// === FONCTIONS DE STOCKAGE UNIFIÉES ===
+async function storageGet(key) {
+    const type = key.replace('ansfal_', '');
+    
+    if (type === 'image' || type === 'video' || type === 'pdf') {
+        return await getMediaByType(type);
+    } else if (type === 'text') {
+        return await getTexts();
+    } else if (type === 'users') {
+        return await loadUsers();
+    } else if (type === 'logo') {
+        const logo = await getLogo();
+        return logo ? [logo] : [];
+    } else if (type === 'total_visitors') {
+        const { data } = await supabase.from('visitors').select('count');
+        return data && data.length > 0 ? data[0].count : 0;
+    } else if (type === 'user') {
+        const user = localStorage.getItem('ansfal_current_user');
+        return user ? [JSON.parse(user)] : [];
+    }
+    
+    return [];
+}
+
+async function storageSet(key, value) {
+    const type = key.replace('ansfal_', '');
+    
+    if (type === 'image' || type === 'video' || type === 'pdf') {
+        return await saveMediaToDB(type, value);
+    } else if (type === 'text') {
+        return await saveTextsToDB(value);
+    } else if (type === 'users') {
+        return await saveUsers(value);
+    } else if (type === 'logo') {
+        return await saveLogoToDB(value);
+    } else if (type === 'total_visitors') {
+        return true;
+    } else if (type === 'user') {
+        localStorage.setItem('ansfal_current_user', JSON.stringify(value));
+        return true;
+    }
+    
+    return false;
+}
+
+async function storageRemove(key) {
+    const type = key.replace('ansfal_', '');
+    
+    try {
+        if (type === 'image' || type === 'video' || type === 'pdf') {
+            await supabase.from('media').delete().eq('type', type);
+        } else if (type === 'text') {
+            await supabase.from('texts').delete().neq('id', '');
+        } else if (type === 'users') {
+            await supabase.from('users').delete().neq('username', 'admin');
+        } else if (type === 'logo') {
+            await supabase.from('logo').delete().neq('id', '');
+        } else if (type === 'user') {
+            localStorage.removeItem('ansfal_current_user');
+        }
+        localStorage.removeItem(key);
+        return true;
+    } catch (error) {
+        console.error('Storage remove error:', error);
+        localStorage.removeItem(key);
+        return false;
+    }
+}
+
+// ============================================================
+// ===== UPLOAD VERS SUPABASE STORAGE =====
+// ============================================================
+
+async function uploadToSupabase(file, type) {
+    try {
+        // Si c'est une URL (pas de fichier physique)
+        if (file.source === 'url') {
+            return {
+                url: file.url,
+                public_id: `url_${Date.now()}`,
+                name: file.title || file.url,
+                type: type
+            };
+        }
+
+        // Générer un nom unique
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${type}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        
+        console.log('Uploading to Supabase Storage:', fileName);
+        
+        // Upload vers Supabase Storage
+        const { data, error } = await supabase.storage
+            .from(STORAGE_BUCKET)
+            .upload(fileName, file, {
+                cacheControl: '3600',
+                upsert: false
+            });
+
+        if (error) throw error;
+
+        // Récupérer l'URL publique
+        const { data: { publicUrl } } = supabase.storage
+            .from(STORAGE_BUCKET)
+            .getPublicUrl(fileName);
+
+        console.log('File uploaded successfully:', publicUrl);
+
+        return {
+            url: publicUrl,
+            public_id: fileName,
+            name: file.name,
+            size: file.size,
+            format: fileExt,
+            type: type,
+            width: file.width || null,
+            height: file.height || null,
+            created_at: new Date().toISOString()
+        };
+
+    } catch (error) {
+        console.error('Upload to Supabase error:', error);
+        showAlert(
+            currentLanguage === 'fr' 
+                ? `Erreur d'upload: ${error.message}` 
+                : `خطأ في الرفع: ${error.message}`,
+            'error'
+        );
+        throw error;
+    }
+}
+
+async function deleteFromSupabase(public_id) {
+    try {
+        if (public_id && !public_id.startsWith('url_')) {
+            console.log('Deleting from Supabase Storage:', public_id);
+            
+            const { error } = await supabase.storage
+                .from(STORAGE_BUCKET)
+                .remove([public_id]);
+                
+            if (error) throw error;
+            
+            console.log('File deleted successfully');
+        }
+        return { success: true };
+    } catch (error) {
+        console.error('Delete from Supabase error:', error);
+        return { success: false, error };
+    }
+}
+
+// ============================================================
+// ===== FONCTIONS D'UPLOAD ET DELETE MODIFIÉES =====
+// ============================================================
+
+// === FONCTION UPLOAD FILES MODIFIÉE ===
+async function uploadFiles() {
+    if (!currentUser) {
+        showAlert(translations[currentLanguage].pleaseLogin, 'error');
+        return;
+    }
+
+    if (uploadMode === 'pc' && selectedFiles.length === 0) {
+        showAlert(translations[currentLanguage].selectFile, 'error');
+        return;
+    }
+
+    document.getElementById('validateBtn').disabled = true;
+    const progressDiv = document.getElementById('uploadProgress');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const uploadStatus = document.getElementById('uploadStatus');
+    
+    progressDiv.style.display = 'block';
+    progressFill.style.width = '0%';
+    progressText.textContent = '0%';
+    uploadStatus.textContent = currentLanguage === 'fr' ? 'Upload vers Supabase...' : 'رفع على Supabase...';
+
+    let uploadedFiles = [];
+    let totalFiles = selectedFiles.length;
+
+    for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
+        
+        try {
+            await simulateUpload(i, totalFiles, progressFill, progressText);
+
+            let result;
+            if (file.source === 'url') {
+                result = {
+                    url: file.url,
+                    public_id: `url_${Date.now()}_${i}`,
+                    name: file.title || file.url,
+                    type: currentUploadType,
+                    created_at: new Date().toISOString()
+                };
+            } else {
+                // Upload vers Supabase
+                result = await uploadToSupabase(file, currentUploadType);
             }
-            return defaultUsers;
+
+            uploadedFiles.push(result);
+
         } catch (error) {
-            console.error('Load users error:', error);
-            return [];
+            console.error('Erreur:', error);
+            showAlert(
+                `${currentLanguage === 'fr' ? 'Erreur lors du traitement de' : 'خطأ أثناء معالجة'} ${file.name || file.url}`,
+                'error'
+            );
         }
     }
+
+    if (uploadedFiles.length > 0) {
+        // Sauvegarder dans Supabase
+        const existingFiles = await storageGet(`ansfal_${currentUploadType}`) || [];
+        const allFiles = [...existingFiles, ...uploadedFiles];
+        
+        const maxFiles = currentUploadType === 'video' ? 50 : 100;
+        if (allFiles.length > maxFiles) {
+            allFiles.splice(0, allFiles.length - maxFiles);
+        }
+        
+        await storageSet(`ansfal_${currentUploadType}`, allFiles);
+        
+        updatePreview();
+        showSuccessMessage(uploadedFiles.length);
+        uploadStatus.textContent = currentLanguage === 'fr' ? 'Upload terminé !' : 'تم الرفع!';
+
+        if (currentUploadType === 'image') {
+            loadGalleryDashboard();
+            loadPublicGallery();
+        } else if (currentUploadType === 'video') {
+            loadVideosDashboard();
+            loadPublicVideos();
+        } else if (currentUploadType === 'pdf') {
+            loadDocumentsDashboard();
+        }
+        
+        // Mettre à jour les statistiques
+        updateStats();
+    }
+
+    document.getElementById('validateBtn').disabled = false;
+    document.getElementById('acceptBtn').style.display = 'flex';
+    document.getElementById('validateBtn').style.display = 'none';
+
+    document.querySelectorAll('.file-item').forEach(item => {
+        item.style.border = '2px solid transparent';
+        item.style.boxShadow = '0 3px 10px rgba(0,0,0,0.08)';
+    });
+    
+    // Réinitialiser
+    selectedFiles = [];
+    document.getElementById('filesGrid').innerHTML = '';
+    document.getElementById('noFiles').style.display = 'block';
+}
+
+// === FONCTION DELETE FILE MODIFIÉE ===
+async function deleteFile(type, index) {
+    if (!currentUser) {
+        showAlert(
+            currentLanguage === 'fr' 
+                ? 'Veuillez vous connecter pour supprimer des fichiers' 
+                : 'يرجى تسجيل الدخول لحذف الملفات',
+            'error'
+        );
+        return;
+    }
+
+    if (currentUser.role !== 'admin' && currentUser.role !== 'webmaster') {
+        showAlert(
+            currentLanguage === 'fr' 
+                ? 'Vous n\'avez pas les permissions nécessaires' 
+                : 'ليس لديك الصلاحيات اللازمة',
+            'error'
+        );
+        return;
+    }
+
+    const confirmationMessage = currentLanguage === 'fr' 
+        ? 'Voulez-vous vraiment supprimer ce fichier ?' 
+        : 'هل تريد حقاً حذف هذا الملف؟';
+
+    if (!confirm(confirmationMessage)) return;
+
+    const files = await storageGet(`ansfal_${type}`) || [];
+    const file = files[index];
+
+    if (!file) {
+        showAlert(
+            currentLanguage === 'fr' ? 'Fichier non trouvé' : 'الملف غير موجود',
+            'error'
+        );
+        return;
+    }
+
+    try {
+        // Supprimer de Supabase Storage
+        if (file.public_id && !file.public_id.startsWith('url_')) {
+            const result = await deleteFromSupabase(file.public_id);
+            if (!result.success) {
+                console.warn('Could not delete from storage, but continuing with DB deletion');
+            }
+        }
+
+        // Supprimer de la base de données
+        files.splice(index, 1);
+        await storageSet(`ansfal_${type}`, files);
+
+        showAlert(
+            currentLanguage === 'fr' ? 'Fichier supprimé avec succès' : 'تم حذف الملف بنجاح',
+            'success'
+        );
+
+        // Mettre à jour les vues
+        if (type === 'image') {
+            loadGalleryDashboard();
+            loadPublicGallery();
+        } else if (type === 'video') {
+            loadVideosDashboard();
+            loadPublicVideos();
+        } else if (type === 'pdf') {
+            loadDocumentsDashboard();
+        }
+
+        updatePreview();
+        updateStats();
+
+    } catch (error) {
+        console.error('Delete error:', error);
+        showAlert(
+            currentLanguage === 'fr' 
+                ? `Erreur lors de la suppression: ${error.message}` 
+                : `خطأ أثناء الحذف: ${error.message}`,
+            'error'
+        );
+    }
+}
+
+// ============================================================
+// ===== MISE À JOUR DES STATISTIQUES =====
+// ============================================================
+
+async function updateStats() {
+    try {
+        const images = await storageGet('ansfal_image') || [];
+        const videos = await storageGet('ansfal_video') || [];
+        const pdfs = await storageGet('ansfal_pdf') || [];
+        const texts = await storageGet('ansfal_text') || [];
+        const users = await loadUsers();
+        
+        const totalMedia = images.length + videos.length + pdfs.length + texts.length;
+        
+        document.getElementById('totalMediaStat').textContent = totalMedia;
+        document.getElementById('totalUsersStat').textContent = users.length;
+        
+        // Mettre à jour aussi les compteurs du dashboard simplifié
+        const totalVisitors = document.getElementById('totalVisitorsStat');
+        if (totalVisitors) {
+            const visitors = await storageGet('ansfal_total_visitors') || 0;
+            totalVisitors.textContent = visitors;
+        }
+    } catch (error) {
+        console.error('Update stats error:', error);
+    }
+}
+
+// ============================================================
+// ===== FONCTIONS DE VISUALISATION =====
+// ============================================================
+
+async function viewFile(type, index) {
+    const files = await storageGet(`ansfal_${type}`) || [];
+    const file = files[index];
+    
+    if (!file) {
+        showAlert(
+            currentLanguage === 'fr' ? 'Fichier non trouvé' : 'الملف غير موجود', 
+            'error'
+        );
+        return;
+    }
+    
+    const viewer = document.getElementById('fileViewer');
+    const viewerTitle = document.getElementById('viewerTitle');
+    const viewerContent = document.getElementById('viewerContent');
+    
+    viewerTitle.textContent = file.name || file.title || `Fichier ${type}`;
+    
+    if (type === 'image') {
+        viewerContent.innerHTML = `
+            <img src="${file.url}" alt="${file.name || 'Image'}" 
+                 style="max-width: 100%; max-height: 70vh; border-radius: 10px;"
+                 onerror="this.src='https://via.placeholder.com/400x300?text=Image+non+disponible'">
+        `;
+    } else if (type === 'video') {
+        if (file.url.includes('youtube.com') || file.url.includes('youtu.be')) {
+            let videoId = '';
+            if (file.url.includes('youtube.com/embed/')) {
+                videoId = file.url.split('youtube.com/embed/')[1];
+            } else if (file.url.includes('youtu.be/')) {
+                videoId = file.url.split('youtu.be/')[1];
+            } else if (file.url.includes('youtube.com/watch?v=')) {
+                videoId = file.url.split('v=')[1].split('&')[0];
+            }
+            
+            if (videoId) {
+                viewerContent.innerHTML = `
+                    <iframe 
+                        width="100%" 
+                        height="500" 
+                        src="https://www.youtube.com/embed/${videoId}" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen
+                        style="border-radius: 10px;">
+                    </iframe>
+                `;
+            }
+        } else {
+            viewerContent.innerHTML = `
+                <video controls style="max-width: 100%; max-height: 70vh; border-radius: 10px;">
+                    <source src="${file.url}" type="video/mp4">
+                    ${currentLanguage === 'fr' ? 'Votre navigateur ne supporte pas la lecture vidéo.' : 'متصفحك لا يدعم تشغيل الفيديو.'}
+                </video>
+            `;
+        }
+    } else if (type === 'pdf') {
+        viewerContent.innerHTML = `
+            <iframe src="${file.url}" 
+                    style="width: 100%; height: 70vh; border: none; border-radius: 10px;">
+            </iframe>
+        `;
+    } else {
+        viewerContent.innerHTML = `
+            <p style="color: #666; text-align: center; padding: 40px;">
+                <i class="fas fa-file fa-3x" style="color: var(--primary);"></i>
+                <br><br>
+                ${currentLanguage === 'fr' ? 'Prévisualisation non disponible' : 'المعاينة غير متاحة'}
+                <br>
+                <a href="${file.url}" target="_blank" class="btn" style="margin-top: 20px;">
+                    <i class="fas fa-download"></i> 
+                    ${currentLanguage === 'fr' ? 'Télécharger' : 'تحميل'}
+                </a>
+            </p>
+        `;
+    }
+    
+    viewer.classList.add('active');
+}
+
+function closeFileViewer() {
+    document.getElementById('fileViewer').classList.remove('active');
+}
+
+// ============================================================
+// ===== AUTHENTIFICATION =====
+// ============================================================
+
+async function login() {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    
+    const users = await loadUsers();
+    const user = users.find(u => u.username === username && u.password === password);
+    
+    if (user) {
+        currentUser = user;
+        await storageSet('ansfal_user', user);
+        showUserInfo();
+        document.body.classList.add('admin-mode');
+        document.getElementById('addBtn').style.display = 'flex';
+        showAlert(translations[currentLanguage].loginSuccess, 'success');
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('userInfo').classList.remove('hidden');
+        
+        const firstLogin = await storageGet('ansfal_first_login');
+        if (!firstLogin || firstLogin.length === 0) {
+            await storageSet('ansfal_first_login', [{ value: false }]);
+            isFirstLogin = true;
+            showAlert(translations[currentLanguage].firstLoginPassword, 'info');
+            setTimeout(() => showPasswordModal(), 1500);
+        }
+        
+        await applyLogo();
+        loadGalleryDashboard();
+        loadVideosDashboard();
+        loadDocumentsDashboard();
+        loadTextDashboard();
+        loadPublicGallery();
+        loadPublicVideos();
+        updateStats();
+        
+    } else {
+        showAlert(translations[currentLanguage].loginError, 'error');
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+    }
+}
+
+async function logout() {
+    if (confirm(
+        currentLanguage === 'fr' 
+            ? 'Voulez-vous vraiment vous déconnecter ?' 
+            : 'هل تريد حقاً تسجيل الخروج؟'
+    )) {
+        currentUser = null;
+        await storageRemove('ansfal_user');
+        document.body.classList.remove('admin-mode');
+        document.getElementById('addBtn').style.display = 'none';
+        document.getElementById('loginForm').classList.remove('hidden');
+        document.getElementById('userInfo').classList.add('hidden');
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+        showAlert(translations[currentLanguage].logoutSuccess, 'info');
+        showSection('home');
+    }
+}
+
+function showUserInfo() {
+    if (currentUser) {
+        const roleNames = {
+            'admin': translations[currentLanguage].admin,
+            'webmaster': translations[currentLanguage].webmaster,
+            'editor': translations[currentLanguage].editor
+        };
+        
+        document.getElementById('userName').textContent = currentUser.name;
+        document.getElementById('userRole').textContent = roleNames[currentUser.role] || currentUser.role;
+        document.getElementById('loginForm').classList.add('hidden');
+        document.getElementById('userInfo').classList.remove('hidden');
+    }
+}
+
+// ============================================================
+// ===== INITIALISATION =====
+// ============================================================
+
+document.addEventListener('DOMContentLoaded', async function() {
+    // Initialiser le compteur de visiteurs avec Supabase
+    await updateVisitorCount();
+    
+    // Charger la langue
+    const savedLang = localStorage.getItem('ansfal_language');
+    if (savedLang) {
+        changeLanguage(savedLang);
+    } else {
+        changeLanguage('fr');
+    }
+    
+    // Charger l'utilisateur
+    const savedUser = await storageGet('ansfal_user');
+    if (savedUser && savedUser.length > 0) {
+        currentUser = savedUser[0];
+        showUserInfo();
+        document.body.classList.add('admin-mode');
+        document.getElementById('addBtn').style.display = 'flex';
+        await applyLogo();
+    } else {
+        document.querySelectorAll('.admin-only').forEach(el => {
+            el.style.display = 'none';
+        });
+    }
+    
+    // Configurer les événements
+    document.querySelectorAll('nav a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            showSection(targetId);
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+    
+    // Configurer WhatsApp
+    const phone = "+212612345678";
+    const message = currentLanguage === 'fr' 
+        ? "Bonjour, je voudrais des informations sur l'association أنسفال" 
+        : "مرحباً، أود الحصول على معلومات حول جمعية أنسفال";
+    document.getElementById('whatsappBtn').href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    
+    // Bouton d'ajout
+    document.getElementById('addBtn').addEventListener('click', function() {
+        if (currentUser) {
+            showUploadModal('image');
+        } else {
+            showAlert(translations[currentLanguage].pleaseLogin, 'error');
+        }
+    });
+    
+    // Charger les données
+    showSection('home');
+    setupFileInput();
+    await loadPublicGallery();
+    await loadPublicVideos();
+    await updateStats();
+});
 </script>
 </body>
 </html>
