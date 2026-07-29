@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ==================== STYLES ==================== */
+        /* ==================== STYLES (CONSERVÉS) ==================== */
         :root {
             --primary: #1a6d2c;
             --secondary: #2e8b57;
@@ -290,16 +290,6 @@
         .section-header {
             text-align: center;
             margin-bottom: 40px;
-        }
-
-        .section-title h2 { font-size: 2.5rem; }
-        .section-title h2:after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 4px;
-            background-color: var(--accent);
-            margin: 10px auto 0;
         }
 
         /* ==================== HERO ==================== */
@@ -1722,7 +1712,6 @@
         // ===== CONFIGURATION SUPABASE =====
         // ============================================================
         const SUPABASE_URL = 'https://kyjjblstxbdkjpzgnvna.supabase.co';
-        // Clé Publishable fournie
         const SUPABASE_KEY = 'sb_publishable_yurioNVjwNwcsFvJ7q47sw_qC-o0hSn';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -1964,16 +1953,13 @@
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
+            
             if (lang === 'fr') {
                 document.getElementById('langFrBtn').classList.add('active');
+                document.body.classList.remove('rtl');
             } else {
                 document.getElementById('langArBtn').classList.add('active');
-            }
-
-            if (lang === 'ar') {
                 document.body.classList.add('rtl');
-            } else {
-                document.body.classList.remove('rtl');
             }
 
             translatePage(lang);
@@ -1982,15 +1968,18 @@
         function translatePage(lang) {
             const t = translations[lang];
 
+            // Compteur
             document.getElementById('visitorsLabel').innerHTML = `${t.visitors}: <span class="visitor-count" id="totalVisitors">0</span>`;
             document.getElementById('onlineLabel').innerHTML = `${t.online}: <span class="visitor-count" id="onlineVisitors">0</span>`;
             document.getElementById('lastVisitLabel').innerHTML = `${t.lastVisit}: <span id="lastVisit">--/--/---- --:--:--</span>`;
 
+            // Auth
             document.getElementById('username').placeholder = t.username;
             document.getElementById('password').placeholder = t.password;
             document.querySelector('#loginForm button').textContent = t.login;
             document.getElementById('logoutBtn').textContent = t.logout;
 
+            // Menu principal
             document.getElementById('menuHome').textContent = t.home;
             document.getElementById('menuAbout').textContent = t.about;
             document.getElementById('menuGallery').textContent = t.gallery;
@@ -1999,51 +1988,61 @@
             document.getElementById('menuContact').textContent = t.contact;
             document.getElementById('menuDashboard').textContent = t.dashboard;
 
+            // Hero
             document.getElementById('heroTitle').textContent = t.heroTitle;
             document.getElementById('heroSubtitle').textContent = t.heroSubtitle;
             document.getElementById('heroText').textContent = t.heroText;
             document.getElementById('heroBtn1').textContent = t.heroBtn1;
             document.getElementById('heroBtn2').innerHTML = `<i class="fas fa-images"></i> ${t.heroBtn2}`;
 
+            // About
             document.getElementById('aboutTitle').textContent = t.aboutTitle;
             document.getElementById('aboutHistory').textContent = t.aboutHistory;
             document.getElementById('aboutText1').textContent = t.aboutText1;
             document.getElementById('aboutText2').textContent = t.aboutText2;
 
+            // Gallery
             document.getElementById('galleryTitle').textContent = t.galleryTitle;
             document.getElementById('noGalleryPublic').textContent = t.noGallery;
 
+            // Videos
             document.getElementById('videosTitle').textContent = t.videosTitle;
             document.getElementById('noVideosPublic').textContent = t.noVideos;
 
+            // Projects
             document.getElementById('projectsTitle').textContent = t.projectsTitle;
             document.getElementById('project1Title').textContent = t.project1Title;
             document.getElementById('project1Desc').textContent = t.project1Desc;
             document.getElementById('project2Title').textContent = t.project2Title;
             document.getElementById('project2Desc').textContent = t.project2Desc;
 
+            // Contact
             document.getElementById('contactTitle').textContent = t.contactTitle;
             document.getElementById('contactAddress').textContent = t.contactAddress;
             document.getElementById('contactPhone').textContent = t.contactPhone;
             document.getElementById('contactEmail').textContent = t.contactEmail;
             document.getElementById('contactLocation').textContent = t.contactLocation;
 
+            // Dashboard
             document.getElementById('dashboardTitle').textContent = t.dashboardTitle;
             document.getElementById('statVisitors').textContent = t.statVisitors;
             document.getElementById('statMedia').textContent = t.statMedia;
             document.getElementById('statTexts').textContent = t.statTexts;
 
+            // Sidebar
             document.getElementById('sidebarDashboard').innerHTML = `<i class="fas fa-tachometer-alt"></i> ${t.sidebarDashboard}`;
             document.getElementById('sidebarGallery').innerHTML = `<i class="fas fa-images"></i> ${t.sidebarGallery}`;
             document.getElementById('sidebarVideos').innerHTML = `<i class="fas fa-video"></i> ${t.sidebarVideos}`;
             document.getElementById('sidebarText').innerHTML = `<i class="fas fa-file-alt"></i> ${t.sidebarText}`;
             document.getElementById('sidebarSettings').innerHTML = `<i class="fas fa-cog"></i> ${t.sidebarSettings}`;
 
+            // Dashboard sections
             document.getElementById('galleryDashboardTitle').textContent = t.galleryDashboardTitle;
             document.getElementById('videosDashboardTitle').textContent = t.videosDashboardTitle;
             document.getElementById('textDashboardTitle').textContent = t.textDashboardTitle;
             document.getElementById('settingsTitle').textContent = t.settingsTitle;
 
+            // Boutons
             document.getElementById('galleryAddBtn').innerHTML = `<i class="fas fa-cloud-upload-alt"></i> ${t.galleryAddBtn}`;
             document.getElementById('videosAddBtn').innerHTML = `<i class="fas fa-cloud-upload-alt"></i> ${t.videosAddBtn}`;
             document.getElementById('textAddBtn').innerHTML = `<i class="fas fa-file-alt"></i> ${t.textAddBtn}`;
@@ -2051,6 +2050,7 @@
             document.getElementById('settingsExportBtn').innerHTML = `<i class="fas fa-file-export"></i> ${t.settingsExportBtn}`;
             document.getElementById('settingsResetBtn').innerHTML = `<i class="fas fa-trash"></i> ${t.settingsResetBtn}`;
 
+            // Upload modal
             document.getElementById('uploadModalTitle').innerHTML = `<i class="fas fa-cloud-upload-alt"></i> ${t.uploadTitle}`;
             document.getElementById('uploadPcTitle').textContent = t.uploadFromPC;
             document.getElementById('uploadPcDesc').textContent = t.uploadFromPCDesc;
@@ -2071,12 +2071,14 @@
             document.getElementById('acceptBtn').innerHTML = `<i class="fas fa-check-circle"></i> ${t.accept}`;
             document.getElementById('validateBtn').innerHTML = `<i class="fas fa-check-double"></i> ${t.validate}`;
 
+            // Text modal
             document.getElementById('textModalTitle').innerHTML = `<i class="fas fa-file-alt"></i> ${t.textModalTitle}`;
             document.getElementById('textTitleLabel').innerHTML = `<i class="fas fa-heading"></i> ${t.textTitleLabel}`;
             document.getElementById('textContentLabel').innerHTML = `<i class="fas fa-align-left"></i> ${t.textContentLabel}`;
             document.getElementById('textCancelBtn').innerHTML = `<i class="fas fa-times"></i> ${t.textCancel}`;
             document.getElementById('textSaveBtn').innerHTML = `<i class="fas fa-save"></i> ${t.textSave}`;
 
+            // Password modal
             document.getElementById('passwordModalTitle').innerHTML = `<i class="fas fa-key"></i> ${t.passwordModalTitle}`;
             document.getElementById('currentPasswordLabel').innerHTML = `<i class="fas fa-lock"></i> ${t.currentPasswordLabel}`;
             document.getElementById('newPasswordLabel').innerHTML = `<i class="fas fa-lock"></i> ${t.newPasswordLabel}`;
@@ -2084,14 +2086,17 @@
             document.getElementById('passwordCancelBtn').innerHTML = `<i class="fas fa-times"></i> ${t.passwordCancel}`;
             document.getElementById('passwordSaveBtn').innerHTML = `<i class="fas fa-save"></i> ${t.passwordSave}`;
 
+            // Footer
             document.getElementById('footerFollow').textContent = t.footerFollow;
             document.getElementById('footerCopyright').textContent = t.footerCopyright;
 
+            // Logo
             document.getElementById('logoTitle').textContent = t.heroTitle;
             document.getElementById('logoSubtitle').textContent = t.heroSubtitle;
             document.getElementById('footerLogoTitle').textContent = t.heroTitle;
             document.getElementById('footerLogoSubtitle').textContent = t.heroSubtitle;
 
+            // WhatsApp
             document.getElementById('whatsappBtn').href = 'https://wa.me/212612345678?text=' + encodeURIComponent(
                 lang === 'fr' ? 'Bonjour, je souhaite des informations sur ANSFAL' :
                 'مرحباً، أود الحصول على معلومات حول جمعية أنسفال'
@@ -2103,15 +2108,18 @@
         // ============================================================
 
         function showSection(sectionId) {
+            // Cacher toutes les sections
             document.querySelectorAll('section').forEach(section => {
                 section.classList.remove('active');
             });
 
+            // Afficher la section cible
             const targetSection = document.getElementById(sectionId);
             if (targetSection) {
                 targetSection.classList.add('active');
             }
 
+            // Mettre à jour le menu
             document.querySelectorAll('#mainMenu a').forEach(link => {
                 link.classList.remove('active');
             });
@@ -2130,8 +2138,10 @@
                 document.getElementById(menuMap[sectionId]).classList.add('active');
             }
 
+            // Scroll en haut
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
+            // Charger les données si besoin
             if (sectionId === 'gallery') {
                 loadPublicGallery();
             } else if (sectionId === 'videos') {
@@ -2263,7 +2273,7 @@
                     const { error } = await supabase.from('media').insert([file]);
                     if (error) {
                         console.error('Erreur insertion:', error);
-                        showAlert('Erreur lors de l\'upload', 'error');
+                        showAlert('Erreur lors de l\'upload: ' + error.message, 'error');
                         return;
                     }
                 }
@@ -2281,7 +2291,7 @@
                 }
                 updateStats();
                 selectedFiles = [];
-                showAlert('Upload réussi !', 'success');
+                showAlert(currentLanguage === 'fr' ? 'Upload réussi !' : 'تم الرفع بنجاح!', 'success');
             } catch (e) {
                 console.error('Erreur upload:', e);
                 showAlert('Erreur lors de l\'upload', 'error');
@@ -2760,7 +2770,6 @@
             document.getElementById('totalMediaStat').textContent = images.length + videos.length;
             document.getElementById('totalTextsStat').textContent = texts.length;
             
-            // Mettre à jour le nombre de visiteurs
             const visitors = parseInt(localStorage.getItem('ansfal_visitors') || '0');
             document.getElementById('totalVisitorsStat').textContent = visitors;
             document.getElementById('totalVisitors').textContent = visitors;
@@ -2796,7 +2805,7 @@
                 } catch (e) {}
             }
 
-            // Initialisation du compteur de visiteurs
+            // Compteur de visiteurs
             let count = parseInt(localStorage.getItem('ansfal_visitors') || '0');
             count++;
             localStorage.setItem('ansfal_visitors', count.toString());
@@ -2815,7 +2824,7 @@
             // Affichage de la section d'accueil
             showSection('home');
 
-            // Click sur le bouton login
+            // Bouton login
             document.getElementById('loginBtn').addEventListener('click', function() {
                 if (currentUser) {
                     logout();
@@ -2826,7 +2835,6 @@
 
             console.log('✅ ANSFAL - Application initialisée avec succès');
             console.log('🔗 Supabase URL:', SUPABASE_URL);
-            console.log('🔑 Supabase Key:', SUPABASE_KEY.substring(0, 20) + '...');
             console.log('🌐 Langue actuelle:', currentLanguage);
             console.log('👤 Utilisateur:', currentUser ? currentUser.name : 'Non connecté');
         });
