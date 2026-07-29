@@ -30,11 +30,7 @@
             --sidebar-text: #ecf0f1;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Roboto', 'Cairo', sans-serif;
@@ -45,70 +41,20 @@
             padding-top: 95px;
         }
 
-        body.rtl {
-            direction: rtl;
-            text-align: right;
-        }
-
-        body.rtl .language-switcher {
-            right: auto;
-            left: 15px;
-        }
-
-        body.rtl .auth-bar {
-            flex-direction: row-reverse;
-        }
-
-        body.rtl .auth-form {
-            flex-direction: row-reverse;
-        }
-
-        body.rtl .user-info {
-            flex-direction: row-reverse;
-        }
-
-        body.rtl .sidebar-menu a {
-            border-left: none;
-            border-right: 4px solid transparent;
-        }
-
-        body.rtl .sidebar-menu a:hover {
-            border-right-color: var(--accent);
-        }
-
-        body.rtl .sidebar-menu a.active {
-            border-right-color: var(--accent);
-        }
-
-        body.rtl .sidebar-menu i {
-            margin-right: 0;
-            margin-left: 10px;
-        }
-
-        body.rtl .stat-card {
-            border-left: none;
-            border-right: 4px solid var(--primary);
-        }
-
-        body.rtl .dashboard-item {
-            border-left: none;
-            border-right: 4px solid var(--primary);
-        }
-
-        body.rtl .whatsapp-float {
-            right: auto;
-            left: 20px;
-        }
-
-        body.rtl .login-btn {
-            right: auto;
-            left: 20px;
-        }
-
-        body.rtl .btn-add-float {
-            right: auto;
-            left: 20px;
-        }
+        body.rtl { direction: rtl; text-align: right; }
+        body.rtl .language-switcher { right: auto; left: 15px; }
+        body.rtl .auth-bar { flex-direction: row-reverse; }
+        body.rtl .auth-form { flex-direction: row-reverse; }
+        body.rtl .user-info { flex-direction: row-reverse; }
+        body.rtl .sidebar-menu a { border-left: none; border-right: 4px solid transparent; }
+        body.rtl .sidebar-menu a:hover { border-right-color: var(--accent); }
+        body.rtl .sidebar-menu a.active { border-right-color: var(--accent); }
+        body.rtl .sidebar-menu i { margin-right: 0; margin-left: 10px; }
+        body.rtl .stat-card { border-left: none; border-right: 4px solid var(--primary); }
+        body.rtl .dashboard-item { border-left: none; border-right: 4px solid var(--primary); }
+        body.rtl .whatsapp-float { right: auto; left: 20px; }
+        body.rtl .login-btn { right: auto; left: 20px; }
+        body.rtl .btn-add-float { right: auto; left: 20px; }
 
         h1, h2, h3, h4 {
             font-family: 'Poppins', 'Cairo', sans-serif;
@@ -180,13 +126,8 @@
             gap: 5px;
         }
 
-        .lang-btn.active {
-            background-color: var(--dark);
-        }
-
-        .lang-btn:hover {
-            background-color: var(--secondary);
-        }
+        .lang-btn.active { background-color: var(--dark); }
+        .lang-btn:hover { background-color: var(--secondary); }
 
         /* ==================== BARRE D'AUTH ==================== */
         .auth-bar {
@@ -220,9 +161,7 @@
             font-size: 14px;
         }
 
-        .auth-form input::placeholder {
-            color: rgba(255,255,255,0.7);
-        }
+        .auth-form input::placeholder { color: rgba(255,255,255,0.7); }
 
         .auth-form button {
             background: var(--success);
@@ -235,9 +174,7 @@
             transition: background 0.3s;
         }
 
-        .auth-form button:hover {
-            background: #219653;
-        }
+        .auth-form button:hover { background: #219653; }
 
         .user-info {
             display: flex;
@@ -270,13 +207,9 @@
             transition: background 0.3s;
         }
 
-        .logout-btn:hover {
-            background: #c0392b;
-        }
+        .logout-btn:hover { background: #c0392b; }
 
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
         /* ==================== HEADER ==================== */
         header {
@@ -340,10 +273,7 @@
             font-size: 0.9rem;
         }
 
-        nav a:hover {
-            color: var(--primary);
-        }
-
+        nav a:hover { color: var(--primary); }
         nav a.active {
             color: var(--primary);
             border-bottom: 2px solid var(--primary);
@@ -355,19 +285,14 @@
             display: none;
         }
 
-        section.active {
-            display: block;
-        }
+        section.active { display: block; }
 
         .section-header {
             text-align: center;
             margin-bottom: 40px;
         }
 
-        .section-title h2 {
-            font-size: 2.5rem;
-        }
-
+        .section-title h2 { font-size: 2.5rem; }
         .section-title h2:after {
             content: '';
             display: block;
@@ -392,9 +317,7 @@
             align-items: center;
         }
 
-        .hero.active {
-            display: flex;
-        }
+        .hero.active { display: flex; }
 
         .hero h2 {
             font-size: 3rem;
@@ -456,9 +379,7 @@
             transition: transform 0.3s;
         }
 
-        .gallery-public-item:hover img {
-            transform: scale(1.05);
-        }
+        .gallery-public-item:hover img { transform: scale(1.05); }
 
         /* ==================== VIDÉOS ==================== */
         .videos-public {
@@ -518,9 +439,7 @@
             box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
 
-        body.rtl .dashboard-sidebar {
-            border-radius: 10px 0 0 10px;
-        }
+        body.rtl .dashboard-sidebar { border-radius: 10px 0 0 10px; }
 
         .sidebar-menu {
             list-style: none;
@@ -528,9 +447,7 @@
             margin: 0;
         }
 
-        .sidebar-menu li {
-            margin-bottom: 2px;
-        }
+        .sidebar-menu li { margin-bottom: 2px; }
 
         .sidebar-menu a {
             display: block;
@@ -595,9 +512,7 @@
             transition: transform 0.3s;
         }
 
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
+        .stat-card:hover { transform: translateY(-5px); }
 
         .stat-card h3 {
             margin: 0 0 10px 0;
@@ -616,9 +531,7 @@
             display: none;
         }
 
-        .dashboard-section-content.active {
-            display: block;
-        }
+        .dashboard-section-content.active { display: block; }
 
         .section-actions {
             display: flex;
@@ -682,9 +595,7 @@
             border-radius: 8px;
         }
 
-        .item-info {
-            flex-grow: 1;
-        }
+        .item-info { flex-grow: 1; }
 
         .item-info h4 {
             margin: 0 0 3px 0;
@@ -715,17 +626,10 @@
             transition: all 0.3s;
         }
 
-        .btn-action:hover {
-            transform: scale(1.1);
-        }
+        .btn-action:hover { transform: scale(1.1); }
 
-        .btn-action.view {
-            background: var(--success);
-        }
-
-        .btn-action.delete {
-            background: var(--danger);
-        }
+        .btn-action.view { background: var(--success); }
+        .btn-action.delete { background: var(--danger); }
 
         .no-content {
             color: #666;
@@ -803,9 +707,7 @@
             transition: all 0.3s;
         }
 
-        .admin-mode .btn-add-float {
-            display: flex;
-        }
+        .admin-mode .btn-add-float { display: flex; }
 
         .btn-add-float:hover {
             background: linear-gradient(135deg, #219653, #27ae60);
@@ -830,14 +732,8 @@
         }
 
         @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         .alert.success {
@@ -873,9 +769,7 @@
             padding: 20px;
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
         .modal {
             background: white;
@@ -920,13 +814,9 @@
             transition: background 0.3s;
         }
 
-        .close-modal:hover {
-            background: rgba(255,255,255,0.2);
-        }
+        .close-modal:hover { background: rgba(255,255,255,0.2); }
 
-        .modal-body {
-            padding: 25px;
-        }
+        .modal-body { padding: 25px; }
 
         .upload-choice {
             display: grid;
@@ -984,9 +874,7 @@
             background: var(--light);
         }
 
-        .upload-area:hover {
-            border-color: var(--accent);
-        }
+        .upload-area:hover { border-color: var(--accent); }
 
         .upload-icon {
             font-size: 3rem;
@@ -1024,22 +912,16 @@
             transform: translateY(-2px);
         }
 
-        .file-input {
-            display: none;
-        }
+        .file-input { display: none; }
 
         .url-input-area {
             display: none;
             margin-bottom: 20px;
         }
 
-        .url-input-area.active {
-            display: block;
-        }
+        .url-input-area.active { display: block; }
 
-        .url-input-group {
-            margin-bottom: 15px;
-        }
+        .url-input-group { margin-bottom: 15px; }
 
         .url-input-group label {
             display: block;
@@ -1216,9 +1098,7 @@
             transition: all 0.3s;
         }
 
-        .btn-ok:hover {
-            background: #219653;
-        }
+        .btn-ok:hover { background: #219653; }
 
         #actionButtons {
             display: flex;
@@ -1274,137 +1154,84 @@
 
         /* ==================== RESPONSIVE ==================== */
         @media (max-width: 768px) {
-            body {
-                padding-top: 80px;
-            }
-
+            body { padding-top: 80px; }
             .visitor-counter .container {
                 flex-direction: column;
                 gap: 3px;
                 font-size: 0.7rem;
             }
-
             .auth-bar {
                 flex-direction: column;
                 gap: 5px;
                 padding: 5px 10px;
             }
-
             .auth-form {
                 flex-direction: column;
                 width: 100%;
             }
-
             .auth-form input {
                 width: 100%;
                 font-size: 12px;
                 padding: 5px 10px;
             }
-
             .user-info {
                 flex-direction: column;
                 gap: 5px;
             }
-
             .header-container {
                 flex-direction: column;
                 gap: 8px;
                 padding: 8px 0;
             }
-
-            .logo-text h1 {
-                font-size: 1.1rem;
-            }
-
-            .logo-text p {
-                font-size: 0.6rem;
-            }
-
-            nav ul {
-                gap: 5px;
-            }
-
+            .logo-text h1 { font-size: 1.1rem; }
+            .logo-text p { font-size: 0.6rem; }
+            nav ul { gap: 5px; }
             nav a {
                 font-size: 0.75rem;
                 padding: 3px 8px;
             }
-
             .hero {
                 padding: 60px 0 40px;
                 min-height: 300px;
             }
-
-            .hero h2 {
-                font-size: 2rem;
-            }
-
-            .hero h3 {
-                font-size: 1.1rem;
-            }
-
-            .hero p {
-                font-size: 0.9rem;
-            }
-
+            .hero h2 { font-size: 2rem; }
+            .hero h3 { font-size: 1.1rem; }
+            .hero p { font-size: 0.9rem; }
             .dashboard-container {
                 grid-template-columns: 1fr;
                 padding: 10px;
             }
-
-            .dashboard-sidebar {
-                border-radius: 10px;
-            }
-
-            .dashboard-content {
-                padding: 15px;
-            }
-
-            .page-title {
-                font-size: 1.2rem;
-            }
-
+            .dashboard-sidebar { border-radius: 10px; }
+            .dashboard-content { padding: 15px; }
+            .page-title { font-size: 1.2rem; }
             .footer-container {
                 grid-template-columns: 1fr;
                 text-align: center;
             }
-
-            .upload-choice {
-                grid-template-columns: 1fr;
-            }
-
+            .upload-choice { grid-template-columns: 1fr; }
             .whatsapp-float {
                 width: 45px;
                 height: 45px;
                 font-size: 1.3rem;
                 bottom: 70px;
             }
-
             .login-btn {
                 width: 40px;
                 height: 40px;
                 font-size: 1rem;
             }
-
             .btn-add-float {
                 width: 40px;
                 height: 40px;
                 font-size: 18px;
                 bottom: 120px;
             }
-
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
         }
 
         @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .items-grid {
-                grid-template-columns: 1fr;
-            }
+            .stats-grid { grid-template-columns: 1fr; }
+            .items-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -1892,10 +1719,11 @@
 
     <script>
         // ============================================================
-        // ===== CONFIGURATION =====
+        // ===== CONFIGURATION SUPABASE =====
         // ============================================================
         const SUPABASE_URL = 'https://kyjjblstxbdkjpzgnvna.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5ampibHN0eGJka2pwemdudm5hIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUwMTk3ODcsImV4cCI6MjA1MDU5NTc4N30.CGIl4tN9EXM4dhGzDvLDqS34PM0aJQjYhDXqBkq8W0E';
+        // Clé Publishable fournie
+        const SUPABASE_KEY = 'sb_publishable_yurioNVjwNwcsFvJ7q47sw_qC-o0hSn';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentUser = null;
@@ -2154,18 +1982,15 @@
         function translatePage(lang) {
             const t = translations[lang];
 
-            // Compteur
             document.getElementById('visitorsLabel').innerHTML = `${t.visitors}: <span class="visitor-count" id="totalVisitors">0</span>`;
             document.getElementById('onlineLabel').innerHTML = `${t.online}: <span class="visitor-count" id="onlineVisitors">0</span>`;
             document.getElementById('lastVisitLabel').innerHTML = `${t.lastVisit}: <span id="lastVisit">--/--/---- --:--:--</span>`;
 
-            // Auth
             document.getElementById('username').placeholder = t.username;
             document.getElementById('password').placeholder = t.password;
             document.querySelector('#loginForm button').textContent = t.login;
             document.getElementById('logoutBtn').textContent = t.logout;
 
-            // Menu
             document.getElementById('menuHome').textContent = t.home;
             document.getElementById('menuAbout').textContent = t.about;
             document.getElementById('menuGallery').textContent = t.gallery;
@@ -2174,61 +1999,51 @@
             document.getElementById('menuContact').textContent = t.contact;
             document.getElementById('menuDashboard').textContent = t.dashboard;
 
-            // Hero
             document.getElementById('heroTitle').textContent = t.heroTitle;
             document.getElementById('heroSubtitle').textContent = t.heroSubtitle;
             document.getElementById('heroText').textContent = t.heroText;
             document.getElementById('heroBtn1').textContent = t.heroBtn1;
             document.getElementById('heroBtn2').innerHTML = `<i class="fas fa-images"></i> ${t.heroBtn2}`;
 
-            // About
             document.getElementById('aboutTitle').textContent = t.aboutTitle;
             document.getElementById('aboutHistory').textContent = t.aboutHistory;
             document.getElementById('aboutText1').textContent = t.aboutText1;
             document.getElementById('aboutText2').textContent = t.aboutText2;
 
-            // Gallery
             document.getElementById('galleryTitle').textContent = t.galleryTitle;
             document.getElementById('noGalleryPublic').textContent = t.noGallery;
 
-            // Videos
             document.getElementById('videosTitle').textContent = t.videosTitle;
             document.getElementById('noVideosPublic').textContent = t.noVideos;
 
-            // Projects
             document.getElementById('projectsTitle').textContent = t.projectsTitle;
             document.getElementById('project1Title').textContent = t.project1Title;
             document.getElementById('project1Desc').textContent = t.project1Desc;
             document.getElementById('project2Title').textContent = t.project2Title;
             document.getElementById('project2Desc').textContent = t.project2Desc;
 
-            // Contact
             document.getElementById('contactTitle').textContent = t.contactTitle;
             document.getElementById('contactAddress').textContent = t.contactAddress;
             document.getElementById('contactPhone').textContent = t.contactPhone;
             document.getElementById('contactEmail').textContent = t.contactEmail;
             document.getElementById('contactLocation').textContent = t.contactLocation;
 
-            // Dashboard
             document.getElementById('dashboardTitle').textContent = t.dashboardTitle;
             document.getElementById('statVisitors').textContent = t.statVisitors;
             document.getElementById('statMedia').textContent = t.statMedia;
             document.getElementById('statTexts').textContent = t.statTexts;
 
-            // Sidebar
             document.getElementById('sidebarDashboard').innerHTML = `<i class="fas fa-tachometer-alt"></i> ${t.sidebarDashboard}`;
             document.getElementById('sidebarGallery').innerHTML = `<i class="fas fa-images"></i> ${t.sidebarGallery}`;
             document.getElementById('sidebarVideos').innerHTML = `<i class="fas fa-video"></i> ${t.sidebarVideos}`;
             document.getElementById('sidebarText').innerHTML = `<i class="fas fa-file-alt"></i> ${t.sidebarText}`;
             document.getElementById('sidebarSettings').innerHTML = `<i class="fas fa-cog"></i> ${t.sidebarSettings}`;
 
-            // Dashboard sections
             document.getElementById('galleryDashboardTitle').textContent = t.galleryDashboardTitle;
             document.getElementById('videosDashboardTitle').textContent = t.videosDashboardTitle;
             document.getElementById('textDashboardTitle').textContent = t.textDashboardTitle;
             document.getElementById('settingsTitle').textContent = t.settingsTitle;
 
-            // Buttons
             document.getElementById('galleryAddBtn').innerHTML = `<i class="fas fa-cloud-upload-alt"></i> ${t.galleryAddBtn}`;
             document.getElementById('videosAddBtn').innerHTML = `<i class="fas fa-cloud-upload-alt"></i> ${t.videosAddBtn}`;
             document.getElementById('textAddBtn').innerHTML = `<i class="fas fa-file-alt"></i> ${t.textAddBtn}`;
@@ -2236,7 +2051,6 @@
             document.getElementById('settingsExportBtn').innerHTML = `<i class="fas fa-file-export"></i> ${t.settingsExportBtn}`;
             document.getElementById('settingsResetBtn').innerHTML = `<i class="fas fa-trash"></i> ${t.settingsResetBtn}`;
 
-            // Upload modal
             document.getElementById('uploadModalTitle').innerHTML = `<i class="fas fa-cloud-upload-alt"></i> ${t.uploadTitle}`;
             document.getElementById('uploadPcTitle').textContent = t.uploadFromPC;
             document.getElementById('uploadPcDesc').textContent = t.uploadFromPCDesc;
@@ -2257,14 +2071,12 @@
             document.getElementById('acceptBtn').innerHTML = `<i class="fas fa-check-circle"></i> ${t.accept}`;
             document.getElementById('validateBtn').innerHTML = `<i class="fas fa-check-double"></i> ${t.validate}`;
 
-            // Text modal
             document.getElementById('textModalTitle').innerHTML = `<i class="fas fa-file-alt"></i> ${t.textModalTitle}`;
             document.getElementById('textTitleLabel').innerHTML = `<i class="fas fa-heading"></i> ${t.textTitleLabel}`;
             document.getElementById('textContentLabel').innerHTML = `<i class="fas fa-align-left"></i> ${t.textContentLabel}`;
             document.getElementById('textCancelBtn').innerHTML = `<i class="fas fa-times"></i> ${t.textCancel}`;
             document.getElementById('textSaveBtn').innerHTML = `<i class="fas fa-save"></i> ${t.textSave}`;
 
-            // Password modal
             document.getElementById('passwordModalTitle').innerHTML = `<i class="fas fa-key"></i> ${t.passwordModalTitle}`;
             document.getElementById('currentPasswordLabel').innerHTML = `<i class="fas fa-lock"></i> ${t.currentPasswordLabel}`;
             document.getElementById('newPasswordLabel').innerHTML = `<i class="fas fa-lock"></i> ${t.newPasswordLabel}`;
@@ -2272,17 +2084,14 @@
             document.getElementById('passwordCancelBtn').innerHTML = `<i class="fas fa-times"></i> ${t.passwordCancel}`;
             document.getElementById('passwordSaveBtn').innerHTML = `<i class="fas fa-save"></i> ${t.passwordSave}`;
 
-            // Footer
             document.getElementById('footerFollow').textContent = t.footerFollow;
             document.getElementById('footerCopyright').textContent = t.footerCopyright;
 
-            // Logo
             document.getElementById('logoTitle').textContent = t.heroTitle;
             document.getElementById('logoSubtitle').textContent = t.heroSubtitle;
             document.getElementById('footerLogoTitle').textContent = t.heroTitle;
             document.getElementById('footerLogoSubtitle').textContent = t.heroSubtitle;
 
-            // WhatsApp
             document.getElementById('whatsappBtn').href = 'https://wa.me/212612345678?text=' + encodeURIComponent(
                 lang === 'fr' ? 'Bonjour, je souhaite des informations sur ANSFAL' :
                 'مرحباً، أود الحصول على معلومات حول جمعية أنسفال'
@@ -2366,7 +2175,17 @@
 
         async function loadPublicGallery() {
             try {
-                const { data } = await supabase.from('media').select('*').eq('type', 'image').order('created_at', { ascending: false });
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('*')
+                    .eq('type', 'image')
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Erreur Supabase:', error);
+                    return;
+                }
+
                 const galleryPublic = document.getElementById('publicGallery');
                 if (!data || data.length === 0) {
                     galleryPublic.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune image disponible' : 'لا توجد صور متاحة'}</div>`;
@@ -2379,13 +2198,24 @@
                 galleryPublic.innerHTML = html;
                 localStorage.setItem('ansfal_image', JSON.stringify(data));
             } catch (e) {
-                console.error('Error loading gallery:', e);
+                console.error('Erreur chargement galerie:', e);
+                showAlert('Erreur de connexion à Supabase', 'error');
             }
         }
 
         async function loadPublicVideos() {
             try {
-                const { data } = await supabase.from('media').select('*').eq('type', 'video').order('created_at', { ascending: false });
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('*')
+                    .eq('type', 'video')
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    console.error('Erreur Supabase:', error);
+                    return;
+                }
+
                 const videosPublic = document.getElementById('publicVideos');
                 if (!data || data.length === 0) {
                     videosPublic.innerHTML = `<div class="no-content">${currentLanguage === 'fr' ? 'Aucune vidéo disponible' : 'لا توجد فيديوهات متاحة'}</div>`;
@@ -2414,7 +2244,8 @@
                 videosPublic.innerHTML = html;
                 localStorage.setItem('ansfal_video', JSON.stringify(data));
             } catch (e) {
-                console.error('Error loading videos:', e);
+                console.error('Erreur chargement vidéos:', e);
+                showAlert('Erreur de connexion à Supabase', 'error');
             }
         }
 
@@ -2429,7 +2260,12 @@
                 }));
                 
                 for (const file of newFiles) {
-                    await supabase.from('media').insert([file]);
+                    const { error } = await supabase.from('media').insert([file]);
+                    if (error) {
+                        console.error('Erreur insertion:', error);
+                        showAlert('Erreur lors de l\'upload', 'error');
+                        return;
+                    }
                 }
                 
                 document.getElementById('uploadProgress').style.display = 'none';
@@ -2445,8 +2281,9 @@
                 }
                 updateStats();
                 selectedFiles = [];
+                showAlert('Upload réussi !', 'success');
             } catch (e) {
-                console.error('Error uploading:', e);
+                console.error('Erreur upload:', e);
                 showAlert('Erreur lors de l\'upload', 'error');
             }
         }
@@ -2601,9 +2438,25 @@
             if (!confirm(currentLanguage === 'fr' ? 'Supprimer ce fichier ?' : 'حذف هذا الملف؟')) return;
 
             try {
-                const { data } = await supabase.from('media').select('*').eq('type', type);
-                if (!data || data.length === 0 || !data[index]) return;
-                await supabase.from('media').delete().eq('id', data[index].id);
+                const { data, error } = await supabase
+                    .from('media')
+                    .select('*')
+                    .eq('type', type);
+                    
+                if (error || !data || data.length === 0 || !data[index]) {
+                    showAlert('Erreur lors de la suppression', 'error');
+                    return;
+                }
+                
+                const { error: deleteError } = await supabase
+                    .from('media')
+                    .delete()
+                    .eq('id', data[index].id);
+                    
+                if (deleteError) {
+                    showAlert('Erreur lors de la suppression', 'error');
+                    return;
+                }
 
                 if (type === 'image') {
                     loadGalleryDashboard();
@@ -2613,8 +2466,9 @@
                     loadPublicVideos();
                 }
                 updateStats();
+                showAlert('Fichier supprimé', 'success');
             } catch (e) {
-                console.error('Error deleting:', e);
+                console.error('Erreur suppression:', e);
                 showAlert('Erreur lors de la suppression', 'error');
             }
         }
@@ -2627,6 +2481,7 @@
             localStorage.setItem('ansfal_text', JSON.stringify(texts));
             loadTextDashboard();
             updateStats();
+            showAlert('Texte supprimé', 'success');
         }
 
         // ============================================================
@@ -2904,6 +2759,11 @@
             const texts = JSON.parse(localStorage.getItem('ansfal_text') || '[]');
             document.getElementById('totalMediaStat').textContent = images.length + videos.length;
             document.getElementById('totalTextsStat').textContent = texts.length;
+            
+            // Mettre à jour le nombre de visiteurs
+            const visitors = parseInt(localStorage.getItem('ansfal_visitors') || '0');
+            document.getElementById('totalVisitorsStat').textContent = visitors;
+            document.getElementById('totalVisitors').textContent = visitors;
         }
 
         function showAlert(message, type = 'info') {
@@ -2936,11 +2796,12 @@
                 } catch (e) {}
             }
 
-            // Initialisation du compteur
+            // Initialisation du compteur de visiteurs
             let count = parseInt(localStorage.getItem('ansfal_visitors') || '0');
             count++;
             localStorage.setItem('ansfal_visitors', count.toString());
             document.getElementById('totalVisitors').textContent = count;
+            document.getElementById('totalVisitorsStat').textContent = count;
 
             const now = new Date();
             document.getElementById('lastVisit').textContent = now.toLocaleString();
@@ -2959,10 +2820,15 @@
                 if (currentUser) {
                     logout();
                 } else {
-                    // Faire défiler jusqu'à la barre d'auth
                     document.getElementById('authBar').scrollIntoView({ behavior: 'smooth' });
                 }
             });
+
+            console.log('✅ ANSFAL - Application initialisée avec succès');
+            console.log('🔗 Supabase URL:', SUPABASE_URL);
+            console.log('🔑 Supabase Key:', SUPABASE_KEY.substring(0, 20) + '...');
+            console.log('🌐 Langue actuelle:', currentLanguage);
+            console.log('👤 Utilisateur:', currentUser ? currentUser.name : 'Non connecté');
         });
     </script>
 </body>
