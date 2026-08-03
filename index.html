@@ -1620,8 +1620,12 @@
                     <h3 class="upload-text" id="uploadAreaText">Glissez-déposez vos fichiers ici</h3>
                     <p class="upload-subtext" id="uploadAreaSubtext">ou cliquez pour parcourir vos fichiers</p>
                     <div class="size-warning"><i class="fas fa-info-circle"></i> <span id="modalSizeWarning">Taille max: 20MB par fichier</span></div>
-                    <button class="btn-browse" id="browseBtn"><i class="fas fa-folder-open"></i> <span id="browseBtnText">Parcourir</span></button>
-                    <input type="file" id="fileInput" class="file-input" multiple />
+                    
+                    <!-- BOUTON PARCOURIR CORRIGÉ -->
+                    <button class="btn-browse" id="browseBtn" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-folder-open"></i> <span id="browseBtnText">Parcourir</span>
+                    </button>
+                    <input type="file" id="fileInput" class="file-input" multiple accept="image/*,video/*">
                 </div>
 
                 <div class="url-input-area" id="urlUploadArea">
@@ -1658,10 +1662,14 @@
                     <button class="btn-ok" onclick="hideUploadModal()" id="okBtn"><i class="fas fa-check"></i> <span id="okBtnText">OK</span></button>
                 </div>
 
+                <!-- BOUTONS D'ACTION CORRIGÉS -->
                 <div class="upload-actions" id="actionButtons">
-                    <button class="btn-browse" onclick="acceptUpload()" id="acceptBtn" style="background:var(--warning);"><i class="fas fa-check-circle"></i> <span id="acceptBtnText">Accepter</span></button>
-                    <button class="btn-browse" onclick="validateAndUpload()" id="validateBtn" style="background:var(--success);display:none;"><i class="fas fa-check-double"></i> <span id="validateBtnText">Valider</span></button>
-                    <button class="btn-browse" onclick="hideUploadModal()" id="cancelBtn" style="background:var(--danger);"><i class="fas fa-times"></i> <span id="cancelBtnText">Annuler</span></button>
+                    <button class="btn-browse" onclick="hideUploadModal()" id="cancelBtn" style="background:var(--danger);">
+                        <i class="fas fa-times"></i> <span id="cancelBtnText">Annuler</span>
+                    </button>
+                    <button class="btn-browse" onclick="uploadFiles()" id="uploadBtn" style="background:var(--success);">
+                        <i class="fas fa-cloud-upload-alt"></i> <span id="uploadBtnText">Téléverser</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -2171,16 +2179,25 @@
 
         function showUploadModal(type) {
             var t = getLang();
-            if (type === 'text') { document.getElementById('textModal').classList.add('active'); return; }
+            if (type === 'text') { 
+                document.getElementById('textModal').classList.add('active'); 
+                return; 
+            }
             document.getElementById('uploadModal').classList.add('active');
-            document.getElementById('fileInput').onchange = function(e) {
-                var files = e.target.files;
-                for (var i = 0; i < files.length; i++) {
-                    selectedFiles.push(files[i]);
-                }
-                updateFilePreview();
-                document.getElementById('noFiles').style.display = 'none';
-            };
+            
+            var fileInput = document.getElementById('fileInput');
+            if (fileInput) {
+                fileInput.onchange = function(e) {
+                    var files = e.target.files;
+                    for (var i = 0; i < files.length; i++) {
+                        selectedFiles.push(files[i]);
+                    }
+                    updateFilePreview();
+                    document.getElementById('noFiles').style.display = 'none';
+                    // Réinitialiser l'input
+                    fileInput.value = '';
+                };
+            }
         }
 
         function hideUploadModal() {
@@ -2191,8 +2208,6 @@
             document.getElementById('uploadProgress').style.display = 'none';
             document.getElementById('uploadSuccess').style.display = 'none';
             document.getElementById('actionButtons').style.display = 'flex';
-            document.getElementById('acceptBtn').style.display = 'flex';
-            document.getElementById('validateBtn').style.display = 'none';
         }
 
         function hideTextModal() { document.getElementById('textModal').classList.remove('active'); }
@@ -2247,29 +2262,113 @@
             showAlert(t.alertURLAdded, 'success');
         }
 
-        function acceptUpload() {
+        // ============================================================
+        // TÉLÉVERSER LES FICHIERS VERS SUPABASE
+        // ============================================================
+        async function uploadFiles() {
             var t = getLang();
-            if (selectedFiles.length === 0) { showAlert(t.alertNoFile, 'error'); return; }
-            document.getElementById('acceptBtn').style.display = 'none';
-            document.getElementById('validateBtn').style.display = 'flex';
+            
+            if (selectedFiles.length === 0) {
+                showAlert(t.alertNoFile, 'error');
+                return;
+            }
+
+            // Afficher la barre de progression
+            document.getElementById('uploadProgress').style.display = 'block';
+            document.getElementById('actionButtons').style.display = 'none';
+            
+            var total = selectedFiles.length;
+            var uploaded = 0;
+            var errors = [];
+
+            for (var i = 0; i < selectedFiles.length; i++) {
+                var file = selectedFiles[i];
+                
+                try {
+                    // Déterminer le type (image ou vidéo)
+                    var isVideo = file.type && file.type.startsWith('video/');
+                    var tableName = isVideo ? 'videos' : 'gallery';
+                    
+                    // Lire le fichier en base64
+                    var base64 = await readFileAsBase64(file);
+                    
+                    // Créer l'objet à insérer
+                    var data = {
+                        title: file.name.split('.')[0] || 'Fichier ' + (i + 1),
+                        description: 'Uploadé depuis le site ANSFAL'
+                    };
+                    
+                    // Si c'est une image, ajouter image_url
+                    if (isVideo) {
+                        data.video_url = base64;
+                    } else {
+                        data.image_url = base64;
+                    }
+                    
+                    // Insérer dans Supabase
+                    var { error } = await supabase
+                        .from(tableName)
+                        .insert([data]);
+                    
+                    if (error) {
+                        errors.push(file.name + ': ' + error.message);
+                    } else {
+                        uploaded++;
+                    }
+                    
+                    // Mettre à jour la progression
+                    var progress = Math.round(((i + 1) / total) * 100);
+                    document.getElementById('progressFill').style.width = progress + '%';
+                    document.getElementById('progressText').textContent = progress + '% (' + (i + 1) + '/' + total + ')';
+                    
+                } catch (error) {
+                    errors.push(file.name + ': ' + error.message);
+                }
+            }
+
+            // Afficher le résultat
+            document.getElementById('uploadProgress').style.display = 'none';
+            
+            if (errors.length === 0) {
+                // Succès
+                document.getElementById('uploadSuccess').style.display = 'block';
+                document.getElementById('successMessage').textContent = uploaded + ' fichier(s) téléversé(s) avec succès !';
+                showAlert(uploaded + ' fichier(s) téléversé(s) avec succès !', 'success');
+                
+                // Recharger les données
+                setTimeout(function() {
+                    loadGallery();
+                    loadVideos();
+                }, 1000);
+                
+            } else {
+                // Erreurs
+                showAlert('Erreur: ' + errors.join(', '), 'error');
+                document.getElementById('actionButtons').style.display = 'flex';
+            }
+            
+            // Réinitialiser après 5 secondes si succès
+            if (errors.length === 0) {
+                setTimeout(function() {
+                    hideUploadModal();
+                }, 3000);
+            }
         }
 
-        function validateAndUpload() {
-            document.getElementById('validateBtn').disabled = true;
-            document.getElementById('uploadProgress').style.display = 'block';
-            var p = 0;
-            var interval = setInterval(function() {
-                p += 10;
-                document.getElementById('progressFill').style.width = p + '%';
-                document.getElementById('progressText').textContent = p + '%';
-                if (p >= 100) {
-                    clearInterval(interval);
-                    document.getElementById('uploadProgress').style.display = 'none';
-                    document.getElementById('uploadSuccess').style.display = 'block';
-                    document.getElementById('actionButtons').style.display = 'none';
-                    document.getElementById('validateBtn').disabled = false;
-                }
-            }, 100);
+        // ============================================================
+        // LIRE UN FICHIER EN BASE64
+        // ============================================================
+        function readFileAsBase64(file) {
+            return new Promise(function(resolve, reject) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    resolve(e.target.result);
+                };
+                reader.onerror = function(e) {
+                    reject(e.target.error);
+                };
+                reader.readAsDataURL(file);
+            });
         }
 
         function saveTextContent() {
@@ -2617,8 +2716,7 @@
         window.showPasswordModal = showPasswordModal;
         window.selectUploadMode = selectUploadMode;
         window.addUrlMedia = addUrlMedia;
-        window.acceptUpload = acceptUpload;
-        window.validateAndUpload = validateAndUpload;
+        window.uploadFiles = uploadFiles;
         window.saveTextContent = saveTextContent;
         window.changePassword = changePassword;
         window.resetAllData = resetAllData;
