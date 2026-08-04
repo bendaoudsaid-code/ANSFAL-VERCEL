@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ANSFAL - جمعية التعاون والتنمية والبيئة</title>
+    <title>Association ANSFAL - جمعية أنسفال للتعاون والتنمية والبيئة</title>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -15,7 +15,7 @@
 
     <style>
         /* ============================================================
-           STYLES COMPLETS - Version 2 avec Ticker + Météo
+           STYLES COMPLETS
            ============================================================ */
         * {
             margin: 0;
@@ -34,10 +34,15 @@
             --success: #4caf50;
             --danger: #f44336;
             --info: #2196F3;
+            --warning: #f39c12;
             --sidebar-bg: #2c3e50;
             --sidebar-text: #ecf0f1;
             --whatsapp: #25D366;
             --ticker-bg: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            --visa: #1a1f71;
+            --mastercard: #eb001b;
+            --amex: #2e77d0;
+            --cmi: #e67e22;
         }
         body {
             font-family: 'Roboto', 'Cairo', sans-serif;
@@ -380,6 +385,138 @@
             color: var(--accent);
         }
 
+        /* ---- Dons / Paiement ---- */
+        .payment-section {
+            background: var(--light);
+            padding: 40px 0;
+        }
+        .payment-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--dark);
+        }
+        .payment-section h2:after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            margin: 10px auto 0;
+        }
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        .card-item {
+            width: 120px;
+            padding: 20px 10px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+        }
+        .card-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        .card-item.active {
+            border-color: var(--primary);
+            background: var(--light);
+        }
+        .card-item img {
+            width: 80px;
+            height: 50px;
+            object-fit: contain;
+            margin-bottom: 8px;
+        }
+        .card-item .card-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        .card-item .card-name i {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .card-item.visa .card-name i {
+            color: var(--visa);
+        }
+        .card-item.mastercard .card-name i {
+            color: var(--mastercard);
+        }
+        .card-item.amex .card-name i {
+            color: var(--amex);
+        }
+        .card-item.cmi .card-name i {
+            color: var(--cmi);
+        }
+
+        .payment-form {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+        }
+        .payment-form .form-group {
+            margin-bottom: 18px;
+        }
+        .payment-form label {
+            display: block;
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        .payment-form input,
+        .payment-form select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        .payment-form input:focus,
+        .payment-form select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        .payment-form .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .payment-form .form-row .form-group {
+            flex: 1;
+        }
+        .payment-form .btn-payment {
+            width: 100%;
+            padding: 14px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .payment-form .btn-payment:hover {
+            background: #219653;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+        .payment-form .btn-payment i {
+            margin-right: 8px;
+        }
+
         /* ---- Galerie Publique ---- */
         #galleryContainer {
             display: grid;
@@ -440,6 +577,210 @@
             font-weight: 500;
             color: var(--dark);
             text-align: center;
+        }
+
+        /* ---- Actualité ANSFAL ---- */
+        .actu-section {
+            background: var(--white);
+            padding: 40px 0;
+            border-top: 2px solid var(--light);
+            border-bottom: 2px solid var(--light);
+        }
+        .actu-section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--dark);
+        }
+        .actu-section h2:after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--accent);
+            margin: 10px auto 0;
+        }
+        .actu-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .actu-item {
+            background: var(--light);
+            border-radius: 10px;
+            padding: 15px 20px;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        .actu-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow);
+        }
+        .actu-item .actu-text {
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.5;
+        }
+        .actu-item .actu-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 0.7rem;
+            color: #888;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .actu-item .actu-meta .author {
+            font-weight: 500;
+            color: var(--primary);
+        }
+        .actu-item .actu-meta .status {
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .actu-item .actu-meta .status.published {
+            background: var(--success);
+            color: white;
+        }
+        .actu-item .actu-meta .status.draft {
+            background: var(--warning);
+            color: white;
+        }
+        .actu-item .actu-meta .word-count {
+            background: var(--info);
+            color: white;
+            padding: 1px 8px;
+            border-radius: 8px;
+            font-size: 0.6rem;
+        }
+        .actu-item .actu-expand {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #ddd;
+            display: none;
+            font-size: 0.9rem;
+            color: #555;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .actu-item .actu-expand.show {
+            display: block;
+        }
+        .actu-item .toggle-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 2px 10px;
+        }
+        .actu-item .toggle-btn:hover {
+            text-decoration: underline;
+        }
+        .actu-item .admin-actions {
+            display: none;
+            gap: 5px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        .admin-mode .actu-item .admin-actions {
+            display: flex;
+        }
+        .actu-item .admin-actions .btn-actu {
+            padding: 4px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .actu-item .admin-actions .btn-actu.publish {
+            background: var(--success);
+            color: white;
+        }
+        .actu-item .admin-actions .btn-actu.publish:hover {
+            background: #219653;
+        }
+        .actu-item .admin-actions .btn-actu.delete {
+            background: var(--danger);
+            color: white;
+        }
+        .actu-item .admin-actions .btn-actu.delete:hover {
+            background: #c0392b;
+        }
+        .actu-item .admin-actions .btn-actu.edit {
+            background: var(--info);
+            color: white;
+        }
+        .actu-item .admin-actions .btn-actu.edit:hover {
+            background: #1a73e8;
+        }
+
+        /* Formulaire d'ajout d'actualité */
+        .actu-form {
+            max-width: 800px;
+            margin: 30px auto 0;
+            background: var(--light);
+            padding: 25px;
+            border-radius: 10px;
+        }
+        .actu-form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+        .actu-form textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        .actu-form .actu-form-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .actu-form .actu-form-row .word-counter {
+            font-size: 0.8rem;
+            color: #888;
+            margin-left: auto;
+        }
+        .actu-form .actu-form-row .word-counter .count {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .actu-form .actu-form-row .word-counter .warning {
+            color: var(--danger);
+        }
+        .btn-actu-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-actu-submit:hover {
+            background: var(--dark);
+            transform: translateY(-2px);
         }
 
         /* ---- Dashboard ---- */
@@ -566,6 +907,12 @@
             background: #219653;
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(33, 150, 83, 0.3);
+        }
+        .btn-import.warning {
+            background: var(--warning);
+        }
+        .btn-import.warning:hover {
+            background: #d35400;
         }
         .items-grid {
             display: grid;
@@ -1203,7 +1550,7 @@
         }
 
         /* ============================================================
-           NOUVEAUX STYLES : TICKER + MÉTÉO
+           TICKER + MÉTÉO
            ============================================================ */
         .ticker-bar {
             position: fixed;
@@ -1236,20 +1583,26 @@
             white-space: nowrap;
             font-size: 0.95rem;
             font-weight: 500;
-            animation: ticker-scroll 25s linear infinite;
             color: #fff;
             text-shadow: 0 0 10px rgba(60, 179, 113, 0.3);
             padding: 0 10px;
+            animation-duration: 60s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
         }
+        body:not(.rtl) .ticker-text {
+            animation-name: ticker-scroll-ltr;
+        }
+        body.rtl .ticker-text {
+            animation-name: ticker-scroll-rtl;
+        }
+
         .ticker-text i {
             margin: 0 8px;
             color: var(--accent);
         }
-        body.rtl .ticker-text {
-            animation: ticker-scroll-rtl 25s linear infinite;
-        }
 
-        @keyframes ticker-scroll {
+        @keyframes ticker-scroll-ltr {
             0% {
                 transform: translateX(100%);
             }
@@ -1257,6 +1610,7 @@
                 transform: translateX(-200%);
             }
         }
+
         @keyframes ticker-scroll-rtl {
             0% {
                 transform: translateX(-100%);
@@ -1280,13 +1634,13 @@
             color: var(--accent);
             font-weight: 600;
             letter-spacing: 0.5px;
+            flex-shrink: 0;
         }
         body.rtl .ticker-label {
             margin-right: 0;
             margin-left: 12px;
         }
 
-        /* Météo */
         .weather-box {
             display: flex;
             align-items: center;
@@ -1300,6 +1654,7 @@
             justify-content: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(5px);
+            flex-shrink: 0;
         }
         .weather-box i {
             font-size: 1.3rem;
@@ -1316,7 +1671,7 @@
             color: #aaa;
         }
 
-        /* ---- Gestion de l'affichage admin ---- */
+        /* ---- Admin ---- */
         .admin-only {
             display: none !important;
         }
@@ -1351,7 +1706,7 @@
             display: block !important;
         }
 
-        /* ---- Paramètres d'édition ---- */
+        /* ---- Paramètres ---- */
         .settings-section {
             margin-top: 20px;
             padding: 20px;
@@ -1388,20 +1743,14 @@
             color: var(--dark);
         }
 
-        .logo-upload-area {
-            border: 2px dashed #ddd;
-            padding: 20px;
-            text-align: center;
-            border-radius: 10px;
-            margin: 10px 0;
-            cursor: pointer;
-            transition: all 0.3s;
+        /* Logo upload avec bouton + */
+        .logo-upload-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
         }
-        .logo-upload-area:hover {
-            border-color: var(--primary);
-            background: rgba(26, 109, 44, 0.05);
-        }
-        .logo-preview {
+        .logo-upload-wrapper .logo-preview {
             width: 80px;
             height: 80px;
             border-radius: 50%;
@@ -1412,18 +1761,66 @@
             justify-content: center;
             background: white;
             flex-shrink: 0;
+            position: relative;
         }
-        .logo-preview img {
+        .logo-upload-wrapper .logo-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        .logo-preview i {
+        .logo-upload-wrapper .logo-preview i {
             font-size: 3rem;
             color: var(--primary);
         }
+        .logo-upload-wrapper .logo-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .logo-upload-wrapper .logo-actions .btn-plus {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+        }
+        .logo-upload-wrapper .logo-actions .btn-plus:hover {
+            background: var(--dark);
+            transform: scale(1.1);
+        }
+        .logo-upload-wrapper .logo-actions .btn-plus i {
+            font-size: 1.2rem;
+        }
+        .logo-upload-wrapper .logo-actions .btn-upload-logo {
+            background: var(--info);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .logo-upload-wrapper .logo-actions .btn-upload-logo:hover {
+            background: #1a73e8;
+            transform: translateY(-2px);
+        }
+        .logo-upload-wrapper .logo-actions .file-info {
+            font-size: 0.7rem;
+            color: #888;
+        }
 
-        /* ---- Conteneurs dynamiques Supabase ---- */
+        /* ---- Articles ---- */
         #articlesContainer {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1506,9 +1903,6 @@
                 border-radius: 0;
                 padding: 12px 0;
             }
-            body.rtl .dashboard-sidebar {
-                border-radius: 0;
-            }
             .auth-bar {
                 flex-direction: column;
                 gap: 6px;
@@ -1566,7 +1960,7 @@
             }
             .ticker-text {
                 font-size: 0.75rem;
-                animation-duration: 20s;
+                animation-duration: 35s !important;
             }
             .weather-box {
                 font-size: 0.7rem;
@@ -1576,6 +1970,39 @@
             footer {
                 margin-bottom: 85px;
             }
+            .cards-container {
+                gap: 15px;
+            }
+            .card-item {
+                width: 90px;
+                padding: 15px 8px;
+            }
+            .card-item img {
+                width: 60px;
+                height: 35px;
+            }
+            .payment-form {
+                padding: 20px;
+            }
+            .payment-form .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .actu-container {
+                padding: 0 10px;
+            }
+            .actu-item .actu-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            .logo-upload-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+            .logo-upload-wrapper .logo-actions {
+                align-items: center;
+            }
         }
         @media (max-width: 480px) {
             .stats-grid {
@@ -1583,7 +2010,21 @@
             }
             .ticker-text {
                 font-size: 0.65rem;
-                animation-duration: 15s;
+                animation-duration: 30s !important;
+            }
+            .card-item {
+                width: 70px;
+                padding: 10px 5px;
+            }
+            .card-item img {
+                width: 45px;
+                height: 28px;
+            }
+            .card-item .card-name {
+                font-size: 0.6rem;
+            }
+            .actu-form {
+                padding: 15px;
             }
         }
     </style>
@@ -1626,7 +2067,7 @@
                 <i class="fas fa-hands-helping"></i>
                 <div class="logo-text">
                     <h1 id="logoTitle">ANSFAL</h1>
-                    <p id="logoSubtitle">Association de Coopération, Développement et Environnement</p>
+                    <p id="logoSubtitle">Association ANSFAL de Coopération, Développement et Environnement</p>
                 </div>
             </div>
             <nav>
@@ -1636,6 +2077,8 @@
                     <li><a href="#" onclick="showSection('gallery')" id="menuGallery"><i class="fas fa-images"></i> Galerie</a></li>
                     <li><a href="#" onclick="showSection('videos')" id="menuVideos"><i class="fas fa-video"></i> Vidéos</a></li>
                     <li><a href="#" onclick="showSection('projects')" id="menuProjects"><i class="fas fa-project-diagram"></i> Projets</a></li>
+                    <li><a href="#" onclick="showSection('dons')" id="menuDons"><i class="fas fa-hand-holding-heart"></i> Dons</a></li>
+                    <li><a href="#" onclick="showSection('actu')" id="menuActu"><i class="fas fa-newspaper"></i> Actualité</a></li>
                     <li><a href="#" onclick="showSection('contact')" id="menuContact"><i class="fas fa-envelope"></i> Contact</a></li>
                     <li><a href="#" onclick="showSection('dashboard')" id="menuDashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                 </ul>
@@ -1648,11 +2091,12 @@
         <div class="container">
             <div class="hero-content">
                 <h2 id="heroTitle">ANSFAL</h2>
-                <h3 id="heroSubtitle">Association de Coopération, Développement et Environnement</h3>
+                <h3 id="heroSubtitle">Association ANSFAL de Coopération, Développement et Environnement</h3>
                 <p id="heroText">Œuvrant pour un développement durable, la coopération nationale et la protection de l'environnement depuis 2023.</p>
                 <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:25px;">
                     <a href="#" class="btn" onclick="showSection('projects')" id="heroBtn1"><i class="fas fa-rocket"></i> Découvrir nos actions</a>
                     <a href="#" class="btn" style="background:var(--info);border-color:var(--info);" onclick="showSection('gallery')" id="heroBtn2"><i class="fas fa-images"></i> Galerie Photos</a>
+                    <a href="#" class="btn" style="background:var(--success);border-color:var(--success);" onclick="showSection('dons')" id="heroBtn3"><i class="fas fa-hand-holding-heart"></i> Faire un don</a>
                 </div>
             </div>
         </div>
@@ -1703,6 +2147,86 @@
         </div>
     </section>
 
+    <!-- ========== DONS ========== -->
+    <section id="dons" class="payment-section">
+        <div class="container">
+            <h2 id="donsTitle"><i class="fas fa-hand-holding-heart"></i> Faire un don</h2>
+            <p style="text-align:center;color:#666;margin-bottom:30px;" id="donsSubtitle">Choisissez votre moyen de paiement et soutenez nos actions</p>
+
+            <div class="cards-container">
+                <div class="card-item visa" onclick="selectCard('visa')" data-card="visa">
+                    <div class="card-name"><i class="fab fa-cc-visa"></i> Visa</div>
+                </div>
+                <div class="card-item mastercard" onclick="selectCard('mastercard')" data-card="mastercard">
+                    <div class="card-name"><i class="fab fa-cc-mastercard"></i> MasterCard</div>
+                </div>
+                <div class="card-item amex" onclick="selectCard('amex')" data-card="amex">
+                    <div class="card-name"><i class="fab fa-cc-amex"></i> American Express</div>
+                </div>
+                <div class="card-item cmi" onclick="selectCard('cmi')" data-card="cmi">
+                    <div class="card-name"><i class="fas fa-credit-card"></i> CMI</div>
+                </div>
+            </div>
+
+            <div class="payment-form">
+                <form id="paymentForm" onsubmit="processPayment(event)">
+                    <div class="form-group">
+                        <label for="cardNumber" id="labelCardNumber"><i class="fas fa-credit-card"></i> Numéro de carte</label>
+                        <input type="text" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" required />
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expiryDate" id="labelExpiryDate"><i class="fas fa-calendar-alt"></i> Date d'expiration</label>
+                            <input type="text" id="expiryDate" placeholder="MM/AA" maxlength="5" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv" id="labelCvv"><i class="fas fa-lock"></i> Code de sécurité</label>
+                            <input type="text" id="cvv" placeholder="CVV" maxlength="4" required />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cardName" id="labelCardName"><i class="fas fa-user"></i> Nom sur la carte</label>
+                        <input type="text" id="cardName" placeholder="Nom complet" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="amount" id="labelAmount"><i class="fas fa-coins"></i> Montant (MAD)</label>
+                        <input type="number" id="amount" placeholder="100" min="10" required />
+                    </div>
+                    <button type="submit" class="btn-payment" id="btnPayment">
+                        <i class="fas fa-heart"></i> <span id="btnPaymentText">Faire un don</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ACTUALITÉ ANSFAL ========== -->
+    <section id="actu" class="actu-section">
+        <div class="container">
+            <h2 id="actuTitle"><i class="fas fa-newspaper"></i> Actualité ANSFAL</h2>
+            <p style="text-align:center;color:#666;margin-bottom:20px;" id="actuSubtitle">Partagez votre avis en 20 mots maximum</p>
+
+            <div class="actu-container" id="actuContainer">
+                <div class="no-content" id="noActuPublic">Aucune actualité pour le moment.</div>
+            </div>
+
+            <!-- Formulaire d'ajout -->
+            <div class="actu-form">
+                <h3 id="actuFormTitle" style="color:var(--dark);margin-bottom:15px;"><i class="fas fa-pen"></i> Laisser un commentaire</h3>
+                <textarea id="actuText" placeholder="Écrivez votre actualité en 20 mots maximum..." maxlength="200"></textarea>
+                <div class="actu-form-row">
+                    <div class="word-counter">
+                        <span id="wordCountDisplay">0</span> / 20 mots
+                        <span class="warning" id="wordWarning" style="display:none;">⚠️ Dépassement !</span>
+                    </div>
+                    <button class="btn-actu-submit" onclick="submitActu()">
+                        <i class="fas fa-paper-plane"></i> <span id="actuSubmitText">Publier</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- ========== CONTACT ========== -->
     <section id="contact">
         <div class="container">
@@ -1745,7 +2269,6 @@
                     <li><a href="#" data-section="gallery" onclick="showDashboardSection('gallery')" id="sidebarGallery"><i class="fas fa-images"></i> <span id="sidebarGalleryText">Galerie</span></a></li>
                     <li><a href="#" data-section="videos" onclick="showDashboardSection('videos')" id="sidebarVideos"><i class="fas fa-video"></i> <span id="sidebarVideosText">Vidéos</span></a></li>
                     <li><a href="#" data-section="publications" onclick="showDashboardSection('publications')" id="sidebarPublications"><i class="fas fa-newspaper"></i> <span id="sidebarPublicationsText">Publications</span></a></li>
-                    <li><a href="#" data-section="dons" onclick="showDashboardSection('dons')" id="sidebarDons"><i class="fas fa-hand-holding-heart"></i> <span id="sidebarDonsText">Dons</span></a></li>
                     <li><a href="#" data-section="text" onclick="showDashboardSection('text')" id="sidebarText"><i class="fas fa-file-alt"></i> <span id="sidebarTextText">Textes</span></a></li>
                     <li><a href="#" data-page="settings" onclick="showDashboardSection('settings')" id="sidebarSettings"><i class="fas fa-cog"></i> <span id="sidebarSettingsText">Paramètres</span></a></li>
                 </ul>
@@ -1758,7 +2281,7 @@
                         <div class="stat-card"><h3 id="statVisitors"><i class="fas fa-users"></i> Visiteurs</h3><div class="stat-number" id="totalVisitorsStat">0</div></div>
                         <div class="stat-card"><h3 id="statMedia"><i class="fas fa-photo-video"></i> Médias</h3><div class="stat-number" id="totalMediaStat">0</div></div>
                         <div class="stat-card"><h3 id="statPublications"><i class="fas fa-newspaper"></i> Publications</h3><div class="stat-number" id="totalPublicationsStat">0</div></div>
-                        <div class="stat-card"><h3 id="statDons"><i class="fas fa-hand-holding-heart"></i> Dons</h3><div class="stat-number" id="totalDonsStat">0</div></div>
+                        <div class="stat-card"><h3 id="statActu"><i class="fas fa-comment"></i> Actualités</h3><div class="stat-number" id="totalActuStat">0</div></div>
                     </div>
                 </div>
 
@@ -1786,14 +2309,6 @@
                     <div class="items-grid" id="publicationsList"></div>
                 </div>
 
-                <div id="donsDashboard" class="dashboard-section-content">
-                    <h2 id="donsDashboardTitle"><i class="fas fa-hand-holding-heart"></i> Gestion des dons</h2>
-                    <div class="section-actions">
-                        <button class="btn-import admin-only" onclick="showUploadModal('don')" id="donsAddBtn"><i class="fas fa-plus"></i> <span id="donsAddBtnText">Nouveau don</span></button>
-                    </div>
-                    <div class="items-grid" id="donsList"></div>
-                </div>
-
                 <div id="textDashboard" class="dashboard-section-content">
                     <h2 id="textDashboardTitle"><i class="fas fa-file-alt"></i> Gestion des textes</h2>
                     <div class="section-actions">
@@ -1815,29 +2330,34 @@
                         </div>
                     </div>
 
-                    <!-- Texte défilant - STOCKÉ DANS SUPABASE -->
+                    <!-- Texte défilant -->
                     <div class="settings-section admin-only">
                         <h3><i class="fas fa-scroll"></i> Texte défilant (Avis au public)</h3>
                         <div>
                             <label>Texte en français</label>
                             <input type="text" id="tickerTextFr" value="Bienvenue sur le site officiel d'ANSFAL - Association de Coopération, Développement et Environnement">
                             <label>Texte en arabe</label>
-                            <input type="text" id="tickerTextAr" value="مرحباً بكم في الموقع الرسمي لأنسفال - جمعية التعاون والتنمية والبيئة">
+                            <input type="text" id="tickerTextAr" value="مرحباً بكم في الموقع الرسمي لجمعية أنسفال للتعاون والتنمية والبيئة">
                             <button class="btn-import" onclick="saveTickerText()" style="background:var(--info);"><i class="fas fa-save"></i> Enregistrer le texte</button>
                         </div>
                     </div>
 
-                    <!-- Logo -->
+                    <!-- Logo - Upload vers Supabase avec bouton + -->
                     <div class="settings-section admin-only">
                         <h3><i class="fas fa-image"></i> Changer le logo</h3>
-                        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+                        <div class="logo-upload-wrapper">
                             <div class="logo-preview" id="logoPreview">
                                 <i class="fas fa-hands-helping"></i>
                             </div>
-                            <div class="logo-upload-area" onclick="document.getElementById('logoInput').click()">
-                                <i class="fas fa-cloud-upload-alt" style="font-size:2rem;color:var(--primary);"></i>
-                                <p style="color:#666;">Cliquez pour changer le logo</p>
-                                <input type="file" id="logoInput" accept="image/*" style="display:none;" onchange="changeLogo(event)">
+                            <div class="logo-actions">
+                                <input type="file" id="logoFileInput" accept="image/*" style="display:none;" />
+                                <button class="btn-plus" onclick="document.getElementById('logoFileInput').click()" title="Changer le logo">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <button class="btn-upload-logo" onclick="uploadLogoToSupabase()">
+                                    <i class="fas fa-cloud-upload-alt"></i> Uploader
+                                </button>
+                                <span class="file-info" id="logoFileInfo">Aucun fichier sélectionné</span>
                             </div>
                         </div>
                     </div>
@@ -1852,7 +2372,7 @@
             <div class="footer-container">
                 <div>
                     <h3 style="color:white;" id="footerLogoTitle">ANSFAL</h3>
-                    <p style="color:rgba(255,255,255,0.8);" id="footerLogoSubtitle">Association de Coopération, Développement et Environnement</p>
+                    <p style="color:rgba(255,255,255,0.8);" id="footerLogoSubtitle">Association ANSFAL de Coopération, Développement et Environnement</p>
                 </div>
                 <div>
                     <h4 id="footerFollow">Suivez-nous</h4>
@@ -1864,20 +2384,18 @@
                     </div>
                 </div>
             </div>
-            <div class="copyright"><p id="footerCopyright">© 2024 ANSFAL. Tous droits réservés.</p></div>
+            <div class="copyright"><p id="footerCopyright">© 2024 Association ANSFAL. Tous droits réservés.</p></div>
         </div>
     </footer>
 
     <!-- ========== TICKER + MÉTÉO (BARRE EN BAS) ========== -->
     <div class="ticker-bar">
-        <!-- Texte défilant -->
         <div class="ticker-container">
             <span class="ticker-label"><i class="fas fa-bullhorn"></i> AVIS</span>
             <span class="ticker-text" id="tickerText">
-                <i class="fas fa-arrow-right"></i> Bienvenue sur le site officiel d'ANSFAL - Association de Coopération, Développement et Environnement <i class="fas fa-arrow-right"></i>
+                <i class="fas fa-arrow-right"></i> Bienvenue sur le site officiel d'Association ANSFAL - Coopération, Développement et Environnement <i class="fas fa-arrow-right"></i>
             </span>
         </div>
-        <!-- Météo -->
         <div class="weather-box" id="weatherBox">
             <i class="fas fa-cloud-sun"></i>
             <span class="temp" id="weatherTemp">--°C</span>
@@ -2029,11 +2547,11 @@
     </div>
 
     <!-- ============================================================
-    JAVASCRIPT COMPLET - STOCKAGE SUPABASE POUR TICKER
+    JAVASCRIPT COMPLET
     ============================================================ -->
     <script>
         // ============================================================
-        // CONFIGURATION SUPABASE (identique au premier fichier)
+        // CONFIGURATION SUPABASE
         // ============================================================
         var supabaseUrl = 'https://ewgrkdlivxgogaysgxje.supabase.co';
         var supabaseKey = 'sb_publishable_Cu364NmwnWvimRiZ1OMGKQ_r-EoVZOe';
@@ -2041,25 +2559,30 @@
 
         console.log('✅ Supabase connecté !');
 
+        var selectedLogoFile = null;
+
         // ============================================================
         // TRADUCTIONS
         // ============================================================
         var LANG = {
             fr: {
                 logoTitle: 'ANSFAL',
-                logoSubtitle: 'Association de Coopération, Développement et Environnement',
+                logoSubtitle: 'Association ANSFAL de Coopération, Développement et Environnement',
                 menuHome: 'Accueil',
                 menuAbout: 'À propos',
                 menuGallery: 'Galerie',
                 menuVideos: 'Vidéos',
                 menuProjects: 'Projets',
+                menuDons: 'Dons',
+                menuActu: 'Actualité',
                 menuContact: 'Contact',
                 menuDashboard: 'Dashboard',
-                heroTitle: 'ANSFAL',
-                heroSubtitle: 'Association de Coopération, Développement et Environnement',
+                heroTitle: 'Association ANSFAL',
+                heroSubtitle: 'Association ANSFAL de Coopération, Développement et Environnement',
                 heroText: 'Œuvrant pour un développement durable, la coopération nationale et la protection de l\'environnement depuis 2023.',
                 heroBtn1: 'Découvrir nos actions',
                 heroBtn2: 'Galerie Photos',
+                heroBtn3: 'Faire un don',
                 aboutTitle: 'À propos d\'ANSFAL',
                 aboutHistory: 'Notre histoire',
                 aboutText1: 'Fondée en 2023, l\'Association ANSFAL pour la Coopération et le Développement et l\'Environnement est née de la conviction que le développement humain et la protection environnementale doivent aller de pair.',
@@ -2069,6 +2592,12 @@
                 videosTitle: 'Vidéos',
                 noVideosPublic: 'Aucune vidéo disponible pour le moment.',
                 projectsTitle: 'Nos Projets',
+                donsTitle: 'Faire un don',
+                donsSubtitle: 'Choisissez votre moyen de paiement et soutenez nos actions',
+                actuTitle: 'Actualité ANSFAL',
+                actuSubtitle: 'Partagez votre avis en 20 mots maximum',
+                actuFormTitle: 'Laisser un commentaire',
+                actuSubmitText: 'Publier',
                 contactTitle: 'Contactez-nous',
                 contactAddress: 'Adresse',
                 contactLocation: 'Maroc',
@@ -2078,22 +2607,19 @@
                 sidebarGalleryText: 'Galerie',
                 sidebarVideosText: 'Vidéos',
                 sidebarPublicationsText: 'Publications',
-                sidebarDonsText: 'Dons',
                 sidebarTextText: 'Textes',
                 sidebarSettingsText: 'Paramètres',
                 dashboardTitle: 'Tableau de Bord ANSFAL',
                 statVisitors: 'Visiteurs',
                 statMedia: 'Médias',
                 statPublications: 'Publications',
-                statDons: 'Dons',
+                statActu: 'Actualités',
                 galleryDashboardTitle: 'Gestion des images',
                 galleryAddBtnText: 'Ajouter des images',
                 videosDashboardTitle: 'Gestion des vidéos',
                 videosAddBtnText: 'Ajouter des vidéos',
                 publicationsDashboardTitle: 'Gestion des publications',
                 publicationsAddBtnText: 'Nouvelle publication',
-                donsDashboardTitle: 'Gestion des dons',
-                donsAddBtnText: 'Nouveau don',
                 textDashboardTitle: 'Gestion des textes',
                 textAddBtnText: 'Ajouter un texte',
                 settingsTitle: 'Paramètres',
@@ -2132,9 +2658,9 @@
                 passwordCancelBtnText: 'Annuler',
                 passwordSaveBtnText: 'Enregistrer',
                 footerLogoTitle: 'ANSFAL',
-                footerLogoSubtitle: 'Association de Coopération, Développement et Environnement',
+                footerLogoSubtitle: 'Association ANSFAL de Coopération, Développement et Environnement',
                 footerFollow: 'Suivez-nous',
-                footerCopyright: '© 2024 ANSFAL. Tous droits réservés.',
+                footerCopyright: '© 2024 Association ANSFAL. Tous droits réservés.',
                 usernamePlaceholder: 'Nom d\'utilisateur',
                 passwordPlaceholder: 'Mot de passe',
                 loginBtnText: 'Connexion',
@@ -2157,23 +2683,46 @@
                 alertLoginRequired: 'Veuillez vous connecter',
                 alertItemDeleted: 'Élément supprimé avec succès',
                 alertContactSaved: 'Contacts mis à jour',
-                alertTickerSaved: 'Texte défilant mis à jour'
+                alertTickerSaved: 'Texte défilant mis à jour',
+                alertPaymentSuccess: 'Merci pour votre don ! 💚',
+                alertLogoUploaded: 'Logo uploadé avec succès !',
+                alertLogoError: 'Erreur lors de l\'upload du logo',
+                alertActuSubmitted: 'Votre actualité a été soumise ! En attente de publication.',
+                alertActuPublished: 'Actualité publiée avec succès !',
+                alertActuDeleted: 'Actualité supprimée !',
+                alertActuTooLong: 'Votre texte dépasse 20 mots !',
+                labelCardNumber: 'Numéro de carte',
+                labelExpiryDate: 'Date d\'expiration',
+                labelCvv: 'Code de sécurité',
+                labelCardName: 'Nom sur la carte',
+                labelAmount: 'Montant (MAD)',
+                btnPaymentText: 'Faire un don',
+                noActuPublic: 'Aucune actualité pour le moment.',
+                statusPublished: 'Publié',
+                statusDraft: 'Brouillon',
+                toggleRead: 'Lire la suite',
+                toggleHide: 'Réduire',
+                publishBtn: 'Publier',
+                deleteBtn: 'Supprimer'
             },
             ar: {
-                logoTitle: 'أنسفال',
-                logoSubtitle: 'جمعية التعاون والتنمية والبيئة',
+                logoTitle: 'جمعية أنسفال',
+                logoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
                 menuHome: 'الرئيسية',
                 menuAbout: 'من نحن',
                 menuGallery: 'معرض الصور',
                 menuVideos: 'الفيديوهات',
                 menuProjects: 'المشاريع',
+                menuDons: 'التبرعات',
+                menuActu: 'الأخبار',
                 menuContact: 'اتصل بنا',
                 menuDashboard: 'لوحة التحكم',
-                heroTitle: 'أنسفال',
-                heroSubtitle: 'جمعية التعاون والتنمية والبيئة',
+                heroTitle: 'جمعية أنسفال',
+                heroSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
                 heroText: 'تعمل من أجل التنمية المستدامة والتعاون الوطني وحماية البيئة منذ عام 2023.',
                 heroBtn1: 'اكتشف أعمالنا',
                 heroBtn2: 'معرض الصور',
+                heroBtn3: 'تبرع الآن',
                 aboutTitle: 'من نحن - أنسفال',
                 aboutHistory: 'تاريخنا',
                 aboutText1: 'تأسست جمعية أنسفال للتعاون والتنمية والبيئة في عام 2023 انطلاقاً من قناعة بأن التنمية البشرية وحماية البيئة يجب أن يسيرا جنباً إلى جنب.',
@@ -2183,6 +2732,12 @@
                 videosTitle: 'الفيديوهات',
                 noVideosPublic: 'لا توجد فيديوهات متاحة حالياً.',
                 projectsTitle: 'مشاريعنا',
+                donsTitle: 'تبرع الآن',
+                donsSubtitle: 'اختر وسيلة الدفع وادعم أعمالنا',
+                actuTitle: 'أخبار أنسفال',
+                actuSubtitle: 'شارك رأيك في 20 كلمة كحد أقصى',
+                actuFormTitle: 'اترك تعليقاً',
+                actuSubmitText: 'نشر',
                 contactTitle: 'اتصل بنا',
                 contactAddress: 'العنوان',
                 contactLocation: 'المغرب',
@@ -2192,22 +2747,19 @@
                 sidebarGalleryText: 'معرض الصور',
                 sidebarVideosText: 'الفيديوهات',
                 sidebarPublicationsText: 'المنشورات',
-                sidebarDonsText: 'التبرعات',
                 sidebarTextText: 'النصوص',
                 sidebarSettingsText: 'الإعدادات',
                 dashboardTitle: 'لوحة تحكم أنسفال',
                 statVisitors: 'الزوار',
                 statMedia: 'الوسائط',
                 statPublications: 'المنشورات',
-                statDons: 'التبرعات',
+                statActu: 'الأخبار',
                 galleryDashboardTitle: 'إدارة الصور',
                 galleryAddBtnText: 'إضافة صور',
                 videosDashboardTitle: 'إدارة الفيديوهات',
                 videosAddBtnText: 'إضافة فيديوهات',
                 publicationsDashboardTitle: 'إدارة المنشورات',
                 publicationsAddBtnText: 'منشور جديد',
-                donsDashboardTitle: 'إدارة التبرعات',
-                donsAddBtnText: 'تبرع جديد',
                 textDashboardTitle: 'إدارة النصوص',
                 textAddBtnText: 'إضافة نص',
                 settingsTitle: 'الإعدادات',
@@ -2245,10 +2797,10 @@
                 confirmPasswordLabelText: 'تأكيد كلمة المرور الجديدة',
                 passwordCancelBtnText: 'إلغاء',
                 passwordSaveBtnText: 'حفظ',
-                footerLogoTitle: 'أنسفال',
-                footerLogoSubtitle: 'جمعية التعاون والتنمية والبيئة',
+                footerLogoTitle: 'جمعية أنسفال',
+                footerLogoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
                 footerFollow: 'تابعنا',
-                footerCopyright: '© 2024 أنسفال. جميع الحقوق محفوظة.',
+                footerCopyright: '© 2024 جمعية أنسفال. جميع الحقوق محفوظة.',
                 usernamePlaceholder: 'اسم المستخدم',
                 passwordPlaceholder: 'كلمة المرور',
                 loginBtnText: 'تسجيل الدخول',
@@ -2271,11 +2823,32 @@
                 alertLoginRequired: 'يرجى تسجيل الدخول',
                 alertItemDeleted: 'تم حذف العنصر بنجاح',
                 alertContactSaved: 'تم تحديث جهات الاتصال',
-                alertTickerSaved: 'تم تحديث النص المتحرك'
+                alertTickerSaved: 'تم تحديث النص المتحرك',
+                alertPaymentSuccess: 'شكراً لتبرعكم! 💚',
+                alertLogoUploaded: 'تم رفع الشعار بنجاح!',
+                alertLogoError: 'حدث خطأ أثناء رفع الشعار',
+                alertActuSubmitted: 'تم إرسال خبرك! في انتظار النشر.',
+                alertActuPublished: 'تم نشر الخبر بنجاح!',
+                alertActuDeleted: 'تم حذف الخبر!',
+                alertActuTooLong: 'نصك يتجاوز 20 كلمة!',
+                labelCardNumber: 'رقم البطاقة',
+                labelExpiryDate: 'تاريخ الانتهاء',
+                labelCvv: 'رمز الأمان',
+                labelCardName: 'الاسم على البطاقة',
+                labelAmount: 'المبلغ (درهم)',
+                btnPaymentText: 'تبرع الآن',
+                noActuPublic: 'لا توجد أخبار حالياً.',
+                statusPublished: 'منشور',
+                statusDraft: 'مسودة',
+                toggleRead: 'اقرأ المزيد',
+                toggleHide: 'إخفاء',
+                publishBtn: 'نشر',
+                deleteBtn: 'حذف'
             }
         };
 
         var currentLang = 'fr';
+        var selectedCard = 'visa';
 
         // ============================================================
         // FONCTIONS DE LANGUE
@@ -2296,6 +2869,8 @@
             document.getElementById('menuGallery').innerHTML = '<i class="fas fa-images"></i> ' + t.menuGallery;
             document.getElementById('menuVideos').innerHTML = '<i class="fas fa-video"></i> ' + t.menuVideos;
             document.getElementById('menuProjects').innerHTML = '<i class="fas fa-project-diagram"></i> ' + t.menuProjects;
+            document.getElementById('menuDons').innerHTML = '<i class="fas fa-hand-holding-heart"></i> ' + t.menuDons;
+            document.getElementById('menuActu').innerHTML = '<i class="fas fa-newspaper"></i> ' + t.menuActu;
             document.getElementById('menuContact').innerHTML = '<i class="fas fa-envelope"></i> ' + t.menuContact;
             document.getElementById('menuDashboard').innerHTML = '<i class="fas fa-tachometer-alt"></i> ' + t.menuDashboard;
 
@@ -2304,6 +2879,7 @@
             document.getElementById('heroText').textContent = t.heroText;
             document.getElementById('heroBtn1').innerHTML = '<i class="fas fa-rocket"></i> ' + t.heroBtn1;
             document.getElementById('heroBtn2').innerHTML = '<i class="fas fa-images"></i> ' + t.heroBtn2;
+            document.getElementById('heroBtn3').innerHTML = '<i class="fas fa-hand-holding-heart"></i> ' + t.heroBtn3;
 
             document.getElementById('aboutTitle').textContent = t.aboutTitle;
             document.getElementById('aboutHistory').textContent = t.aboutHistory;
@@ -2313,6 +2889,12 @@
             document.getElementById('galleryTitle').textContent = t.galleryTitle;
             document.getElementById('videosTitle').textContent = t.videosTitle;
             document.getElementById('projectsTitle').textContent = t.projectsTitle;
+            document.getElementById('donsTitle').innerHTML = '<i class="fas fa-hand-holding-heart"></i> ' + t.donsTitle;
+            document.getElementById('donsSubtitle').textContent = t.donsSubtitle;
+            document.getElementById('actuTitle').innerHTML = '<i class="fas fa-newspaper"></i> ' + t.actuTitle;
+            document.getElementById('actuSubtitle').textContent = t.actuSubtitle;
+            document.getElementById('actuFormTitle').innerHTML = '<i class="fas fa-pen"></i> ' + t.actuFormTitle;
+            document.getElementById('actuSubmitText').textContent = t.actuSubmitText;
 
             document.getElementById('contactTitle').textContent = t.contactTitle;
             document.getElementById('contactAddress').textContent = t.contactAddress;
@@ -2324,7 +2906,6 @@
             document.getElementById('sidebarGalleryText').textContent = t.sidebarGalleryText;
             document.getElementById('sidebarVideosText').textContent = t.sidebarVideosText;
             document.getElementById('sidebarPublicationsText').textContent = t.sidebarPublicationsText;
-            document.getElementById('sidebarDonsText').textContent = t.sidebarDonsText;
             document.getElementById('sidebarTextText').textContent = t.sidebarTextText;
             document.getElementById('sidebarSettingsText').textContent = t.sidebarSettingsText;
 
@@ -2332,21 +2913,16 @@
             document.getElementById('statVisitors').innerHTML = '<i class="fas fa-users"></i> ' + t.statVisitors;
             document.getElementById('statMedia').innerHTML = '<i class="fas fa-photo-video"></i> ' + t.statMedia;
             document.getElementById('statPublications').innerHTML = '<i class="fas fa-newspaper"></i> ' + t.statPublications;
-            document.getElementById('statDons').innerHTML = '<i class="fas fa-hand-holding-heart"></i> ' + t.statDons;
+            document.getElementById('statActu').innerHTML = '<i class="fas fa-comment"></i> ' + t.statActu;
             document.getElementById('galleryDashboardTitle').innerHTML = '<i class="fas fa-images"></i> ' + t.galleryDashboardTitle;
             document.getElementById('galleryAddBtn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i> ' + t.galleryAddBtnText;
             document.getElementById('videosDashboardTitle').innerHTML = '<i class="fas fa-video"></i> ' + t.videosDashboardTitle;
             document.getElementById('videosAddBtn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i> ' + t.videosAddBtnText;
             document.getElementById('publicationsDashboardTitle').innerHTML = '<i class="fas fa-newspaper"></i> ' + t.publicationsDashboardTitle;
             document.getElementById('publicationsAddBtn').innerHTML = '<i class="fas fa-plus"></i> ' + t.publicationsAddBtnText;
-            document.getElementById('donsDashboardTitle').innerHTML = '<i class="fas fa-hand-holding-heart"></i> ' + t.donsDashboardTitle;
-            document.getElementById('donsAddBtn').innerHTML = '<i class="fas fa-plus"></i> ' + t.donsAddBtnText;
             document.getElementById('textDashboardTitle').innerHTML = '<i class="fas fa-file-alt"></i> ' + t.textDashboardTitle;
             document.getElementById('textAddBtn').innerHTML = '<i class="fas fa-file-alt"></i> ' + t.textAddBtnText;
             document.getElementById('settingsTitle').innerHTML = '<i class="fas fa-cog"></i> ' + t.settingsTitle;
-            document.getElementById('settingsPasswordBtn').innerHTML = '<i class="fas fa-key"></i> ' + t.settingsPasswordBtnText;
-            document.getElementById('settingsExportBtn').innerHTML = '<i class="fas fa-file-export"></i> ' + t.settingsExportBtnText;
-            document.getElementById('settingsResetBtn').innerHTML = '<i class="fas fa-trash"></i> ' + t.settingsResetBtnText;
 
             document.getElementById('uploadModalText').textContent = t.uploadModalText;
             document.getElementById('uploadPcTitle').textContent = t.uploadPcTitle;
@@ -2395,6 +2971,18 @@
 
             document.getElementById('viewerTitle').textContent = t.viewerTitle;
 
+            // Dons
+            document.getElementById('labelCardNumber').innerHTML = '<i class="fas fa-credit-card"></i> ' + t.labelCardNumber;
+            document.getElementById('labelExpiryDate').innerHTML = '<i class="fas fa-calendar-alt"></i> ' + t.labelExpiryDate;
+            document.getElementById('labelCvv').innerHTML = '<i class="fas fa-lock"></i> ' + t.labelCvv;
+            document.getElementById('labelCardName').innerHTML = '<i class="fas fa-user"></i> ' + t.labelCardName;
+            document.getElementById('labelAmount').innerHTML = '<i class="fas fa-coins"></i> ' + t.labelAmount;
+            document.getElementById('btnPaymentText').textContent = t.btnPaymentText;
+
+            // Actualité
+            var noActu = document.getElementById('noActuPublic');
+            if (noActu) noActu.textContent = t.noActuPublic;
+
             var msg = lang === 'fr' ? 'Bonjour, je souhaite des informations sur ANSFAL' :
                 'مرحباً، أود الحصول على معلومات حول جمعية أنسفال';
             document.getElementById('whatsappBtn').href = 'https://wa.me/212612345678?text=' + encodeURIComponent(msg);
@@ -2404,8 +2992,8 @@
             var noVideos = document.getElementById('noVideosPublic');
             if (noVideos) noVideos.textContent = t.noVideosPublic;
 
-            // Mettre à jour le texte défilant selon la langue
             updateTickerText();
+            loadActu();
 
             try { localStorage.setItem('ansfal_lang', lang); } catch (e) {}
         }
@@ -2447,8 +3035,8 @@
             loadGalleryDashboard();
             loadVideosDashboard();
             loadPublicationsDashboard();
-            loadDonsDashboard();
             loadTextDashboard();
+            loadActu();
         }
 
         function logout() {
@@ -2462,6 +3050,7 @@
             document.getElementById('menuDashboard').classList.add('hidden');
             document.getElementById('contactEditForm').style.display = 'none';
             showAlert(t.alertLogout, 'info');
+            loadActu();
         }
 
         // ============================================================
@@ -2473,7 +3062,7 @@
             if (target) target.classList.add('active');
             document.querySelectorAll('#mainMenu a').forEach(function(l) { l.classList.remove('active'); });
             var map = { home: 'menuHome', about: 'menuAbout', gallery: 'menuGallery', videos: 'menuVideos',
-                projects: 'menuProjects', contact: 'menuContact', dashboard: 'menuDashboard' };
+                projects: 'menuProjects', dons: 'menuDons', actu: 'menuActu', contact: 'menuContact', dashboard: 'menuDashboard' };
             if (map[id]) document.getElementById(map[id]).classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -2486,6 +3075,378 @@
             document.querySelectorAll('.sidebar-menu a').forEach(function(l) {
                 if (l.getAttribute('data-page') === type || l.getAttribute('data-section') === type) l.classList.add('active');
             });
+        }
+
+        // ============================================================
+        // DONS - SELECTION CARTE
+        // ============================================================
+        function selectCard(cardType) {
+            selectedCard = cardType;
+            document.querySelectorAll('.card-item').forEach(function(el) {
+                el.classList.remove('active');
+            });
+            document.querySelector('.card-item[data-card="' + cardType + '"]').classList.add('active');
+        }
+
+        // Formatage des champs de carte
+        document.addEventListener('DOMContentLoaded', function() {
+            var cardNumber = document.getElementById('cardNumber');
+            if (cardNumber) {
+                cardNumber.addEventListener('input', function(e) {
+                    var value = this.value.replace(/\D/g, '');
+                    if (value.length > 16) value = value.slice(0, 16);
+                    var formatted = '';
+                    for (var i = 0; i < value.length; i++) {
+                        if (i > 0 && i % 4 === 0) formatted += ' ';
+                        formatted += value[i];
+                    }
+                    this.value = formatted;
+                });
+            }
+
+            var expiryDate = document.getElementById('expiryDate');
+            if (expiryDate) {
+                expiryDate.addEventListener('input', function(e) {
+                    var value = this.value.replace(/\D/g, '');
+                    if (value.length > 4) value = value.slice(0, 4);
+                    if (value.length >= 2) {
+                        var month = parseInt(value.slice(0, 2));
+                        if (month > 12) value = '12' + value.slice(2);
+                    }
+                    var formatted = '';
+                    for (var i = 0; i < value.length; i++) {
+                        if (i === 2 && value.length > 2) formatted += '/';
+                        formatted += value[i];
+                    }
+                    this.value = formatted;
+                });
+            }
+
+            var cvv = document.getElementById('cvv');
+            if (cvv) {
+                cvv.addEventListener('input', function(e) {
+                    this.value = this.value.replace(/\D/g, '').slice(0, 4);
+                });
+            }
+
+            // Sélectionner un fichier logo
+            var logoInput = document.getElementById('logoFileInput');
+            if (logoInput) {
+                logoInput.addEventListener('change', function(e) {
+                    if (e.target.files.length > 0) {
+                        selectedLogoFile = e.target.files[0];
+                        document.getElementById('logoFileInfo').textContent = selectedLogoFile.name + ' (' + (selectedLogoFile.size / 1024).toFixed(1) + ' KB)';
+                    }
+                });
+            }
+
+            // Compteur de mots pour l'actualité
+            var actuText = document.getElementById('actuText');
+            if (actuText) {
+                actuText.addEventListener('input', function() {
+                    var words = this.value.trim().split(/\s+/).filter(function(w) { return w.length > 0; });
+                    var count = words.length;
+                    document.getElementById('wordCountDisplay').textContent = count;
+                    var warning = document.getElementById('wordWarning');
+                    if (count > 20) {
+                        warning.style.display = 'inline';
+                        this.style.borderColor = 'var(--danger)';
+                    } else {
+                        warning.style.display = 'none';
+                        this.style.borderColor = '';
+                    }
+                });
+            }
+        });
+
+        // ============================================================
+        // UPLOAD LOGO VERS SUPABASE
+        // ============================================================
+        async function uploadLogoToSupabase() {
+            var t = getLang();
+
+            if (!selectedLogoFile) {
+                showAlert('Veuillez d\'abord sélectionner un logo', 'error');
+                return;
+            }
+
+            if (selectedLogoFile.size > 2 * 1024 * 1024) {
+                showAlert('Le logo est trop volumineux (max 2MB)', 'error');
+                return;
+            }
+
+            try {
+                var reader = new FileReader();
+                reader.onload = async function(e) {
+                    var base64Data = e.target.result;
+
+                    var { data: existing, error: checkError } = await supabase
+                        .from('settings')
+                        .select('*')
+                        .eq('key', 'logo')
+                        .limit(1);
+
+                    if (checkError) throw checkError;
+
+                    var result;
+                    if (existing && existing.length > 0) {
+                        result = await supabase
+                            .from('settings')
+                            .update({
+                                value: base64Data,
+                                updated_at: new Date().toISOString()
+                            })
+                            .eq('id', existing[0].id);
+                    } else {
+                        result = await supabase
+                            .from('settings')
+                            .insert([{
+                                key: 'logo',
+                                value: base64Data,
+                                updated_at: new Date().toISOString()
+                            }]);
+                    }
+
+                    if (result.error) throw result.error;
+
+                    var logoPreview = document.getElementById('logoPreview');
+                    logoPreview.innerHTML = '<img src="' + base64Data + '" style="width:100%;height:100%;object-fit:cover;">';
+
+                    showAlert(t.alertLogoUploaded || 'Logo uploadé avec succès !', 'success');
+                    selectedLogoFile = null;
+                    document.getElementById('logoFileInput').value = '';
+                    document.getElementById('logoFileInfo').textContent = 'Aucun fichier sélectionné';
+
+                };
+                reader.readAsDataURL(selectedLogoFile);
+
+            } catch (error) {
+                console.error('Erreur upload logo:', error);
+                showAlert(t.alertLogoError || 'Erreur lors de l\'upload du logo: ' + error.message, 'error');
+            }
+        }
+
+        // ============================================================
+        // ACTUALITÉ - GESTION COMPLÈTE (Supabase)
+        // ============================================================
+
+        // Soumettre une actualité
+        async function submitActu() {
+            var t = getLang();
+            var text = document.getElementById('actuText').value.trim();
+
+            if (!text) {
+                showAlert(t.alertFillFields, 'error');
+                return;
+            }
+
+            var words = text.split(/\s+/).filter(function(w) { return w.length > 0; });
+            if (words.length > 20) {
+                showAlert(t.alertActuTooLong, 'error');
+                return;
+            }
+
+            var isRTL = document.body.classList.contains('rtl');
+
+            try {
+                var { error } = await supabase
+                    .from('actu')
+                    .insert([{
+                        text_fr: isRTL ? '' : text,
+                        text_ar: isRTL ? text : '',
+                        author: 'Visiteur',
+                        status: 'draft',
+                        created_at: new Date().toISOString(),
+                        word_count: words.length
+                    }]);
+
+                if (error) throw error;
+
+                showAlert(t.alertActuSubmitted, 'success');
+                document.getElementById('actuText').value = '';
+                document.getElementById('wordCountDisplay').textContent = '0';
+                loadActu();
+
+            } catch (error) {
+                console.error('Erreur soumission actu:', error);
+                showAlert('Erreur: ' + error.message, 'error');
+            }
+        }
+
+        // Charger les actualités
+        async function loadActu() {
+            var container = document.getElementById('actuContainer');
+            if (!container) return;
+
+            try {
+                var { data, error } = await supabase
+                    .from('actu')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                var isAdmin = document.body.classList.contains('admin-mode');
+                var t = getLang();
+
+                // Filtrer : si admin, voir tout, sinon seulement les publiés
+                var filtered = isAdmin ? data : (data || []).filter(function(item) { return item.status === 'published'; });
+
+                if (!filtered || filtered.length === 0) {
+                    container.innerHTML = '<div class="no-content">' + t.noActuPublic + '</div>';
+                    return;
+                }
+
+                container.innerHTML = filtered.map(function(item) {
+                    var isRTL = document.body.classList.contains('rtl');
+                    var text = isRTL ? (item.text_ar || item.text_fr) : (item.text_fr || item.text_ar);
+                    var statusText = item.status === 'published' ? t.statusPublished : t.statusDraft;
+                    var statusClass = item.status === 'published' ? 'published' : 'draft';
+
+                    var adminActions = isAdmin ? `
+                        <div class="admin-actions">
+                            ${item.status === 'draft' ? `<button class="btn-actu publish" onclick="publishActu(${item.id})"><i class="fas fa-check"></i> ${t.publishBtn}</button>` : ''}
+                            <button class="btn-actu delete" onclick="deleteActu(${item.id})"><i class="fas fa-trash"></i> ${t.deleteBtn}</button>
+                        </div>
+                    ` : '';
+
+                    return `
+                        <div class="actu-item" data-id="${item.id}">
+                            <div class="actu-text">${text}</div>
+                            <div class="actu-meta">
+                                <span><span class="author"><i class="fas fa-user"></i> ${item.author || 'Anonyme'}</span></span>
+                                <span><span class="word-count">${item.word_count || 0} mots</span></span>
+                                <span><span class="status ${statusClass}">${statusText}</span></span>
+                                <span>${new Date(item.created_at).toLocaleDateString()}</span>
+                            </div>
+                            ${adminActions}
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Erreur chargement actu:', error);
+                container.innerHTML = '<div class="no-content">❌ Erreur de chargement</div>';
+            }
+        }
+
+        // Publier une actualité (admin)
+        async function publishActu(id) {
+            var t = getLang();
+            if (!confirm('Publier cette actualité ?')) return;
+
+            try {
+                var { error } = await supabase
+                    .from('actu')
+                    .update({ status: 'published', published_at: new Date().toISOString() })
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                showAlert(t.alertActuPublished, 'success');
+                loadActu();
+
+            } catch (error) {
+                console.error('Erreur publication:', error);
+                showAlert('Erreur: ' + error.message, 'error');
+            }
+        }
+
+        // Supprimer une actualité (admin)
+        async function deleteActu(id) {
+            var t = getLang();
+            if (!confirm(t.alertActuDeleted + ' ?')) return;
+
+            try {
+                var { error } = await supabase
+                    .from('actu')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                showAlert(t.alertActuDeleted, 'success');
+                loadActu();
+
+            } catch (error) {
+                console.error('Erreur suppression:', error);
+                showAlert('Erreur: ' + error.message, 'error');
+            }
+        }
+
+        // ============================================================
+        // TRAITEMENT DU PAIEMENT
+        // ============================================================
+        function processPayment(event) {
+            event.preventDefault();
+            var t = getLang();
+
+            var cardNumber = document.getElementById('cardNumber').value.trim();
+            var expiryDate = document.getElementById('expiryDate').value.trim();
+            var cvv = document.getElementById('cvv').value.trim();
+            var cardName = document.getElementById('cardName').value.trim();
+            var amount = document.getElementById('amount').value.trim();
+
+            if (!cardNumber || !expiryDate || !cvv || !cardName || !amount) {
+                showAlert(t.alertFillFields, 'error');
+                return;
+            }
+
+            if (cardNumber.replace(/\s/g, '').length < 16) {
+                showAlert('Numéro de carte invalide', 'error');
+                return;
+            }
+
+            if (amount < 10) {
+                showAlert('Le montant minimum est de 10 MAD', 'error');
+                return;
+            }
+
+            // Enregistrer le don dans Supabase
+            saveDonation({
+                card_type: selectedCard,
+                card_number: cardNumber.slice(-4),
+                card_name: cardName,
+                amount: amount,
+                status: 'completed'
+            });
+
+            showAlert(t.alertPaymentSuccess, 'success');
+
+            // Réinitialiser le formulaire
+            document.getElementById('paymentForm').reset();
+            document.querySelectorAll('.card-item').forEach(function(el) {
+                el.classList.remove('active');
+            });
+            selectedCard = 'visa';
+            document.querySelector('.card-item[data-card="visa"]').classList.add('active');
+        }
+
+        // ============================================================
+        // SAUVEGARDE DON DANS SUPABASE
+        // ============================================================
+        async function saveDonation(data) {
+            try {
+                var { error } = await supabase
+                    .from('dons')
+                    .insert([{
+                        title: 'Don ' + data.card_type + ' - ' + data.amount + ' MAD',
+                        montant: data.amount + ' MAD',
+                        donateur: data.card_name,
+                        publisher: 'visiteur',
+                        card_type: data.card_type,
+                        card_last4: data.card_number,
+                        status: data.status,
+                        created_at: new Date().toISOString()
+                    }]);
+
+                if (error) throw error;
+                console.log('✅ Don enregistré avec succès');
+                updateDashboardStats();
+
+            } catch (error) {
+                console.error('Erreur sauvegarde don:', error);
+            }
         }
 
         // ============================================================
@@ -2507,8 +3468,7 @@
             var titles = {
                 'image': 'Uploader des images',
                 'video': 'Uploader des vidéos',
-                'article': 'Nouvelle publication',
-                'don': 'Nouveau don'
+                'article': 'Nouvelle publication'
             };
             document.getElementById('uploadModalText').textContent = titles[type] || 'Uploader des fichiers';
 
@@ -2609,8 +3569,7 @@
             var tableMap = {
                 'image': 'gallery',
                 'video': 'videos',
-                'article': 'articles',
-                'don': 'dons'
+                'article': 'articles'
             };
             var tableName = tableMap[currentUploadType] || 'gallery';
             var publisher = document.getElementById('userName').textContent || 'admin';
@@ -2632,9 +3591,6 @@
                         data.content = file.name.split('.')[0] || 'Contenu';
                         data.category = 'publication';
                         data.status = 'published';
-                    } else if (tableName === 'dons') {
-                        data.montant = '0';
-                        data.donateur = 'Anonyme';
                     } else if (isVideo) {
                         data.video_url = base64;
                     } else {
@@ -2671,7 +3627,6 @@
                     loadGalleryDashboard();
                     loadVideosDashboard();
                     loadPublicationsDashboard();
-                    loadDonsDashboard();
                     loadPublicGallery();
                     loadPublicVideos();
                     loadArticles();
@@ -2729,7 +3684,6 @@
                 loadGalleryDashboard();
                 loadVideosDashboard();
                 loadPublicationsDashboard();
-                loadDonsDashboard();
                 loadTextDashboard();
                 loadPublicGallery();
                 loadPublicVideos();
@@ -2742,9 +3696,9 @@
         }
 
         // ============================================================
-        // MODIFICATION DES CONTACTS
+        // CONTACTS - STOCKAGE SUPABASE
         // ============================================================
-        function saveContactInfo() {
+        async function saveContactInfo() {
             var t = getLang();
             var phone = document.getElementById('editPhone').value.trim();
             var email = document.getElementById('editEmail').value.trim();
@@ -2755,17 +3709,107 @@
                 return;
             }
 
-            document.getElementById('contactPhoneValue').textContent = phone;
-            document.getElementById('contactEmailValue').textContent = email;
-            document.getElementById('contactLocation').textContent = address;
-
             try {
-                localStorage.setItem('ansfal_contact_phone', phone);
-                localStorage.setItem('ansfal_contact_email', email);
-                localStorage.setItem('ansfal_contact_address', address);
-            } catch (e) {}
+                var { data: existing, error: checkError } = await supabase
+                    .from('settings')
+                    .select('*')
+                    .eq('key', 'contact_info')
+                    .limit(1);
 
-            showAlert(t.alertContactSaved || 'Contacts mis à jour', 'success');
+                if (checkError) throw checkError;
+
+                var contactData = {
+                    phone: phone,
+                    email: email,
+                    address: address,
+                    updated_at: new Date().toISOString()
+                };
+
+                var result;
+                if (existing && existing.length > 0) {
+                    result = await supabase
+                        .from('settings')
+                        .update({
+                            value: contactData,
+                            updated_at: new Date().toISOString()
+                        })
+                        .eq('id', existing[0].id);
+                } else {
+                    result = await supabase
+                        .from('settings')
+                        .insert([{
+                            key: 'contact_info',
+                            value: contactData,
+                            updated_at: new Date().toISOString()
+                        }]);
+                }
+
+                if (result.error) throw result.error;
+
+                document.getElementById('contactPhoneValue').textContent = phone;
+                document.getElementById('contactEmailValue').textContent = email;
+                document.getElementById('contactLocation').textContent = address;
+
+                showAlert(t.alertContactSaved || 'Contacts mis à jour', 'success');
+
+            } catch (error) {
+                console.error('Erreur sauvegarde contacts:', error);
+                showAlert('Erreur: ' + error.message, 'error');
+            }
+        }
+
+        async function loadContactsFromSupabase() {
+            try {
+                var { data, error } = await supabase
+                    .from('settings')
+                    .select('*')
+                    .eq('key', 'contact_info')
+                    .limit(1);
+
+                if (error) throw error;
+
+                if (data && data.length > 0) {
+                    var contact = data[0].value;
+                    if (contact.phone) {
+                        document.getElementById('contactPhoneValue').textContent = contact.phone;
+                        document.getElementById('editPhone').value = contact.phone;
+                    }
+                    if (contact.email) {
+                        document.getElementById('contactEmailValue').textContent = contact.email;
+                        document.getElementById('editEmail').value = contact.email;
+                    }
+                    if (contact.address) {
+                        document.getElementById('contactLocation').textContent = contact.address;
+                        document.getElementById('editAddress').value = contact.address;
+                    }
+                }
+            } catch (error) {
+                console.error('Erreur chargement contacts:', error);
+            }
+        }
+
+        // ============================================================
+        // LOGO - STOCKAGE SUPABASE (chargement uniquement)
+        // ============================================================
+        async function loadLogoFromSupabase() {
+            try {
+                var { data, error } = await supabase
+                    .from('settings')
+                    .select('*')
+                    .eq('key', 'logo')
+                    .limit(1);
+
+                if (error) throw error;
+
+                if (data && data.length > 0) {
+                    var logoData = data[0].value;
+                    if (logoData) {
+                        document.getElementById('logoPreview').innerHTML = '<img src="' + logoData + '" style="width:100%;height:100%;object-fit:cover;">';
+                    }
+                }
+            } catch (error) {
+                console.error('Erreur chargement logo:', error);
+            }
         }
 
         // ============================================================
@@ -2782,7 +3826,6 @@
             }
 
             try {
-                // Vérifier si une entrée existe déjà
                 var { data: existing, error: checkError } = await supabase
                     .from('ticker')
                     .select('*')
@@ -2792,13 +3835,11 @@
 
                 var result;
                 if (existing && existing.length > 0) {
-                    // Mise à jour
                     result = await supabase
                         .from('ticker')
                         .update({ text_fr: frText, text_ar: arText, updated_at: new Date().toISOString() })
                         .eq('id', existing[0].id);
                 } else {
-                    // Insertion
                     result = await supabase
                         .from('ticker')
                         .insert([{ text_fr: frText, text_ar: arText, updated_at: new Date().toISOString() }]);
@@ -2833,9 +3874,8 @@
 
             } catch (error) {
                 console.error('Erreur chargement ticker:', error);
-                // Utiliser les valeurs par défaut
                 document.getElementById('tickerTextFr').value = 'Bienvenue sur le site officiel d\'ANSFAL - Association de Coopération, Développement et Environnement';
-                document.getElementById('tickerTextAr').value = 'مرحباً بكم في الموقع الرسمي لأنسفال - جمعية التعاون والتنمية والبيئة';
+                document.getElementById('tickerTextAr').value = 'مرحباً بكم في الموقع الرسمي لجمعية أنسفال للتعاون والتنمية والبيئة';
                 updateTickerText();
             }
         }
@@ -2847,13 +3887,13 @@
             var isRTL = document.body.classList.contains('rtl');
 
             var frText = document.getElementById('tickerTextFr').value || 'Bienvenue sur le site officiel d\'ANSFAL - Association de Coopération, Développement et Environnement';
-            var arText = document.getElementById('tickerTextAr').value || 'مرحباً بكم في الموقع الرسمي لأنسفال - جمعية التعاون والتنمية والبيئة';
+            var arText = document.getElementById('tickerTextAr').value || 'مرحباً بكم في الموقع الرسمي لجمعية أنسفال للتعاون والتنمية والبيئة';
 
             var text = isRTL ? arText : frText;
+            var arrow1 = isRTL ? 'left' : 'right';
+            var arrow2 = isRTL ? 'right' : 'left';
 
-            var arrow = isRTL ? '➡️' : '⬅️';
-            ticker.innerHTML = '<i class="fas fa-arrow-' + (isRTL ? 'left' : 'right') + '"></i> ' + text +
-                ' <i class="fas fa-arrow-' + (isRTL ? 'left' : 'right') + '"></i> ';
+            ticker.innerHTML = '<i class="fas fa-arrow-' + arrow1 + '"></i> ' + text + ' <i class="fas fa-arrow-' + arrow2 + '"></i> ';
         }
 
         // ============================================================
@@ -2866,7 +3906,6 @@
 
                 if (data && data.current_condition) {
                     var temp = data.current_condition[0].temp_C;
-                    var weatherDesc = data.current_condition[0].weatherDesc[0].value;
                     var iconCode = data.current_condition[0].weatherCode;
 
                     document.getElementById('weatherTemp').textContent = temp + '°C';
@@ -2887,27 +3926,6 @@
                 console.log('Météo non disponible:', error);
                 document.getElementById('weatherTemp').textContent = '--°C';
             }
-        }
-
-        // ============================================================
-        // CHANGER LE LOGO
-        // ============================================================
-        function changeLogo(event) {
-            var file = event.target.files[0];
-            if (!file) return;
-
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                var logoPreview = document.getElementById('logoPreview');
-                logoPreview.innerHTML = '<img src="' + e.target.result + '" style="width:100%;height:100%;object-fit:cover;">';
-
-                try {
-                    localStorage.setItem('ansfal_logo', e.target.result);
-                } catch (e) {}
-
-                showAlert('Logo modifié avec succès', 'success');
-            };
-            reader.readAsDataURL(file);
         }
 
         // ============================================================
@@ -3029,45 +4047,6 @@
                 }).join('');
             } catch (error) {
                 console.error('Erreur chargement publications:', error);
-                container.innerHTML = '<div class="no-content">❌ Erreur de chargement</div>';
-            }
-        }
-
-        async function loadDonsDashboard() {
-            var container = document.getElementById('donsList');
-            if (!container) return;
-
-            try {
-                var { data, error } = await supabase
-                    .from('dons')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
-                if (error) throw error;
-
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<div class="no-content">Aucun don</div>';
-                    return;
-                }
-
-                var isAdmin = document.body.classList.contains('admin-mode');
-
-                container.innerHTML = data.map(function(item) {
-                    var deleteButton = isAdmin ?
-                        '<button class="btn-action delete" onclick="deleteItem(\'dons\', ' + item.id + ')"><i class="fas fa-trash"></i></button>' :
-                        '';
-
-                    return '<div class="dashboard-item don-item">' +
-                        '<div class="item-icon"><i class="fas fa-hand-holding-heart"></i></div>' +
-                        '<div class="item-info"><h4>' + item.title + '</h4>' +
-                        '<small>' + (item.montant || 'Montant non spécifié') + ' - ' + new Date(item.created_at).toLocaleDateString() + '</small>' +
-                        '<span class="publisher-name"><i class="fas fa-user"></i> ' + (item.publisher || (item.donateur || 'Anonyme')) + '</span></div>' +
-                        '<div class="item-actions">' +
-                        deleteButton +
-                        '</div></div>';
-                }).join('');
-            } catch (error) {
-                console.error('Erreur chargement dons:', error);
                 container.innerHTML = '<div class="no-content">❌ Erreur de chargement</div>';
             }
         }
@@ -3281,10 +4260,6 @@
                     .from('articles')
                     .select('*', { count: 'exact', head: true });
 
-                var { count: donCount } = await supabase
-                    .from('dons')
-                    .select('*', { count: 'exact', head: true });
-
                 var { count: galleryCount } = await supabase
                     .from('gallery')
                     .select('*', { count: 'exact', head: true });
@@ -3293,9 +4268,18 @@
                     .from('videos')
                     .select('*', { count: 'exact', head: true });
 
+                var { count: donCount } = await supabase
+                    .from('dons')
+                    .select('*', { count: 'exact', head: true });
+
+                var { count: actuCount } = await supabase
+                    .from('actu')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('status', 'published');
+
                 document.getElementById('totalPublicationsStat').textContent = pubCount || 0;
-                document.getElementById('totalDonsStat').textContent = donCount || 0;
                 document.getElementById('totalMediaStat').textContent = (galleryCount || 0) + (videosCount || 0);
+                document.getElementById('totalActuStat').textContent = actuCount || 0;
 
             } catch (error) {
                 console.error('Erreur stats dashboard:', error);
@@ -3380,28 +4364,22 @@
                 if (saved) switchLanguage(saved);
             } catch (e) {}
 
-            try {
-                var phone = localStorage.getItem('ansfal_contact_phone');
-                var email = localStorage.getItem('ansfal_contact_email');
-                var address = localStorage.getItem('ansfal_contact_address');
-                if (phone) document.getElementById('contactPhoneValue').textContent = phone;
-                if (email) document.getElementById('contactEmailValue').textContent = email;
-                if (address) document.getElementById('contactLocation').textContent = address;
-                if (phone) document.getElementById('editPhone').value = phone;
-                if (email) document.getElementById('editEmail').value = email;
-                if (address) document.getElementById('editAddress').value = address;
-            } catch (e) {}
+            // Charger les contacts depuis Supabase
+            loadContactsFromSupabase();
 
-            try {
-                var logo = localStorage.getItem('ansfal_logo');
-                if (logo) {
-                    document.getElementById('logoPreview').innerHTML = '<img src="' + logo + '" style="width:100%;height:100%;object-fit:cover;">';
-                }
-            } catch (e) {}
+            // Charger le logo depuis Supabase
+            loadLogoFromSupabase();
 
-            // Charger le texte défilant depuis Supabase
+            // Charger le texte défilant
             loadTickerFromSupabase();
 
+            // Charger les actualités
+            loadActu();
+
+            // Sélectionner Visa par défaut
+            selectCard('visa');
+
+            // Bouton d'ajout
             var addBtn = document.getElementById('addBtn');
             if (addBtn) {
                 addBtn.addEventListener('click', function() {
@@ -3414,6 +4392,7 @@
                 });
             }
 
+            // Bouton de connexion
             var loginBtn = document.getElementById('loginBtn');
             if (loginBtn) {
                 loginBtn.addEventListener('click', function() {
@@ -3423,28 +4402,33 @@
                 });
             }
 
+            // Charger les données
             loadArticles();
             loadPublicGallery();
             loadPublicVideos();
             loadGalleryDashboard();
             loadVideosDashboard();
             loadPublicationsDashboard();
-            loadDonsDashboard();
             loadTextDashboard();
 
+            // Compteur visiteurs
             setTimeout(trackVisitor, 1500);
             updateStats();
 
+            // Météo
             fetchWeather();
             setInterval(fetchWeather, 600000);
 
+            // Traductions
             var t = getLang();
             var noGallery = document.getElementById('noGalleryPublic');
             if (noGallery) noGallery.textContent = t.noGalleryPublic;
             var noVideos = document.getElementById('noVideosPublic');
             if (noVideos) noVideos.textContent = t.noVideosPublic;
+            var noActu = document.getElementById('noActuPublic');
+            if (noActu) noActu.textContent = t.noActuPublic;
 
-            console.log('✅ ANSFAL Version 2 chargée - Ticker stocké dans Supabase');
+            console.log('✅ ANSFAL chargé - Stockage Supabase');
         });
 
         // ============================================================
@@ -3474,16 +4458,21 @@
         window.viewPublication = viewPublication;
         window.deleteItem = deleteItem;
         window.saveContactInfo = saveContactInfo;
-        window.changeLogo = changeLogo;
         window.saveTickerText = saveTickerText;
         window.loadGalleryDashboard = loadGalleryDashboard;
         window.loadVideosDashboard = loadVideosDashboard;
         window.loadPublicationsDashboard = loadPublicationsDashboard;
-        window.loadDonsDashboard = loadDonsDashboard;
         window.loadTextDashboard = loadTextDashboard;
         window.loadPublicGallery = loadPublicGallery;
         window.loadPublicVideos = loadPublicVideos;
         window.loadArticles = loadArticles;
+        window.selectCard = selectCard;
+        window.processPayment = processPayment;
+        window.uploadLogoToSupabase = uploadLogoToSupabase;
+        window.submitActu = submitActu;
+        window.loadActu = loadActu;
+        window.publishActu = publishActu;
+        window.deleteActu = deleteActu;
     </script>
 
 </body>
