@@ -788,7 +788,7 @@
             background: #c0392b;
         }
 
-        /* Formulaire d'ajout d'actualité */
+        /* ---- Formulaire d'ajout d'actualité ---- */
         .actu-form {
             max-width: 800px;
             margin: 30px auto 0;
@@ -1503,6 +1503,19 @@
         .file-viewer-body .viewer-actions a:hover {
             background: #219653;
             transform: scale(1.05);
+        }
+        .file-viewer-body .viewer-actions button {
+            background: var(--danger);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-left: 10px;
+        }
+        .file-viewer-body .viewer-actions button:hover {
+            background: #c0392b;
         }
         .close-viewer {
             background: none;
@@ -3464,7 +3477,7 @@
         }
 
         // ============================================================
-        // ACTUALITÉ - UPLOADER UN PDF (CORRIGÉ)
+        // ACTUALITÉ - UPLOADER UN PDF
         // ============================================================
         async function uploadActuPDF() {
             var t = getLang();
@@ -3523,7 +3536,7 @@
         }
 
         // ============================================================
-        // ACTUALITÉ - CHARGER ET AFFICHER (CORRIGÉ)
+        // ACTUALITÉ - CHARGER ET AFFICHER
         // ============================================================
         async function loadActu() {
             var container = document.getElementById('actuContainer');
@@ -3641,6 +3654,9 @@
                         <a href="${pdfData}" download="${fileName || 'document.pdf'}">
                             <i class="fas fa-download"></i> Télécharger
                         </a>
+                        <button onclick="closeFileViewer()">
+                            <i class="fas fa-times"></i> Fermer
+                        </button>
                     </div>
                 `;
             }
