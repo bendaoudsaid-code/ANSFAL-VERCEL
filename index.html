@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- PDF.js pour afficher les PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js">
+    </script>
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js">
     </script>
@@ -43,6 +46,7 @@
             --mastercard: #eb001b;
             --amex: #2e77d0;
             --cmi: #e67e22;
+            --pdf: #e74c3c;
         }
         body {
             font-family: 'Roboto', 'Cairo', sans-serif;
@@ -104,6 +108,13 @@
         }
         body.rtl .dashboard-sidebar {
             border-radius: 10px 0 0 10px;
+        }
+        body.rtl .actu-item {
+            border-left: none;
+            border-right: 4px solid var(--primary);
+        }
+        body.rtl .actu-item:hover {
+            transform: translateX(-5px);
         }
         .container {
             width: 90%;
@@ -612,7 +623,6 @@
             padding: 15px 20px;
             border-left: 4px solid var(--primary);
             transition: all 0.3s;
-            cursor: pointer;
             position: relative;
         }
         .actu-item:hover {
@@ -623,6 +633,40 @@
             font-size: 0.95rem;
             color: var(--text);
             line-height: 1.5;
+        }
+        .actu-item .actu-file {
+            margin-top: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .actu-item .actu-file .file-name {
+            font-weight: 600;
+            color: var(--pdf);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .actu-item .actu-file .file-name i {
+            font-size: 1.2rem;
+        }
+        .actu-item .actu-file .file-preview {
+            margin-top: 8px;
+            max-height: 300px;
+            overflow: auto;
+            background: #f9f9f9;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .actu-item .actu-file .file-preview canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        .actu-item .actu-file .file-preview .pdf-viewer {
+            width: 100%;
+            min-height: 200px;
+            border: none;
         }
         .actu-item .actu-meta {
             display: flex;
@@ -660,32 +704,6 @@
             border-radius: 8px;
             font-size: 0.6rem;
         }
-        .actu-item .actu-expand {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px dashed #ddd;
-            display: none;
-            font-size: 0.9rem;
-            color: #555;
-            background: rgba(255, 255, 255, 0.5);
-            padding: 10px;
-            border-radius: 5px;
-        }
-        .actu-item .actu-expand.show {
-            display: block;
-        }
-        .actu-item .toggle-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 2px 10px;
-        }
-        .actu-item .toggle-btn:hover {
-            text-decoration: underline;
-        }
         .actu-item .admin-actions {
             display: none;
             gap: 5px;
@@ -718,11 +736,11 @@
         .actu-item .admin-actions .btn-actu.delete:hover {
             background: #c0392b;
         }
-        .actu-item .admin-actions .btn-actu.edit {
+        .actu-item .admin-actions .btn-actu.download {
             background: var(--info);
             color: white;
         }
-        .actu-item .admin-actions .btn-actu.edit:hover {
+        .actu-item .admin-actions .btn-actu.download:hover {
             background: #1a73e8;
         }
 
@@ -781,6 +799,45 @@
         .btn-actu-submit:hover {
             background: var(--dark);
             transform: translateY(-2px);
+        }
+        .btn-actu-upload {
+            background: var(--info);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-actu-upload:hover {
+            background: #1a73e8;
+            transform: translateY(-2px);
+        }
+        .actu-form .file-upload-area {
+            border: 2px dashed #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .actu-form .file-upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(26, 109, 44, 0.05);
+        }
+        .actu-form .file-upload-area .file-info {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .actu-form .file-upload-area .file-info i {
+            color: var(--pdf);
+            font-size: 1.5rem;
         }
 
         /* ---- Dashboard ---- */
@@ -2003,6 +2060,13 @@
             .logo-upload-wrapper .logo-actions {
                 align-items: center;
             }
+            .actu-form .actu-form-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .actu-form .actu-form-row .word-counter {
+                margin-left: 0;
+            }
         }
         @media (max-width: 480px) {
             .stats-grid {
@@ -2204,7 +2268,7 @@
     <section id="actu" class="actu-section">
         <div class="container">
             <h2 id="actuTitle"><i class="fas fa-newspaper"></i> Actualité ANSFAL</h2>
-            <p style="text-align:center;color:#666;margin-bottom:20px;" id="actuSubtitle">Partagez votre avis en 20 mots maximum</p>
+            <p style="text-align:center;color:#666;margin-bottom:20px;" id="actuSubtitle">Partagez votre avis en 20 mots maximum ou uploader un PDF</p>
 
             <div class="actu-container" id="actuContainer">
                 <div class="no-content" id="noActuPublic">Aucune actualité pour le moment.</div>
@@ -2221,6 +2285,19 @@
                     </div>
                     <button class="btn-actu-submit" onclick="submitActu()">
                         <i class="fas fa-paper-plane"></i> <span id="actuSubmitText">Publier</span>
+                    </button>
+                </div>
+
+                <!-- Upload de fichier PDF -->
+                <div style="margin-top:20px;border-top:2px dashed #ddd;padding-top:20px;">
+                    <h4 style="color:var(--dark);margin-bottom:10px;"><i class="fas fa-file-pdf" style="color:var(--pdf);"></i> Uploader un PDF</h4>
+                    <div class="file-upload-area" onclick="document.getElementById('actuFileInput').click()">
+                        <i class="fas fa-cloud-upload-alt" style="font-size:2rem;color:var(--primary);"></i>
+                        <p class="file-info" id="actuFileInfo"><i class="fas fa-file-pdf"></i> Cliquez pour sélectionner un PDF (max 10MB)</p>
+                        <input type="file" id="actuFileInput" accept=".pdf" style="display:none;" />
+                    </div>
+                    <button class="btn-actu-upload" onclick="uploadActuPDF()" style="margin-top:10px;">
+                        <i class="fas fa-upload"></i> Uploader le PDF
                     </button>
                 </div>
             </div>
@@ -2560,6 +2637,7 @@
         console.log('✅ Supabase connecté !');
 
         var selectedLogoFile = null;
+        var selectedActuFile = null;
 
         // ============================================================
         // TRADUCTIONS
@@ -2595,7 +2673,7 @@
                 donsTitle: 'Faire un don',
                 donsSubtitle: 'Choisissez votre moyen de paiement et soutenez nos actions',
                 actuTitle: 'Actualité ANSFAL',
-                actuSubtitle: 'Partagez votre avis en 20 mots maximum',
+                actuSubtitle: 'Partagez votre avis en 20 mots maximum ou uploader un PDF',
                 actuFormTitle: 'Laisser un commentaire',
                 actuSubmitText: 'Publier',
                 contactTitle: 'Contactez-nous',
@@ -2691,6 +2769,8 @@
                 alertActuPublished: 'Actualité publiée avec succès !',
                 alertActuDeleted: 'Actualité supprimée !',
                 alertActuTooLong: 'Votre texte dépasse 20 mots !',
+                alertActuPDFUploaded: 'PDF uploadé avec succès !',
+                alertActuPDFError: 'Erreur lors de l\'upload du PDF',
                 labelCardNumber: 'Numéro de carte',
                 labelExpiryDate: 'Date d\'expiration',
                 labelCvv: 'Code de sécurité',
@@ -2703,7 +2783,9 @@
                 toggleRead: 'Lire la suite',
                 toggleHide: 'Réduire',
                 publishBtn: 'Publier',
-                deleteBtn: 'Supprimer'
+                deleteBtn: 'Supprimer',
+                downloadBtn: 'Télécharger',
+                filePDF: 'Fichier PDF'
             },
             ar: {
                 logoTitle: 'جمعية أنسفال',
@@ -2735,7 +2817,7 @@
                 donsTitle: 'تبرع الآن',
                 donsSubtitle: 'اختر وسيلة الدفع وادعم أعمالنا',
                 actuTitle: 'أخبار أنسفال',
-                actuSubtitle: 'شارك رأيك في 20 كلمة كحد أقصى',
+                actuSubtitle: 'شارك رأيك في 20 كلمة كحد أقصى أو حمّل ملف PDF',
                 actuFormTitle: 'اترك تعليقاً',
                 actuSubmitText: 'نشر',
                 contactTitle: 'اتصل بنا',
@@ -2831,6 +2913,8 @@
                 alertActuPublished: 'تم نشر الخبر بنجاح!',
                 alertActuDeleted: 'تم حذف الخبر!',
                 alertActuTooLong: 'نصك يتجاوز 20 كلمة!',
+                alertActuPDFUploaded: 'تم رفع ملف PDF بنجاح!',
+                alertActuPDFError: 'حدث خطأ أثناء رفع ملف PDF',
                 labelCardNumber: 'رقم البطاقة',
                 labelExpiryDate: 'تاريخ الانتهاء',
                 labelCvv: 'رمز الأمان',
@@ -2843,7 +2927,9 @@
                 toggleRead: 'اقرأ المزيد',
                 toggleHide: 'إخفاء',
                 publishBtn: 'نشر',
-                deleteBtn: 'حذف'
+                deleteBtn: 'حذف',
+                downloadBtn: 'تحميل',
+                filePDF: 'ملف PDF'
             }
         };
 
@@ -3088,7 +3174,9 @@
             document.querySelector('.card-item[data-card="' + cardType + '"]').classList.add('active');
         }
 
-        // Formatage des champs de carte
+        // ============================================================
+        // FORMATAGE DES CHAMPS DE CARTE
+        // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             var cardNumber = document.getElementById('cardNumber');
             if (cardNumber) {
@@ -3135,7 +3223,20 @@
                 logoInput.addEventListener('change', function(e) {
                     if (e.target.files.length > 0) {
                         selectedLogoFile = e.target.files[0];
-                        document.getElementById('logoFileInfo').textContent = selectedLogoFile.name + ' (' + (selectedLogoFile.size / 1024).toFixed(1) + ' KB)';
+                        document.getElementById('logoFileInfo').textContent = selectedLogoFile.name + ' (' + (selectedLogoFile
+                            .size / 1024).toFixed(1) + ' KB)';
+                    }
+                });
+            }
+
+            // Sélectionner un fichier PDF pour l'actualité
+            var actuFileInput = document.getElementById('actuFileInput');
+            if (actuFileInput) {
+                actuFileInput.addEventListener('change', function(e) {
+                    if (e.target.files.length > 0) {
+                        selectedActuFile = e.target.files[0];
+                        document.getElementById('actuFileInfo').innerHTML = '<i class="fas fa-file-pdf"></i> ' + selectedActuFile
+                            .name + ' (' + (selectedActuFile.size / 1024).toFixed(1) + ' KB)';
                     }
                 });
             }
@@ -3156,6 +3257,11 @@
                         this.style.borderColor = '';
                     }
                 });
+            }
+
+            // Initialiser PDF.js
+            if (typeof pdfjsLib !== 'undefined') {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
             }
         });
 
@@ -3227,10 +3333,8 @@
         }
 
         // ============================================================
-        // ACTUALITÉ - GESTION COMPLÈTE (Supabase)
+        // ACTUALITÉ - SOUMETTRE UN TEXTE
         // ============================================================
-
-        // Soumettre une actualité
         async function submitActu() {
             var t = getLang();
             var text = document.getElementById('actuText').value.trim();
@@ -3273,7 +3377,68 @@
             }
         }
 
-        // Charger les actualités
+        // ============================================================
+        // ACTUALITÉ - UPLOADER UN PDF
+        // ============================================================
+        async function uploadActuPDF() {
+            var t = getLang();
+
+            if (!selectedActuFile) {
+                showAlert('Veuillez d\'abord sélectionner un fichier PDF', 'error');
+                return;
+            }
+
+            if (selectedActuFile.size > 10 * 1024 * 1024) {
+                showAlert('Le PDF est trop volumineux (max 10MB)', 'error');
+                return;
+            }
+
+            if (selectedActuFile.type !== 'application/pdf') {
+                showAlert('Veuillez sélectionner un fichier PDF valide', 'error');
+                return;
+            }
+
+            try {
+                var reader = new FileReader();
+                reader.onload = async function(e) {
+                    var base64Data = e.target.result;
+
+                    var isRTL = document.body.classList.contains('rtl');
+
+                    var { error } = await supabase
+                        .from('actu')
+                        .insert([{
+                            text_fr: isRTL ? '' : '📄 ' + selectedActuFile.name,
+                            text_ar: isRTL ? '📄 ' + selectedActuFile.name : '',
+                            author: 'Visiteur',
+                            status: 'draft',
+                            file_name: selectedActuFile.name,
+                            file_data: base64Data,
+                            file_type: 'pdf',
+                            created_at: new Date().toISOString(),
+                            word_count: 0
+                        }]);
+
+                    if (error) throw error;
+
+                    showAlert(t.alertActuPDFUploaded, 'success');
+                    selectedActuFile = null;
+                    document.getElementById('actuFileInput').value = '';
+                    document.getElementById('actuFileInfo').innerHTML = '<i class="fas fa-file-pdf"></i> Cliquez pour sélectionner un PDF (max 10MB)';
+                    loadActu();
+
+                };
+                reader.readAsDataURL(selectedActuFile);
+
+            } catch (error) {
+                console.error('Erreur upload PDF:', error);
+                showAlert(t.alertActuPDFError + ': ' + error.message, 'error');
+            }
+        }
+
+        // ============================================================
+        // ACTUALITÉ - CHARGER ET AFFICHER
+        // ============================================================
         async function loadActu() {
             var container = document.getElementById('actuContainer');
             if (!container) return;
@@ -3289,7 +3454,6 @@
                 var isAdmin = document.body.classList.contains('admin-mode');
                 var t = getLang();
 
-                // Filtrer : si admin, voir tout, sinon seulement les publiés
                 var filtered = isAdmin ? data : (data || []).filter(function(item) { return item.status === 'published'; });
 
                 if (!filtered || filtered.length === 0) {
@@ -3303,6 +3467,24 @@
                     var statusText = item.status === 'published' ? t.statusPublished : t.statusDraft;
                     var statusClass = item.status === 'published' ? 'published' : 'draft';
 
+                    // Afficher le PDF si présent
+                    var fileHtml = '';
+                    if (item.file_data && item.file_type === 'pdf') {
+                        fileHtml = `
+                            <div class="actu-file">
+                                <div class="file-name">
+                                    <i class="fas fa-file-pdf"></i> ${item.file_name || 'Document PDF'}
+                                    <a href="${item.file_data}" download="${item.file_name || 'document.pdf'}" style="margin-left:10px;color:var(--info);">
+                                        <i class="fas fa-download"></i> ${t.downloadBtn}
+                                    </a>
+                                </div>
+                                <div class="file-preview">
+                                    <iframe src="${item.file_data}" class="pdf-viewer" style="width:100%;height:300px;"></iframe>
+                                </div>
+                            </div>
+                        `;
+                    }
+
                     var adminActions = isAdmin ? `
                         <div class="admin-actions">
                             ${item.status === 'draft' ? `<button class="btn-actu publish" onclick="publishActu(${item.id})"><i class="fas fa-check"></i> ${t.publishBtn}</button>` : ''}
@@ -3313,9 +3495,10 @@
                     return `
                         <div class="actu-item" data-id="${item.id}">
                             <div class="actu-text">${text}</div>
+                            ${fileHtml}
                             <div class="actu-meta">
                                 <span><span class="author"><i class="fas fa-user"></i> ${item.author || 'Anonyme'}</span></span>
-                                <span><span class="word-count">${item.word_count || 0} mots</span></span>
+                                ${item.word_count > 0 ? `<span><span class="word-count">${item.word_count} mots</span></span>` : ''}
                                 <span><span class="status ${statusClass}">${statusText}</span></span>
                                 <span>${new Date(item.created_at).toLocaleDateString()}</span>
                             </div>
@@ -3330,7 +3513,9 @@
             }
         }
 
-        // Publier une actualité (admin)
+        // ============================================================
+        // ACTUALITÉ - PUBLIER
+        // ============================================================
         async function publishActu(id) {
             var t = getLang();
             if (!confirm('Publier cette actualité ?')) return;
@@ -3352,7 +3537,9 @@
             }
         }
 
-        // Supprimer une actualité (admin)
+        // ============================================================
+        // ACTUALITÉ - SUPPRIMER
+        // ============================================================
         async function deleteActu(id) {
             var t = getLang();
             if (!confirm(t.alertActuDeleted + ' ?')) return;
@@ -3402,7 +3589,6 @@
                 return;
             }
 
-            // Enregistrer le don dans Supabase
             saveDonation({
                 card_type: selectedCard,
                 card_number: cardNumber.slice(-4),
@@ -3413,7 +3599,6 @@
 
             showAlert(t.alertPaymentSuccess, 'success');
 
-            // Réinitialiser le formulaire
             document.getElementById('paymentForm').reset();
             document.querySelectorAll('.card-item').forEach(function(el) {
                 el.classList.remove('active');
@@ -3450,7 +3635,7 @@
         }
 
         // ============================================================
-        // UPLOAD
+        // UPLOAD FICHIERS (images, vidéos)
         // ============================================================
         var selectedFiles = [];
         var uploadMode = 'pc';
@@ -3789,7 +3974,7 @@
         }
 
         // ============================================================
-        // LOGO - STOCKAGE SUPABASE (chargement uniquement)
+        // LOGO - STOCKAGE SUPABASE
         // ============================================================
         async function loadLogoFromSupabase() {
             try {
@@ -4473,6 +4658,7 @@
         window.loadActu = loadActu;
         window.publishActu = publishActu;
         window.deleteActu = deleteActu;
+        window.uploadActuPDF = uploadActuPDF;
     </script>
 
 </body>
