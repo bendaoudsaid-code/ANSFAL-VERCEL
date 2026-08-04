@@ -9,9 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <!-- PDF.js pour afficher les PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js">
-    </script>
     <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js">
     </script>
@@ -642,31 +639,86 @@
             border: 1px solid #ddd;
         }
         .actu-item .actu-file .file-name {
-            font-weight: 600;
-            color: var(--pdf);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 5px;
+            transition: background 0.3s;
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-wrap: wrap;
+        }
+        .actu-item .actu-file .file-name:hover {
+            background: rgba(26, 109, 44, 0.05);
         }
         .actu-item .actu-file .file-name i {
-            font-size: 1.2rem;
+            font-size: 1.5rem;
+            color: var(--pdf);
+        }
+        .actu-item .actu-file .file-name .file-label {
+            color: var(--primary);
+            font-weight: 600;
+            flex: 1;
+        }
+        .actu-item .actu-file .file-name .click-hint {
+            font-size: 0.7rem;
+            color: #888;
         }
         .actu-item .actu-file .file-preview {
             margin-top: 8px;
-            max-height: 300px;
+            max-height: 400px;
             overflow: auto;
             background: #f9f9f9;
             border-radius: 5px;
             padding: 10px;
+            display: none;
         }
-        .actu-item .actu-file .file-preview canvas {
-            max-width: 100%;
-            height: auto;
+        .actu-item .actu-file .file-preview.show {
+            display: block;
         }
-        .actu-item .actu-file .file-preview .pdf-viewer {
+        .actu-item .actu-file .file-preview iframe {
             width: 100%;
-            min-height: 200px;
+            height: 400px;
             border: none;
+            border-radius: 5px;
+        }
+        .actu-item .actu-file .file-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+        .actu-item .actu-file .file-actions .btn-file {
+            padding: 4px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .actu-item .actu-file .file-actions .btn-file.preview {
+            background: var(--info);
+        }
+        .actu-item .actu-file .file-actions .btn-file.preview:hover {
+            background: #1a73e8;
+        }
+        .actu-item .actu-file .file-actions .btn-file.download {
+            background: var(--success);
+        }
+        .actu-item .actu-file .file-actions .btn-file.download:hover {
+            background: #219653;
+        }
+        .actu-item .actu-file .file-actions .btn-file.fullscreen {
+            background: var(--warning);
+        }
+        .actu-item .actu-file .file-actions .btn-file.fullscreen:hover {
+            background: #d35400;
         }
         .actu-item .actu-meta {
             display: flex;
@@ -721,27 +773,19 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            color: white;
         }
         .actu-item .admin-actions .btn-actu.publish {
             background: var(--success);
-            color: white;
         }
         .actu-item .admin-actions .btn-actu.publish:hover {
             background: #219653;
         }
         .actu-item .admin-actions .btn-actu.delete {
             background: var(--danger);
-            color: white;
         }
         .actu-item .admin-actions .btn-actu.delete:hover {
             background: #c0392b;
-        }
-        .actu-item .admin-actions .btn-actu.download {
-            background: var(--info);
-            color: white;
-        }
-        .actu-item .admin-actions .btn-actu.download:hover {
-            background: #1a73e8;
         }
 
         /* Formulaire d'ajout d'actualité */
@@ -838,6 +882,13 @@
         .actu-form .file-upload-area .file-info i {
             color: var(--pdf);
             font-size: 1.5rem;
+        }
+        .actu-form .upload-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
         /* ---- Dashboard ---- */
@@ -1436,6 +1487,22 @@
             height: 60vh;
             border: none;
             border-radius: 8px;
+        }
+        .file-viewer-body .viewer-actions {
+            margin-top: 10px;
+        }
+        .file-viewer-body .viewer-actions a {
+            background: var(--success);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .file-viewer-body .viewer-actions a:hover {
+            background: #219653;
+            transform: scale(1.05);
         }
         .close-viewer {
             background: none;
@@ -2067,6 +2134,17 @@
             .actu-form .actu-form-row .word-counter {
                 margin-left: 0;
             }
+            .actu-item .actu-file .file-name {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .actu-item .actu-file .file-actions {
+                flex-direction: column;
+            }
+            .actu-item .actu-file .file-actions .btn-file {
+                width: 100%;
+                justify-content: center;
+            }
         }
         @media (max-width: 480px) {
             .stats-grid {
@@ -2089,6 +2167,13 @@
             }
             .actu-form {
                 padding: 15px;
+            }
+            .file-viewer-content {
+                max-width: 100%;
+                max-height: 100%;
+            }
+            .file-viewer-body iframe {
+                height: 40vh;
             }
         }
     </style>
@@ -2296,9 +2381,11 @@
                         <p class="file-info" id="actuFileInfo"><i class="fas fa-file-pdf"></i> Cliquez pour sélectionner un PDF (max 10MB)</p>
                         <input type="file" id="actuFileInput" accept=".pdf" style="display:none;" />
                     </div>
-                    <button class="btn-actu-upload" onclick="uploadActuPDF()" style="margin-top:10px;">
-                        <i class="fas fa-upload"></i> Uploader le PDF
-                    </button>
+                    <div class="upload-row">
+                        <button class="btn-actu-upload" onclick="uploadActuPDF()">
+                            <i class="fas fa-upload"></i> Uploader le PDF
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2785,6 +2872,8 @@
                 publishBtn: 'Publier',
                 deleteBtn: 'Supprimer',
                 downloadBtn: 'Télécharger',
+                previewBtn: 'Aperçu',
+                fullscreenBtn: 'Plein écran',
                 filePDF: 'Fichier PDF'
             },
             ar: {
@@ -2929,6 +3018,8 @@
                 publishBtn: 'نشر',
                 deleteBtn: 'حذف',
                 downloadBtn: 'تحميل',
+                previewBtn: 'معاينة',
+                fullscreenBtn: 'شاشة كاملة',
                 filePDF: 'ملف PDF'
             }
         };
@@ -3258,11 +3349,6 @@
                     }
                 });
             }
-
-            // Initialiser PDF.js
-            if (typeof pdfjsLib !== 'undefined') {
-                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-            }
         });
 
         // ============================================================
@@ -3378,7 +3464,7 @@
         }
 
         // ============================================================
-        // ACTUALITÉ - UPLOADER UN PDF
+        // ACTUALITÉ - UPLOADER UN PDF (CORRIGÉ)
         // ============================================================
         async function uploadActuPDF() {
             var t = getLang();
@@ -3437,7 +3523,7 @@
         }
 
         // ============================================================
-        // ACTUALITÉ - CHARGER ET AFFICHER
+        // ACTUALITÉ - CHARGER ET AFFICHER (CORRIGÉ)
         // ============================================================
         async function loadActu() {
             var container = document.getElementById('actuContainer');
@@ -3470,16 +3556,27 @@
                     // Afficher le PDF si présent
                     var fileHtml = '';
                     if (item.file_data && item.file_type === 'pdf') {
+                        var previewId = 'pdfPreview_' + item.id;
                         fileHtml = `
                             <div class="actu-file">
-                                <div class="file-name">
-                                    <i class="fas fa-file-pdf"></i> ${item.file_name || 'Document PDF'}
-                                    <a href="${item.file_data}" download="${item.file_name || 'document.pdf'}" style="margin-left:10px;color:var(--info);">
+                                <div class="file-name" onclick="togglePDFPreview('${previewId}')">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <span class="file-label">${item.file_name || 'Document PDF'}</span>
+                                    <span class="click-hint">(Cliquez pour aperçu)</span>
+                                </div>
+                                <div class="file-preview" id="${previewId}">
+                                    <iframe src="${item.file_data}" style="width:100%;height:400px;border:none;border-radius:5px;"></iframe>
+                                </div>
+                                <div class="file-actions">
+                                    <button class="btn-file preview" onclick="togglePDFPreview('${previewId}')">
+                                        <i class="fas fa-eye"></i> ${t.previewBtn}
+                                    </button>
+                                    <a href="${item.file_data}" download="${item.file_name || 'document.pdf'}" class="btn-file download">
                                         <i class="fas fa-download"></i> ${t.downloadBtn}
                                     </a>
-                                </div>
-                                <div class="file-preview">
-                                    <iframe src="${item.file_data}" class="pdf-viewer" style="width:100%;height:300px;"></iframe>
+                                    <button class="btn-file fullscreen" onclick="openPDFFullscreen('${item.file_data}', '${item.file_name || 'Document PDF'}')">
+                                        <i class="fas fa-expand"></i> ${t.fullscreenBtn}
+                                    </button>
                                 </div>
                             </div>
                         `;
@@ -3494,7 +3591,7 @@
 
                     return `
                         <div class="actu-item" data-id="${item.id}">
-                            <div class="actu-text">${text}</div>
+                            <div class="actu-text">${text || ''}</div>
                             ${fileHtml}
                             <div class="actu-meta">
                                 <span><span class="author"><i class="fas fa-user"></i> ${item.author || 'Anonyme'}</span></span>
@@ -3511,6 +3608,43 @@
                 console.error('Erreur chargement actu:', error);
                 container.innerHTML = '<div class="no-content">❌ Erreur de chargement</div>';
             }
+        }
+
+        // ============================================================
+        // FONCTIONS POUR LES PDF
+        // ============================================================
+
+        // Basculer l'aperçu du PDF
+        function togglePDFPreview(previewId) {
+            var preview = document.getElementById(previewId);
+            if (preview) {
+                if (preview.style.display === 'none' || preview.style.display === '') {
+                    preview.style.display = 'block';
+                    preview.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else {
+                    preview.style.display = 'none';
+                }
+            }
+        }
+
+        // Ouvrir le PDF en plein écran
+        function openPDFFullscreen(pdfData, fileName) {
+            var viewer = document.getElementById('fileViewer');
+            var content = document.getElementById('viewerContent');
+            var titleEl = document.getElementById('viewerTitle');
+
+            if (titleEl) titleEl.textContent = fileName || 'Document PDF';
+            if (content) {
+                content.innerHTML = `
+                    <iframe src="${pdfData}" style="width:100%;height:70vh;border:none;border-radius:8px;"></iframe>
+                    <div class="viewer-actions">
+                        <a href="${pdfData}" download="${fileName || 'document.pdf'}">
+                            <i class="fas fa-download"></i> Télécharger
+                        </a>
+                    </div>
+                `;
+            }
+            if (viewer) viewer.classList.add('active');
         }
 
         // ============================================================
@@ -4659,6 +4793,8 @@
         window.publishActu = publishActu;
         window.deleteActu = deleteActu;
         window.uploadActuPDF = uploadActuPDF;
+        window.togglePDFPreview = togglePDFPreview;
+        window.openPDFFullscreen = openPDFFullscreen;
     </script>
 
 </body>
