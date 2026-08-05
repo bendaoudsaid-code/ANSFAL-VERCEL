@@ -3886,116 +3886,106 @@
         // ============================================================
         // TÉLÉVERSER LES FICHIERS VERS SUPABASE
         // ============================================================
-        async function uploadFiles() {
-            var t = getLang();
+        // ============================================================
+// TÉLÉVERSER LES FICHIERS VERS SUPABASE
+// ============================================================
+async function uploadFiles() {
+    var t = getLang();
 
-            if (selectedFiles.length === 0) {
-                showAlert(t.alertNoFile, 'error');
-                return;
-            }
+    if (selectedFiles.length === 0) {
+        showAlert(t.alertNoFile, 'error');
+        return;
+    }
 
-            document.getElementById('uploadProgress').style.display = 'block';
-            document.getElementById('actionButtons').style.display = 'none';
+    document.getElementById('uploadProgress').style.display = 'block';
+    document.getElementById('actionButtons').style.display = 'none';
 
-            var total = selectedFiles.length;
-            var uploaded = 0;
-            var errors = [];
+    var total = selectedFiles.length;
+    var uploaded = 0;
+    var errors = [];
 
-            var tableMap = {
-    'image': 'gallery',
-    'video': 'videos',
-    'article': 'articles',
-    'projets': 'projets',
-    'actualité': 'actualité'
-};'
+    var tableMap = {
+        'image': 'gallery',
+        'video': 'videos',
+        'article': 'articles',
+        'projets': 'projets',
+        'actualité': 'actualité'
+    };
+    
+    var tableName = tableMap[currentUploadType] || 'gallery';
+    var publisher = document.getElementById('userName').textContent || 'admin';
+
+    for (var i = 0; i < selectedFiles.length; i++) {
+        var file = selectedFiles[i];
+
+        try {
+            var isVideo = file.type && file.type.startsWith('video/');
+            var base64 = await readFileAsBase64(file);
+
+            var data = {
+                title: file.name.split('.')[0] || 'Fichier ' + (i + 1),
+                description: 'Uploadé depuis le site ANSFAL',
+                publisher: publisher,
+                uploaded_at: new Date().toISOString()
             };
-            var tableName = tableMap[currentUploadType] || 'gallery';
-            var publisher = document.getElementById('userName').textContent || 'admin';
 
-            for (var i = 0; i < selectedFiles.length; i++) {
-                var file = selectedFiles[i];
-
-                try {
-                    var isVideo = file.type && file.type.startsWith('video/');
-                    var base64 = await readFileAsBase64(file);
-
-                    var data = {
-                        title: file.name.split('.')[0] || 'Fichier ' + (i + 1),
-                        description: 'Uploadé depuis le site ANSFAL',
-                        publisher: publisher
-                    };
-
-                    if (tableName === 'articles') {
-                        data.content = file.name.split('.')[0] || 'Contenu';
-                        data.category = 'publication';
-                        data.status = 'published';
-                    } else if (isVideo) {
-                        data.video_url = base64;
-                    } else {
-                        data.image_url = base64;
-                    }
-
-                    var { error } = await supabase
-                        .from(tableName)
-                        .insert([data]);
-
-                    if (error) {
-                        errors.push(file.name + ': ' + error.message);
-                    } else {
-                        uploaded++;
-                    }
-
-                    var progress = Math.round(((i + 1) / total) * 100);
-                    document.getElementById('progressFill').style.width = progress + '%';
-                    document.getElementById('progressText').textContent = progress + '% (' + (i + 1) + '/' + total + ')';
-
-                } catch (error) {
-                    errors.push(file.name + ': ' + error.message);
-                }
-            }
-
-            document.getElementById('uploadProgress').style.display = 'none';
-
-            if (errors.length === 0) {
-                document.getElementById('uploadSuccess').style.display = 'block';
-                document.getElementById('successMessage').textContent = uploaded + ' fichier(s) téléversé(s) avec succès !';
-                showAlert(uploaded + ' fichier(s) téléversé(s) avec succès !', 'success');
-
-                setTimeout(function() {
-                    loadGalleryDashboard();
-                    loadVideosDashboard();
-                    loadPublicationsDashboard();
-                    loadPublicGallery();
-                    loadPublicVideos();
-                    loadArticles();
-                    updateDashboardStats();
-                }, 1000);
-
+            if (tableName === 'articles') {
+                data.content = file.name.split('.')[0] || 'Contenu';
+                data.category = 'publication';
+                data.status = 'published';
+            } else if (isVideo) {
+                data.video_url = base64;
             } else {
-                showAlert('Erreur: ' + errors.join(', '), 'error');
-                document.getElementById('actionButtons').style.display = 'flex';
+                data.image_url = base64;
             }
 
-            if (errors.length === 0) {
-                setTimeout(function() {
-                    hideUploadModal();
-                }, 3000);
+            var { error } = await supabase
+                .from(tableName)
+                .insert([data]);
+
+            if (error) {
+                errors.push(file.name + ': ' + error.message);
+            } else {
+                uploaded++;
             }
-        }
 
-        function readFileAsBase64(file) {
-            return new Promise(function(resolve, reject) {
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    resolve(e.target.result);
-                };
-                reader.onerror = function(e) {
-                    reject(e.target.error);
-                };
-                reader.readAsDataURL(file);
-            });
-        }
+            var progress = Math.round(((i + 1) / total) * 100);
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = progress + '% (' + (i + 1) + '/' + total + ')';
 
+        } catch (error) {
+            errors.push(file.name + ': ' + error.message);
+        }
+    }
+
+    document.getElementById('uploadProgress').style.display = 'none';
+
+    if (errors.length === 0) {
+        document.getElementById('uploadSuccess').style.display = 'block';
+        document.getElementById('successMessage').textContent = uploaded + ' fichier(s) téléversé(s) avec succès !';
+        showAlert(uploaded + ' fichier(s) téléversé(s) avec succès !', 'success');
+
+        setTimeout(function() {
+            loadGalleryDashboard();
+            loadVideosDashboard();
+            loadPublicationsDashboard();
+            loadPublicGallery();
+            loadPublicVideos();
+            loadArticles();
+            updateDashboardStats();
+        }, 1000);
+
+    } else {
+        showAlert('Erreur: ' + errors.join(', '), 'error');
+        document.getElementById('actionButtons').style.display = 'flex';
+    }
+
+    if (errors.length === 0) {
+        setTimeout(function() {
+            hideUploadModal();
+        }, 3000);
+    }
+}
         // ============================================================
         // SUPPRIMER UN ÉLÉMENT
         // ============================================================
