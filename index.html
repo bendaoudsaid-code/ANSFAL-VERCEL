@@ -3911,18 +3911,27 @@ async function uploadFiles() {
             var isVideo = file.type && file.type.startsWith('video/');
             var isImage = file.type && file.type.startsWith('image/');
             
-            // Déterminer le bucket et la table
+            // Vérification du type
+            if (currentUploadType === 'image' && isVideo) {
+                errors.push(file.name + ': Les vidéos vont dans la section Vidéos');
+                continue;
+            }
+            if (currentUploadType === 'video' && !isVideo) {
+                errors.push(file.name + ': Les images vont dans la section Galerie');
+                continue;
+            }
+            
             var bucketName = isVideo ? 'videos' : 'gallery';
             var tableName = isVideo ? 'videos' : 'gallery';
             
-            // Générer un nom unique pour le fichier
+            // Nom unique pour le fichier
             var timestamp = Date.now();
             var cleanName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
             var filePath = timestamp + '_' + cleanName;
             
             console.log('📤 Upload vers ' + bucketName + '/' + filePath);
             
-            // 1. Uploader le fichier vers le bucket Storage
+            // 1. Upload vers le bucket Storage (PAS base64 !)
             var { data: storageData, error: storageError } = await supabase
                 .storage
                 .from(bucketName)
@@ -3948,7 +3957,7 @@ async function uploadFiles() {
             var publicUrl = urlData.publicUrl;
             console.log('🔗 URL publique:', publicUrl);
             
-            // 3. Préparer les données pour la base
+            // 3. Préparer les données (avec l'URL publique, PAS base64)
             var data = {
                 title: file.name.split('.')[0] || (isVideo ? 'Vidéo' : 'Image') + ' ' + (i + 1),
                 description: 'Uploadé depuis le site ANSFAL',
@@ -3957,16 +3966,14 @@ async function uploadFiles() {
             };
             
             if (isVideo) {
-                data.video_url = publicUrl;  // URL publique, PAS base64 !
-                // Ajouter une vignette si nécessaire
-                data.thumbnail_url = null;
+                data.video_url = publicUrl;
             } else {
                 data.image_url = publicUrl;
             }
             
             console.log('📊 Données à insérer:', data);
             
-            // 4. Insérer dans la base de données
+            // 4. Insérer dans la base
             var { data: result, error: insertError } = await supabase
                 .from(tableName)
                 .insert([data])
@@ -4000,10 +4007,10 @@ async function uploadFiles() {
         showAlert(uploaded + ' fichier(s) téléversé(s) avec succès !', 'success');
 
         setTimeout(function() {
-            loadVideosDashboard();
-            loadPublicVideos();
             loadGalleryDashboard();
+            loadVideosDashboard();
             loadPublicGallery();
+            loadPublicVideos();
             loadArticles();
             updateDashboardStats();
         }, 1000);
@@ -4019,7 +4026,6 @@ async function uploadFiles() {
         }, 3000);
     }
 }
-        
 // ============================================================
 // SUPPRIMER UN ÉLÉMENT
 // ============================================================
