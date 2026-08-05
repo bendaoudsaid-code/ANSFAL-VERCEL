@@ -2494,25 +2494,20 @@
                     <div class="items-grid" id="textList"></div>
                 </div>
 
-                <!-- Dans la section Paramètres du Dashboard -->
-<div id="settingsDashboard" class="dashboard-section-content">
-    <h2 id="settingsTitle"><i class="fas fa-cog"></i> Paramètres</h2>
+                <!-- Paramètres -->
+                <div id="settingsDashboard" class="dashboard-section-content">
+                    <h2 id="settingsTitle"><i class="fas fa-cog"></i> Paramètres</h2>
 
-    <!-- Sécurité -->
-    <div class="settings-section">...</div>
+                    <!-- Sécurité -->
+                    <div class="settings-section">
+                        <h3><i class="fas fa-shield-alt"></i> Sécurité</h3>
+                        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                            <button class="btn-import admin-only" onclick="showPasswordModal()" style="background:var(--info);"><i class="fas fa-key"></i> Changer le mot de passe</button>
+                            <button class="btn-import admin-only" onclick="exportToJSON()" style="background:var(--primary);"><i class="fas fa-file-export"></i> Exporter les données</button>
+                            <button class="btn-import admin-only" onclick="resetAllData()" style="background:var(--danger);"><i class="fas fa-trash"></i> Effacer tout</button>
+                        </div>
+                    </div>
 
-    <!-- Texte défilant -->
-    <div class="settings-section admin-only">...</div>
-
-    <!-- Logo -->
-    <div class="settings-section admin-only">...</div>
-
-    <!-- ✅ AJOUTEZ ICI LA SECTION GESTION DES PDF -->
-    <div class="settings-section admin-only">
-        <h3><i class="fas fa-file-pdf" style="color:var(--pdf);"></i> Gestion des PDF</h3>
-        ...
-    </div>
-</div>
                     <!-- Texte défilant -->
                     <div class="settings-section admin-only">
                         <h3><i class="fas fa-scroll"></i> Texte défilant (Avis au public)</h3>
@@ -2525,7 +2520,7 @@
                         </div>
                     </div>
 
-                    <!-- Logo - Upload vers Supabase avec bouton + -->
+                    <!-- Logo -->
                     <div class="settings-section admin-only">
                         <h3><i class="fas fa-image"></i> Changer le logo</h3>
                         <div class="logo-upload-wrapper">
@@ -2541,6 +2536,40 @@
                                     <i class="fas fa-cloud-upload-alt"></i> Uploader
                                 </button>
                                 <span class="file-info" id="logoFileInfo">Aucun fichier sélectionné</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============================================================
+                         GESTION DES PDF (ADMIN UNIQUEMENT)
+                         ============================================================ -->
+                    <div class="settings-section admin-only">
+                        <h3><i class="fas fa-file-pdf" style="color:var(--pdf);"></i> Gestion des PDF</h3>
+                        <p style="color:#666;margin-bottom:15px;">Uploader, publier ou refuser des PDF</p>
+
+                        <!-- Upload -->
+                        <div style="display:flex;flex-wrap:wrap;gap:15px;align-items:center;margin-bottom:20px;">
+                            <div class="file-upload-area" onclick="document.getElementById('adminPdfInput').click()" style="flex:1;min-width:200px;padding:20px;border:2px dashed #ddd;border-radius:8px;cursor:pointer;text-align:center;background:var(--light);">
+                                <i class="fas fa-cloud-upload-alt" style="font-size:2rem;color:var(--primary);"></i>
+                                <p class="file-info" id="adminPdfInfo"><i class="fas fa-file-pdf" style="color:var(--pdf);"></i> Cliquez pour sélectionner un PDF (max 10MB)</p>
+                                <input type="file" id="adminPdfInput" accept=".pdf" style="display:none;" />
+                            </div>
+                            <button class="btn-import" onclick="uploadAdminPDF()" style="background:var(--info);">
+                                <i class="fas fa-upload"></i> Uploader le PDF
+                            </button>
+                            <button class="btn-import" onclick="loadAdminPDFs()" style="background:var(--primary);">
+                                <i class="fas fa-refresh"></i> Rafraîchir
+                            </button>
+                        </div>
+
+                        <!-- Liste des PDF -->
+                        <div style="margin-top:20px;">
+                            <h4 style="color:var(--dark);margin-bottom:10px;">
+                                <i class="fas fa-list"></i> PDF uploadés
+                                <span style="font-size:0.8rem;font-weight:normal;color:#888;margin-left:10px;" id="pdfCount"></span>
+                            </h4>
+                            <div id="adminPdfList" style="max-height:400px;overflow-y:auto;">
+                                <div class="no-content">Aucun PDF uploadé.</div>
                             </div>
                         </div>
                     </div>
@@ -2744,302 +2773,37 @@
 
         var selectedLogoFile = null;
         var selectedActuFile = null;
+        var selectedAdminPdfFile = null;
 
         // ============================================================
-        // TRADUCTIONS
+        // TRADUCTIONS (version abrégée pour le message, gardez votre LANG complet)
         // ============================================================
         var LANG = {
             fr: {
-                logoTitle: 'ANSFAL',
-                logoSubtitle: 'Association ANSFAL de Coopération, Développement et Environnement',
-                menuHome: 'Accueil',
-                menuAbout: 'À propos',
-                menuGallery: 'Galerie',
-                menuVideos: 'Vidéos',
-                menuProjects: 'Projets',
-                menuDons: 'Dons',
-                menuActu: 'Actualité',
-                menuContact: 'Contact',
-                menuDashboard: 'Dashboard',
-                heroTitle: 'Association ANSFAL',
-                heroSubtitle: 'Association ANSFAL de Coopération, Développement et Environnement',
-                heroText: 'Œuvrant pour un développement durable, la coopération nationale et la protection de l\'environnement depuis 2023.',
-                heroBtn1: 'Découvrir nos actions',
-                heroBtn2: 'Galerie Photos',
-                heroBtn3: 'Faire un don',
-                aboutTitle: 'À propos d\'ANSFAL',
-                aboutHistory: 'Notre histoire',
-                aboutText1: 'Fondée en 2023, l\'Association ANSFAL pour la Coopération et le Développement et l\'Environnement est née de la conviction que le développement humain et la protection environnementale doivent aller de pair.',
-                aboutText2: 'Notre nom \'ANSFAL\' symbolise notre engagement pour un avenir meilleur, basé sur la solidarité, le développement durable et la préservation de notre environnement.',
-                galleryTitle: 'Galerie Photos',
-                noGalleryPublic: 'Aucune image disponible pour le moment.',
-                videosTitle: 'Vidéos',
-                noVideosPublic: 'Aucune vidéo disponible pour le moment.',
-                projectsTitle: 'Nos Projets',
-                donsTitle: 'Faire un don',
-                donsSubtitle: 'Choisissez votre moyen de paiement et soutenez nos actions',
-                actuTitle: 'Actualité ANSFAL',
-                actuSubtitle: 'Partagez votre avis en 20 mots maximum ou uploader un PDF',
-                actuFormTitle: 'Laisser un commentaire',
-                actuSubmitText: 'Publier',
-                contactTitle: 'Contactez-nous',
-                contactAddress: 'Adresse',
-                contactLocation: 'Maroc',
-                contactPhone: 'Téléphone',
-                contactEmail: 'Email',
-                sidebarDashboardText: 'Tableau de bord',
-                sidebarGalleryText: 'Galerie',
-                sidebarVideosText: 'Vidéos',
-                sidebarPublicationsText: 'Publications',
-                sidebarTextText: 'Textes',
-                sidebarSettingsText: 'Paramètres',
-                dashboardTitle: 'Tableau de Bord ANSFAL',
-                statVisitors: 'Visiteurs',
-                statMedia: 'Médias',
-                statPublications: 'Publications',
-                statActu: 'Actualités',
-                galleryDashboardTitle: 'Gestion des images',
-                galleryAddBtnText: 'Ajouter des images',
-                videosDashboardTitle: 'Gestion des vidéos',
-                videosAddBtnText: 'Ajouter des vidéos',
-                publicationsDashboardTitle: 'Gestion des publications',
-                publicationsAddBtnText: 'Nouvelle publication',
-                textDashboardTitle: 'Gestion des textes',
-                textAddBtnText: 'Ajouter un texte',
-                settingsTitle: 'Paramètres',
-                settingsPasswordBtnText: 'Changer le mot de passe',
-                settingsExportBtnText: 'Exporter les données',
-                settingsResetBtnText: 'Effacer tout',
-                uploadModalText: 'Uploader des fichiers',
-                uploadPcTitle: 'Upload depuis PC',
-                uploadPcDesc: 'Uploader des fichiers depuis votre ordinateur',
-                uploadUrlTitle: 'Lien depuis Internet',
-                uploadUrlDesc: 'Ajouter des liens Imgur/YouTube',
-                uploadAreaText: 'Glissez-déposez vos fichiers ici',
-                uploadAreaSubtext: 'ou cliquez pour parcourir vos fichiers',
-                modalSizeWarning: 'Taille max: 20MB par fichier',
-                browseBtnText: 'Parcourir',
-                urlInputLabel: 'URL de l\'image ou de la vidéo',
-                examplesTitle: 'Exemples:',
-                urlExamples: '• Images Imgur: https://i.imgur.com/rX8QePL.jpeg<br />• Vidéo YouTube: https://youtu.be/VIDEO_ID',
-                mediaTitleLabel: 'Titre du média (optionnel)',
-                addUrlBtnText: 'Ajouter le lien',
-                previewTitle: 'Fichiers sélectionnés',
-                noFilesText: 'Aucun fichier sélectionné',
-                uploadingText: 'Upload en cours...',
-                successMessage: 'Upload réussi !',
-                okBtnText: 'OK',
-                cancelBtnText: 'Annuler',
-                textModalHeaderText: 'Ajouter un texte',
-                textTitleLabelText: 'Titre du texte',
-                textContentLabelText: 'Contenu',
-                textCancelBtnText: 'Annuler',
-                textSaveBtnText: 'Enregistrer',
-                passwordModalHeaderText: 'Changer le mot de passe',
-                currentPasswordLabelText: 'Mot de passe actuel',
-                newPasswordLabelText: 'Nouveau mot de passe',
-                confirmPasswordLabelText: 'Confirmer le nouveau mot de passe',
-                passwordCancelBtnText: 'Annuler',
-                passwordSaveBtnText: 'Enregistrer',
-                footerLogoTitle: 'ANSFAL',
-                footerLogoSubtitle: 'Association ANSFAL de Coopération, Développement et Environnement',
-                footerFollow: 'Suivez-nous',
-                footerCopyright: '© 2024 Association ANSFAL. Tous droits réservés.',
-                usernamePlaceholder: 'Nom d\'utilisateur',
-                passwordPlaceholder: 'Mot de passe',
-                loginBtnText: 'Connexion',
-                logoutBtnText: 'Déconnexion',
-                userRoleText: 'Admin',
-                viewerTitle: 'Fichier',
-                alertFillFields: 'Veuillez remplir tous les champs',
-                alertInvalidCredentials: 'Identifiants incorrects',
-                alertLoginSuccess: 'Connexion réussie',
-                alertLogout: 'Déconnecté',
-                alertNoFile: 'Sélectionnez des fichiers',
-                alertFileTooLarge: 'Fichier trop volumineux',
-                alertInvalidURL: 'URL invalide',
-                alertURLAdded: 'URL ajoutée',
-                alertFileDeleted: 'Fichier supprimé',
-                alertTextDeleted: 'Texte supprimé',
-                alertTextSaved: 'Texte enregistré',
-                alertDataReset: 'Données effacées',
-                alertDataExported: 'Données exportées',
-                alertLoginRequired: 'Veuillez vous connecter',
-                alertItemDeleted: 'Élément supprimé avec succès',
-                alertContactSaved: 'Contacts mis à jour',
-                alertTickerSaved: 'Texte défilant mis à jour',
-                alertPaymentSuccess: 'Merci pour votre don ! 💚',
-                alertLogoUploaded: 'Logo uploadé avec succès !',
-                alertLogoError: 'Erreur lors de l\'upload du logo',
-                alertActuSubmitted: 'Votre actualité a été soumise ! En attente de publication.',
-                alertActuPublished: 'Actualité publiée avec succès !',
-                alertActuDeleted: 'Actualité supprimée !',
-                alertActuTooLong: 'Votre texte dépasse 20 mots !',
-                alertActuPDFUploaded: 'PDF uploadé avec succès !',
-                alertActuPDFError: 'Erreur lors de l\'upload du PDF',
-                labelCardNumber: 'Numéro de carte',
-                labelExpiryDate: 'Date d\'expiration',
-                labelCvv: 'Code de sécurité',
-                labelCardName: 'Nom sur la carte',
-                labelAmount: 'Montant (MAD)',
-                btnPaymentText: 'Faire un don',
+                // ... gardez votre LANG complet ...
                 noActuPublic: 'Aucune actualité pour le moment.',
                 statusPublished: 'Publié',
                 statusDraft: 'Brouillon',
-                toggleRead: 'Lire la suite',
-                toggleHide: 'Réduire',
                 publishBtn: 'Publier',
                 deleteBtn: 'Supprimer',
-                downloadBtn: 'Télécharger',
                 previewBtn: 'Aperçu',
+                downloadBtn: 'Télécharger',
                 fullscreenBtn: 'Plein écran',
-                filePDF: 'Fichier PDF'
+                alertActuPublished: 'Actualité publiée avec succès !',
+                alertActuDeleted: 'Actualité supprimée !'
             },
             ar: {
-                logoTitle: 'جمعية أنسفال',
-                logoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
-                menuHome: 'الرئيسية',
-                menuAbout: 'من نحن',
-                menuGallery: 'معرض الصور',
-                menuVideos: 'الفيديوهات',
-                menuProjects: 'المشاريع',
-                menuDons: 'التبرعات',
-                menuActu: 'الأخبار',
-                menuContact: 'اتصل بنا',
-                menuDashboard: 'لوحة التحكم',
-                heroTitle: 'جمعية أنسفال',
-                heroSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
-                heroText: 'تعمل من أجل التنمية المستدامة والتعاون الوطني وحماية البيئة منذ عام 2023.',
-                heroBtn1: 'اكتشف أعمالنا',
-                heroBtn2: 'معرض الصور',
-                heroBtn3: 'تبرع الآن',
-                aboutTitle: 'من نحن - أنسفال',
-                aboutHistory: 'تاريخنا',
-                aboutText1: 'تأسست جمعية أنسفال للتعاون والتنمية والبيئة في عام 2023 انطلاقاً من قناعة بأن التنمية البشرية وحماية البيئة يجب أن يسيرا جنباً إلى جنب.',
-                aboutText2: 'يرمز اسمنا \'أنسفال\' إلى التزامنا بمستقبل أفضل، يقوم على التضامن والتنمية المستدامة والحفاظ على بيئتنا.',
-                galleryTitle: 'معرض الصور',
-                noGalleryPublic: 'لا توجد صور متاحة حالياً.',
-                videosTitle: 'الفيديوهات',
-                noVideosPublic: 'لا توجد فيديوهات متاحة حالياً.',
-                projectsTitle: 'مشاريعنا',
-                donsTitle: 'تبرع الآن',
-                donsSubtitle: 'اختر وسيلة الدفع وادعم أعمالنا',
-                actuTitle: 'أخبار أنسفال',
-                actuSubtitle: 'شارك رأيك في 20 كلمة كحد أقصى أو حمّل ملف PDF',
-                actuFormTitle: 'اترك تعليقاً',
-                actuSubmitText: 'نشر',
-                contactTitle: 'اتصل بنا',
-                contactAddress: 'العنوان',
-                contactLocation: 'المغرب',
-                contactPhone: 'الهاتف',
-                contactEmail: 'البريد الإلكتروني',
-                sidebarDashboardText: 'لوحة التحكم',
-                sidebarGalleryText: 'معرض الصور',
-                sidebarVideosText: 'الفيديوهات',
-                sidebarPublicationsText: 'المنشورات',
-                sidebarTextText: 'النصوص',
-                sidebarSettingsText: 'الإعدادات',
-                dashboardTitle: 'لوحة تحكم أنسفال',
-                statVisitors: 'الزوار',
-                statMedia: 'الوسائط',
-                statPublications: 'المنشورات',
-                statActu: 'الأخبار',
-                galleryDashboardTitle: 'إدارة الصور',
-                galleryAddBtnText: 'إضافة صور',
-                videosDashboardTitle: 'إدارة الفيديوهات',
-                videosAddBtnText: 'إضافة فيديوهات',
-                publicationsDashboardTitle: 'إدارة المنشورات',
-                publicationsAddBtnText: 'منشور جديد',
-                textDashboardTitle: 'إدارة النصوص',
-                textAddBtnText: 'إضافة نص',
-                settingsTitle: 'الإعدادات',
-                settingsPasswordBtnText: 'تغيير كلمة المرور',
-                settingsExportBtnText: 'تصدير البيانات',
-                settingsResetBtnText: 'حذف الكل',
-                uploadModalText: 'رفع الملفات',
-                uploadPcTitle: 'رفع من الكمبيوتر',
-                uploadPcDesc: 'رفع الملفات من جهاز الكمبيوتر الخاص بك',
-                uploadUrlTitle: 'رابط من الإنترنت',
-                uploadUrlDesc: 'إضافة روابط Imgur/YouTube',
-                uploadAreaText: 'اسحب وأفلت ملفاتك هنا',
-                uploadAreaSubtext: 'أو انقر لتصفح ملفاتك',
-                modalSizeWarning: 'الحد الأقصى: 20 ميجابايت لكل ملف',
-                browseBtnText: 'تصفح',
-                urlInputLabel: 'رابط الصورة أو الفيديو',
-                examplesTitle: 'أمثلة:',
-                urlExamples: '• صور Imgur: https://i.imgur.com/rX8QePL.jpeg<br />• فيديو YouTube: https://youtu.be/VIDEO_ID',
-                mediaTitleLabel: 'عنوان الوسيط (اختياري)',
-                addUrlBtnText: 'إضافة الرابط',
-                previewTitle: 'الملفات المحددة',
-                noFilesText: 'لم يتم تحديد أي ملف',
-                uploadingText: 'جاري الرفع...',
-                successMessage: 'تم الرفع بنجاح!',
-                okBtnText: 'حسناً',
-                cancelBtnText: 'إلغاء',
-                textModalHeaderText: 'إضافة نص',
-                textTitleLabelText: 'عنوان النص',
-                textContentLabelText: 'المحتوى',
-                textCancelBtnText: 'إلغاء',
-                textSaveBtnText: 'حفظ',
-                passwordModalHeaderText: 'تغيير كلمة المرور',
-                currentPasswordLabelText: 'كلمة المرور الحالية',
-                newPasswordLabelText: 'كلمة المرور الجديدة',
-                confirmPasswordLabelText: 'تأكيد كلمة المرور الجديدة',
-                passwordCancelBtnText: 'إلغاء',
-                passwordSaveBtnText: 'حفظ',
-                footerLogoTitle: 'جمعية أنسفال',
-                footerLogoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
-                footerFollow: 'تابعنا',
-                footerCopyright: '© 2024 جمعية أنسفال. جميع الحقوق محفوظة.',
-                usernamePlaceholder: 'اسم المستخدم',
-                passwordPlaceholder: 'كلمة المرور',
-                loginBtnText: 'تسجيل الدخول',
-                logoutBtnText: 'تسجيل الخروج',
-                userRoleText: 'مدير',
-                viewerTitle: 'ملف',
-                alertFillFields: 'يرجى ملء جميع الحقول',
-                alertInvalidCredentials: 'بيانات غير صحيحة',
-                alertLoginSuccess: 'تم تسجيل الدخول',
-                alertLogout: 'تم تسجيل الخروج',
-                alertNoFile: 'اختر ملفات',
-                alertFileTooLarge: 'الملف كبير جداً',
-                alertInvalidURL: 'رابط غير صالح',
-                alertURLAdded: 'تم إضافة الرابط',
-                alertFileDeleted: 'تم حذف الملف',
-                alertTextDeleted: 'تم حذف النص',
-                alertTextSaved: 'تم حفظ النص',
-                alertDataReset: 'تم حذف البيانات',
-                alertDataExported: 'تم تصدير البيانات',
-                alertLoginRequired: 'يرجى تسجيل الدخول',
-                alertItemDeleted: 'تم حذف العنصر بنجاح',
-                alertContactSaved: 'تم تحديث جهات الاتصال',
-                alertTickerSaved: 'تم تحديث النص المتحرك',
-                alertPaymentSuccess: 'شكراً لتبرعكم! 💚',
-                alertLogoUploaded: 'تم رفع الشعار بنجاح!',
-                alertLogoError: 'حدث خطأ أثناء رفع الشعار',
-                alertActuSubmitted: 'تم إرسال خبرك! في انتظار النشر.',
-                alertActuPublished: 'تم نشر الخبر بنجاح!',
-                alertActuDeleted: 'تم حذف الخبر!',
-                alertActuTooLong: 'نصك يتجاوز 20 كلمة!',
-                alertActuPDFUploaded: 'تم رفع ملف PDF بنجاح!',
-                alertActuPDFError: 'حدث خطأ أثناء رفع ملف PDF',
-                labelCardNumber: 'رقم البطاقة',
-                labelExpiryDate: 'تاريخ الانتهاء',
-                labelCvv: 'رمز الأمان',
-                labelCardName: 'الاسم على البطاقة',
-                labelAmount: 'المبلغ (درهم)',
-                btnPaymentText: 'تبرع الآن',
+                // ... gardez votre LANG complet ...
                 noActuPublic: 'لا توجد أخبار حالياً.',
                 statusPublished: 'منشور',
                 statusDraft: 'مسودة',
-                toggleRead: 'اقرأ المزيد',
-                toggleHide: 'إخفاء',
                 publishBtn: 'نشر',
                 deleteBtn: 'حذف',
-                downloadBtn: 'تحميل',
                 previewBtn: 'معاينة',
+                downloadBtn: 'تحميل',
                 fullscreenBtn: 'شاشة كاملة',
-                filePDF: 'ملف PDF'
+                alertActuPublished: 'تم نشر الخبر بنجاح!',
+                alertActuDeleted: 'تم حذف الخبر!'
             }
         };
 
@@ -3058,135 +2822,12 @@
             document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
             document.querySelector('.lang-btn[onclick*="' + lang + '"]').classList.add('active');
 
-            document.getElementById('logoTitle').textContent = t.logoTitle;
-            document.getElementById('logoSubtitle').textContent = t.logoSubtitle;
-            document.getElementById('menuHome').innerHTML = '<i class="fas fa-home"></i> ' + t.menuHome;
-            document.getElementById('menuAbout').innerHTML = '<i class="fas fa-info-circle"></i> ' + t.menuAbout;
-            document.getElementById('menuGallery').innerHTML = '<i class="fas fa-images"></i> ' + t.menuGallery;
-            document.getElementById('menuVideos').innerHTML = '<i class="fas fa-video"></i> ' + t.menuVideos;
-            document.getElementById('menuProjects').innerHTML = '<i class="fas fa-project-diagram"></i> ' + t.menuProjects;
-            document.getElementById('menuDons').innerHTML = '<i class="fas fa-hand-holding-heart"></i> ' + t.menuDons;
-            document.getElementById('menuActu').innerHTML = '<i class="fas fa-newspaper"></i> ' + t.menuActu;
-            document.getElementById('menuContact').innerHTML = '<i class="fas fa-envelope"></i> ' + t.menuContact;
-            document.getElementById('menuDashboard').innerHTML = '<i class="fas fa-tachometer-alt"></i> ' + t.menuDashboard;
+            // ... gardez votre fonction switchLanguage complète ...
 
-            document.getElementById('heroTitle').textContent = t.heroTitle;
-            document.getElementById('heroSubtitle').textContent = t.heroSubtitle;
-            document.getElementById('heroText').textContent = t.heroText;
-            document.getElementById('heroBtn1').innerHTML = '<i class="fas fa-rocket"></i> ' + t.heroBtn1;
-            document.getElementById('heroBtn2').innerHTML = '<i class="fas fa-images"></i> ' + t.heroBtn2;
-            document.getElementById('heroBtn3').innerHTML = '<i class="fas fa-hand-holding-heart"></i> ' + t.heroBtn3;
-
-            document.getElementById('aboutTitle').textContent = t.aboutTitle;
-            document.getElementById('aboutHistory').textContent = t.aboutHistory;
-            document.getElementById('aboutText1').textContent = t.aboutText1;
-            document.getElementById('aboutText2').textContent = t.aboutText2;
-
-            document.getElementById('galleryTitle').textContent = t.galleryTitle;
-            document.getElementById('videosTitle').textContent = t.videosTitle;
-            document.getElementById('projectsTitle').textContent = t.projectsTitle;
-            document.getElementById('donsTitle').innerHTML = '<i class="fas fa-hand-holding-heart"></i> ' + t.donsTitle;
-            document.getElementById('donsSubtitle').textContent = t.donsSubtitle;
-            document.getElementById('actuTitle').innerHTML = '<i class="fas fa-newspaper"></i> ' + t.actuTitle;
-            document.getElementById('actuSubtitle').textContent = t.actuSubtitle;
-            document.getElementById('actuFormTitle').innerHTML = '<i class="fas fa-pen"></i> ' + t.actuFormTitle;
-            document.getElementById('actuSubmitText').textContent = t.actuSubmitText;
-
-            document.getElementById('contactTitle').textContent = t.contactTitle;
-            document.getElementById('contactAddress').textContent = t.contactAddress;
-            document.getElementById('contactLocation').textContent = t.contactLocation;
-            document.getElementById('contactPhone').textContent = t.contactPhone;
-            document.getElementById('contactEmail').textContent = t.contactEmail;
-
-            document.getElementById('sidebarDashboardText').textContent = t.sidebarDashboardText;
-            document.getElementById('sidebarGalleryText').textContent = t.sidebarGalleryText;
-            document.getElementById('sidebarVideosText').textContent = t.sidebarVideosText;
-            document.getElementById('sidebarPublicationsText').textContent = t.sidebarPublicationsText;
-            document.getElementById('sidebarTextText').textContent = t.sidebarTextText;
-            document.getElementById('sidebarSettingsText').textContent = t.sidebarSettingsText;
-
-            document.getElementById('dashboardTitle').innerHTML = '<i class="fas fa-tachometer-alt"></i> ' + t.dashboardTitle;
-            document.getElementById('statVisitors').innerHTML = '<i class="fas fa-users"></i> ' + t.statVisitors;
-            document.getElementById('statMedia').innerHTML = '<i class="fas fa-photo-video"></i> ' + t.statMedia;
-            document.getElementById('statPublications').innerHTML = '<i class="fas fa-newspaper"></i> ' + t.statPublications;
-            document.getElementById('statActu').innerHTML = '<i class="fas fa-comment"></i> ' + t.statActu;
-            document.getElementById('galleryDashboardTitle').innerHTML = '<i class="fas fa-images"></i> ' + t.galleryDashboardTitle;
-            document.getElementById('galleryAddBtn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i> ' + t.galleryAddBtnText;
-            document.getElementById('videosDashboardTitle').innerHTML = '<i class="fas fa-video"></i> ' + t.videosDashboardTitle;
-            document.getElementById('videosAddBtn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i> ' + t.videosAddBtnText;
-            document.getElementById('publicationsDashboardTitle').innerHTML = '<i class="fas fa-newspaper"></i> ' + t.publicationsDashboardTitle;
-            document.getElementById('publicationsAddBtn').innerHTML = '<i class="fas fa-plus"></i> ' + t.publicationsAddBtnText;
-            document.getElementById('textDashboardTitle').innerHTML = '<i class="fas fa-file-alt"></i> ' + t.textDashboardTitle;
-            document.getElementById('textAddBtn').innerHTML = '<i class="fas fa-file-alt"></i> ' + t.textAddBtnText;
-            document.getElementById('settingsTitle').innerHTML = '<i class="fas fa-cog"></i> ' + t.settingsTitle;
-
-            document.getElementById('uploadModalText').textContent = t.uploadModalText;
-            document.getElementById('uploadPcTitle').textContent = t.uploadPcTitle;
-            document.getElementById('uploadPcDesc').textContent = t.uploadPcDesc;
-            document.getElementById('uploadUrlTitle').textContent = t.uploadUrlTitle;
-            document.getElementById('uploadUrlDesc').textContent = t.uploadUrlDesc;
-            document.getElementById('uploadAreaText').textContent = t.uploadAreaText;
-            document.getElementById('uploadAreaSubtext').textContent = t.uploadAreaSubtext;
-            document.getElementById('modalSizeWarning').textContent = t.modalSizeWarning;
-            document.getElementById('browseBtnText').textContent = t.browseBtnText;
-            document.getElementById('urlInputLabel').innerHTML = '<i class="fas fa-link"></i> ' + t.urlInputLabel;
-            document.getElementById('examplesTitle').textContent = t.examplesTitle;
-            document.getElementById('urlExamples').innerHTML = t.urlExamples;
-            document.getElementById('mediaTitleLabel').innerHTML = '<i class="fas fa-tag"></i> ' + t.mediaTitleLabel;
-            document.getElementById('addUrlBtnText').textContent = t.addUrlBtnText;
-            document.getElementById('previewTitle').textContent = t.previewTitle;
-            document.getElementById('noFilesText').textContent = t.noFilesText;
-            document.getElementById('uploadingText').textContent = t.uploadingText;
-            document.getElementById('successMessage').textContent = t.successMessage;
-            document.getElementById('okBtnText').textContent = t.okBtnText;
-            document.getElementById('cancelBtnText').textContent = t.cancelBtnText;
-
-            document.getElementById('textModalHeaderText').textContent = t.textModalHeaderText;
-            document.getElementById('textTitleLabelText').textContent = t.textTitleLabelText;
-            document.getElementById('textContentLabelText').textContent = t.textContentLabelText;
-            document.getElementById('textCancelBtnText').textContent = t.textCancelBtnText;
-            document.getElementById('textSaveBtnText').textContent = t.textSaveBtnText;
-
-            document.getElementById('passwordModalHeaderText').textContent = t.passwordModalHeaderText;
-            document.getElementById('currentPasswordLabelText').textContent = t.currentPasswordLabelText;
-            document.getElementById('newPasswordLabelText').textContent = t.newPasswordLabelText;
-            document.getElementById('confirmPasswordLabelText').textContent = t.confirmPasswordLabelText;
-            document.getElementById('passwordCancelBtnText').textContent = t.passwordCancelBtnText;
-            document.getElementById('passwordSaveBtnText').textContent = t.passwordSaveBtnText;
-
-            document.getElementById('footerLogoTitle').textContent = t.footerLogoTitle;
-            document.getElementById('footerLogoSubtitle').textContent = t.footerLogoSubtitle;
-            document.getElementById('footerFollow').textContent = t.footerFollow;
-            document.getElementById('footerCopyright').textContent = t.footerCopyright;
-
-            document.getElementById('username').placeholder = t.usernamePlaceholder;
-            document.getElementById('password').placeholder = t.passwordPlaceholder;
-            document.querySelector('#loginForm button').innerHTML = '<i class="fas fa-sign-in-alt"></i> ' + t.loginBtnText;
-            document.querySelector('.logout-btn').innerHTML = '<i class="fas fa-sign-out-alt"></i> ' + t.logoutBtnText;
-            document.getElementById('userRole').textContent = t.userRoleText;
-
-            document.getElementById('viewerTitle').textContent = t.viewerTitle;
-
-            // Dons
-            document.getElementById('labelCardNumber').innerHTML = '<i class="fas fa-credit-card"></i> ' + t.labelCardNumber;
-            document.getElementById('labelExpiryDate').innerHTML = '<i class="fas fa-calendar-alt"></i> ' + t.labelExpiryDate;
-            document.getElementById('labelCvv').innerHTML = '<i class="fas fa-lock"></i> ' + t.labelCvv;
-            document.getElementById('labelCardName').innerHTML = '<i class="fas fa-user"></i> ' + t.labelCardName;
-            document.getElementById('labelAmount').innerHTML = '<i class="fas fa-coins"></i> ' + t.labelAmount;
-            document.getElementById('btnPaymentText').textContent = t.btnPaymentText;
-
-            // Actualité
-            var noActu = document.getElementById('noActuPublic');
-            if (noActu) noActu.textContent = t.noActuPublic;
-
+            // Mise à jour du message WhatsApp
             var msg = lang === 'fr' ? 'Bonjour, je souhaite avoir plus d\'informations sur vos projets et actions à ANSFAL' :
-    'مرحباً، أود الحصول على معلومات حول جمعية أنسفال';
+                'مرحباً، أود الحصول على معلومات حول جمعية أنسفال';
             document.getElementById('whatsappBtn').href = 'https://wa.me/212625931318?text=' + encodeURIComponent(msg);
-
-            var noGallery = document.getElementById('noGalleryPublic');
-            if (noGallery) noGallery.textContent = t.noGalleryPublic;
-            var noVideos = document.getElementById('noVideosPublic');
-            if (noVideos) noVideos.textContent = t.noVideosPublic;
 
             updateTickerText();
             loadActu();
@@ -3217,8 +2858,8 @@
             var t = getLang();
             var user = document.getElementById('username').value.trim();
             var pass = document.getElementById('password').value.trim();
-            if (!user || !pass) { showAlert(t.alertFillFields, 'error'); return; }
-            showAlert(t.alertLoginSuccess, 'success');
+            if (!user || !pass) { showAlert(t.alertFillFields || 'Veuillez remplir tous les champs', 'error'); return; }
+            showAlert('Connexion réussie', 'success');
             document.getElementById('loginForm').classList.add('hidden');
             document.getElementById('userInfo').classList.remove('hidden');
             document.getElementById('userName').textContent = user;
@@ -3233,11 +2874,12 @@
             loadPublicationsDashboard();
             loadTextDashboard();
             loadActu();
+            loadAdminPDFs();
         }
 
         function logout() {
             var t = getLang();
-            if (!confirm(t.alertLogout + ' ?')) return;
+            if (!confirm('Déconnecté ?')) return;
             document.getElementById('loginForm').classList.remove('hidden');
             document.getElementById('userInfo').classList.add('hidden');
             document.body.classList.remove('admin-mode');
@@ -3245,7 +2887,7 @@
             document.getElementById('loginBtn').style.display = 'flex';
             document.getElementById('menuDashboard').classList.add('hidden');
             document.getElementById('contactEditForm').style.display = 'none';
-            showAlert(t.alertLogout, 'info');
+            showAlert('Déconnecté', 'info');
             loadActu();
         }
 
@@ -3285,9 +2927,10 @@
         }
 
         // ============================================================
-        // FORMATAGE DES CHAMPS DE CARTE
+        // FORMATAGE DES CHAMPS DE CARTE + ADMIN PDF
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
+            // ---- Formatage des champs de carte ----
             var cardNumber = document.getElementById('cardNumber');
             if (cardNumber) {
                 cardNumber.addEventListener('input', function(e) {
@@ -3327,7 +2970,7 @@
                 });
             }
 
-            // Sélectionner un fichier logo
+            // ---- Sélectionner un fichier logo ----
             var logoInput = document.getElementById('logoFileInput');
             if (logoInput) {
                 logoInput.addEventListener('change', function(e) {
@@ -3339,88 +2982,32 @@
                 });
             }
 
-            // ============================================================
-// FORMATAGE DES CHAMPS DE CARTE + ADMIN PDF
-// ============================================================
-document.addEventListener('DOMContentLoaded', function() {
-    // ---- Formatage des champs de carte ----
-    var cardNumber = document.getElementById('cardNumber');
-    if (cardNumber) {
-        cardNumber.addEventListener('input', function(e) {
-            var value = this.value.replace(/\D/g, '');
-            if (value.length > 16) value = value.slice(0, 16);
-            var formatted = '';
-            for (var i = 0; i < value.length; i++) {
-                if (i > 0 && i % 4 === 0) formatted += ' ';
-                formatted += value[i];
+            // ---- Sélectionner un fichier PDF pour l'actualité ----
+            var actuFileInput = document.getElementById('actuFileInput');
+            if (actuFileInput) {
+                actuFileInput.addEventListener('change', function(e) {
+                    if (e.target.files.length > 0) {
+                        selectedActuFile = e.target.files[0];
+                        document.getElementById('actuFileInfo').innerHTML = '<i class="fas fa-file-pdf"></i> ' + selectedActuFile
+                            .name + ' (' + (selectedActuFile.size / 1024).toFixed(1) + ' KB)';
+                    }
+                });
             }
-            this.value = formatted;
-        });
-    }
 
-    var expiryDate = document.getElementById('expiryDate');
-    if (expiryDate) {
-        expiryDate.addEventListener('input', function(e) {
-            var value = this.value.replace(/\D/g, '');
-            if (value.length > 4) value = value.slice(0, 4);
-            if (value.length >= 2) {
-                var month = parseInt(value.slice(0, 2));
-                if (month > 12) value = '12' + value.slice(2);
+            // ---- Admin PDF Input ----
+            var adminPdfInput = document.getElementById('adminPdfInput');
+            if (adminPdfInput) {
+                adminPdfInput.addEventListener('change', function(e) {
+                    if (e.target.files.length > 0) {
+                        selectedAdminPdfFile = e.target.files[0];
+                        document.getElementById('adminPdfInfo').innerHTML = '<i class="fas fa-file-pdf" style="color:var(--pdf);"></i> ' + selectedAdminPdfFile.name + ' (' + (selectedAdminPdfFile.size / 1024 / 1024).toFixed(2) + ' MB)';
+                    }
+                });
             }
-            var formatted = '';
-            for (var i = 0; i < value.length; i++) {
-                if (i === 2 && value.length > 2) formatted += '/';
-                formatted += value[i];
-            }
-            this.value = formatted;
-        });
-    }
 
-    var cvv = document.getElementById('cvv');
-    if (cvv) {
-        cvv.addEventListener('input', function(e) {
-            this.value = this.value.replace(/\D/g, '').slice(0, 4);
+            // ---- Charger les PDF uploadés ----
+            loadAdminPDFs();
         });
-    }
-
-    // ---- Sélectionner un fichier logo ----
-    var logoInput = document.getElementById('logoFileInput');
-    if (logoInput) {
-        logoInput.addEventListener('change', function(e) {
-            if (e.target.files.length > 0) {
-                selectedLogoFile = e.target.files[0];
-                document.getElementById('logoFileInfo').textContent = selectedLogoFile.name + ' (' + (selectedLogoFile
-                    .size / 1024).toFixed(1) + ' KB)';
-            }
-        });
-    }
-
-    // ---- Sélectionner un fichier PDF pour l'actualité ----
-    var actuFileInput = document.getElementById('actuFileInput');
-    if (actuFileInput) {
-        actuFileInput.addEventListener('change', function(e) {
-            if (e.target.files.length > 0) {
-                selectedActuFile = e.target.files[0];
-                document.getElementById('actuFileInfo').innerHTML = '<i class="fas fa-file-pdf"></i> ' + selectedActuFile
-                    .name + ' (' + (selectedActuFile.size / 1024).toFixed(1) + ' KB)';
-            }
-        });
-    }
-
-    // ---- ✅ AJOUT : Admin PDF Input ----
-    var adminPdfInput = document.getElementById('adminPdfInput');
-    if (adminPdfInput) {
-        adminPdfInput.addEventListener('change', function(e) {
-            if (e.target.files.length > 0) {
-                selectedAdminPdfFile = e.target.files[0];
-                document.getElementById('adminPdfInfo').innerHTML = '<i class="fas fa-file-pdf" style="color:var(--pdf);"></i> ' + selectedAdminPdfFile.name + ' (' + (selectedAdminPdfFile.size / 1024 / 1024).toFixed(2) + ' MB)';
-            }
-        });
-    }
-
-    // ---- ✅ AJOUT : Charger les PDF uploadés ----
-    loadAdminPDFs();
-});
 
         // ============================================================
         // UPLOAD LOGO VERS SUPABASE
@@ -3475,7 +3062,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     var logoPreview = document.getElementById('logoPreview');
                     logoPreview.innerHTML = '<img src="' + base64Data + '" style="width:100%;height:100%;object-fit:cover;">';
 
-                    showAlert(t.alertLogoUploaded || 'Logo uploadé avec succès !', 'success');
+                    showAlert('Logo uploadé avec succès !', 'success');
                     selectedLogoFile = null;
                     document.getElementById('logoFileInput').value = '';
                     document.getElementById('logoFileInfo').textContent = 'Aucun fichier sélectionné';
@@ -3485,25 +3072,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
             } catch (error) {
                 console.error('Erreur upload logo:', error);
-                showAlert(t.alertLogoError || 'Erreur lors de l\'upload du logo: ' + error.message, 'error');
+                showAlert('Erreur lors de l\'upload du logo: ' + error.message, 'error');
             }
         }
 
         // ============================================================
-        // ACTUALITÉ - SOUMETTRE UN TEXTE
+        // ACTUALITÉ
         // ============================================================
         async function submitActu() {
             var t = getLang();
             var text = document.getElementById('actuText').value.trim();
 
             if (!text) {
-                showAlert(t.alertFillFields, 'error');
+                showAlert('Veuillez remplir tous les champs', 'error');
                 return;
             }
 
             var words = text.split(/\s+/).filter(function(w) { return w.length > 0; });
             if (words.length > 20) {
-                showAlert(t.alertActuTooLong, 'error');
+                showAlert('Votre texte dépasse 20 mots !', 'error');
                 return;
             }
 
@@ -3523,7 +3110,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (error) throw error;
 
-                showAlert(t.alertActuSubmitted, 'success');
+                showAlert('Votre actualité a été soumise ! En attente de publication.', 'success');
                 document.getElementById('actuText').value = '';
                 document.getElementById('wordCountDisplay').textContent = '0';
                 loadActu();
@@ -3534,9 +3121,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // ============================================================
-        // ACTUALITÉ - UPLOADER UN PDF
-        // ============================================================
         async function uploadActuPDF() {
             var t = getLang();
 
@@ -3578,7 +3162,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     if (error) throw error;
 
-                    showAlert(t.alertActuPDFUploaded, 'success');
+                    showAlert('PDF uploadé avec succès !', 'success');
                     selectedActuFile = null;
                     document.getElementById('actuFileInput').value = '';
                     document.getElementById('actuFileInfo').innerHTML = '<i class="fas fa-file-pdf"></i> Cliquez pour sélectionner un PDF (max 10MB)';
@@ -3589,108 +3173,146 @@ document.addEventListener('DOMContentLoaded', function() {
 
             } catch (error) {
                 console.error('Erreur upload PDF:', error);
-                showAlert(t.alertActuPDFError + ': ' + error.message, 'error');
+                showAlert('Erreur lors de l\'upload du PDF: ' + error.message, 'error');
             }
         }
 
-        // ============================================================
-        // ACTUALITÉ - CHARGER ET AFFICHER
-        // ============================================================
         async function loadActu() {
-    var container = document.getElementById('actuContainer');
-    if (!container) return;
+            var container = document.getElementById('actuContainer');
+            if (!container) return;
 
-    try {
-        var { data, error } = await supabase
-            .from('actu')
-            .select('*')
-            .order('created_at', { ascending: false });
+            try {
+                var { data, error } = await supabase
+                    .from('actu')
+                    .select('*')
+                    .order('created_at', { ascending: false });
 
-        if (error) throw error;
+                if (error) throw error;
 
-        var isAdmin = document.body.classList.contains('admin-mode');
-        var t = getLang();
+                var isAdmin = document.body.classList.contains('admin-mode');
+                var t = getLang();
 
-        var filtered = isAdmin ? data : (data || []).filter(function(item) { return item.status === 'published'; });
+                var filtered = isAdmin ? data : (data || []).filter(function(item) { return item.status === 'published'; });
 
-        if (!filtered || filtered.length === 0) {
-            container.innerHTML = '<div class="no-content">' + t.noActuPublic + '</div>';
-            return;
+                if (!filtered || filtered.length === 0) {
+                    container.innerHTML = '<div class="no-content">' + t.noActuPublic + '</div>';
+                    return;
+                }
+
+                container.innerHTML = filtered.map(function(item) {
+                    var isRTL = document.body.classList.contains('rtl');
+                    var text = isRTL ? (item.text_ar || item.text_fr) : (item.text_fr || item.text_ar);
+
+                    if (item.file_type === 'pdf' && !text) {
+                        text = '📄 ' + (item.file_name || 'Document PDF');
+                    }
+
+                    var statusText = item.status === 'published' ? t.statusPublished : t.statusDraft;
+                    var statusClass = item.status === 'published' ? 'published' : 'draft';
+
+                    var fileHtml = '';
+                    if (item.file_data && item.file_type === 'pdf') {
+                        var previewId = 'pdfPreview_' + item.id;
+                        fileHtml = `
+                            <div class="actu-file">
+                                <div class="file-name" onclick="togglePDFPreview('${previewId}')">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <span class="file-label">${item.file_name || 'Document PDF'}</span>
+                                    <span class="click-hint">(Cliquez pour aperçu)</span>
+                                </div>
+                                <div class="file-preview" id="${previewId}">
+                                    <iframe src="${item.file_data}" style="width:100%;height:400px;border:none;border-radius:5px;"></iframe>
+                                </div>
+                                <div class="file-actions">
+                                    <button class="btn-file preview" onclick="togglePDFPreview('${previewId}')">
+                                        <i class="fas fa-eye"></i> ${t.previewBtn}
+                                    </button>
+                                    <a href="${item.file_data}" download="${item.file_name || 'document.pdf'}" class="btn-file download">
+                                        <i class="fas fa-download"></i> ${t.downloadBtn}
+                                    </a>
+                                    <button class="btn-file fullscreen" onclick="openPDFFullscreen('${item.file_data}', '${item.file_name || 'Document PDF'}')">
+                                        <i class="fas fa-expand"></i> ${t.fullscreenBtn}
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    var adminActions = isAdmin ? `
+                        <div class="admin-actions">
+                            ${item.status === 'draft' ? `<button class="btn-actu publish" onclick="publishActu(${item.id})"><i class="fas fa-check"></i> ${t.publishBtn}</button>` : ''}
+                            <button class="btn-actu delete" onclick="deleteActu(${item.id})"><i class="fas fa-trash"></i> ${t.deleteBtn}</button>
+                        </div>
+                    ` : '';
+
+                    return `
+                        <div class="actu-item" data-id="${item.id}">
+                            <div class="actu-text">${text || ''}</div>
+                            ${fileHtml}
+                            <div class="actu-meta">
+                                <span><span class="author"><i class="fas fa-user"></i> ${item.author || 'Anonyme'}</span></span>
+                                ${item.word_count > 0 ? `<span><span class="word-count">${item.word_count} mots</span></span>` : ''}
+                                <span><span class="status ${statusClass}">${statusText}</span></span>
+                                <span>${new Date(item.created_at).toLocaleDateString()}</span>
+                            </div>
+                            ${adminActions}
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Erreur chargement actu:', error);
+                container.innerHTML = '<div class="no-content">❌ Erreur de chargement</div>';
+            }
         }
 
-        container.innerHTML = filtered.map(function(item) {
-            var isRTL = document.body.classList.contains('rtl');
-            var text = isRTL ? (item.text_ar || item.text_fr) : (item.text_fr || item.text_ar);
-            
-            // ✅ CORRECTION : Si c'est un PDF et qu'il n'y a pas de texte, utiliser le nom du fichier
-            if (item.file_type === 'pdf' && !text) {
-                text = '📄 ' + (item.file_name || 'Document PDF');
+        async function publishActu(id) {
+            var t = getLang();
+            if (!confirm('Publier cette actualité ?')) return;
+
+            try {
+                var { error } = await supabase
+                    .from('actu')
+                    .update({ status: 'published', published_at: new Date().toISOString() })
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                showAlert(t.alertActuPublished, 'success');
+                loadActu();
+                loadAdminPDFs();
+
+            } catch (error) {
+                console.error('Erreur publication:', error);
+                showAlert('Erreur: ' + error.message, 'error');
             }
-            
-            var statusText = item.status === 'published' ? t.statusPublished : t.statusDraft;
-            var statusClass = item.status === 'published' ? 'published' : 'draft';
+        }
 
-            // Afficher le PDF si présent
-            var fileHtml = '';
-            if (item.file_data && item.file_type === 'pdf') {
-                var previewId = 'pdfPreview_' + item.id;
-                fileHtml = `
-                    <div class="actu-file">
-                        <div class="file-name" onclick="togglePDFPreview('${previewId}')">
-                            <i class="fas fa-file-pdf"></i>
-                            <span class="file-label">${item.file_name || 'Document PDF'}</span>
-                            <span class="click-hint">(Cliquez pour aperçu)</span>
-                        </div>
-                        <div class="file-preview" id="${previewId}">
-                            <iframe src="${item.file_data}" style="width:100%;height:400px;border:none;border-radius:5px;"></iframe>
-                        </div>
-                        <div class="file-actions">
-                            <button class="btn-file preview" onclick="togglePDFPreview('${previewId}')">
-                                <i class="fas fa-eye"></i> ${t.previewBtn}
-                            </button>
-                            <a href="${item.file_data}" download="${item.file_name || 'document.pdf'}" class="btn-file download">
-                                <i class="fas fa-download"></i> ${t.downloadBtn}
-                            </a>
-                            <button class="btn-file fullscreen" onclick="openPDFFullscreen('${item.file_data}', '${item.file_name || 'Document PDF'}')">
-                                <i class="fas fa-expand"></i> ${t.fullscreenBtn}
-                            </button>
-                        </div>
-                    </div>
-                `;
+        async function deleteActu(id) {
+            var t = getLang();
+            if (!confirm(t.alertActuDeleted + ' ?')) return;
+
+            try {
+                var { error } = await supabase
+                    .from('actu')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                showAlert(t.alertActuDeleted, 'success');
+                loadActu();
+                loadAdminPDFs();
+
+            } catch (error) {
+                console.error('Erreur suppression:', error);
+                showAlert('Erreur: ' + error.message, 'error');
             }
+        }
 
-            var adminActions = isAdmin ? `
-                <div class="admin-actions">
-                    ${item.status === 'draft' ? `<button class="btn-actu publish" onclick="publishActu(${item.id})"><i class="fas fa-check"></i> ${t.publishBtn}</button>` : ''}
-                    <button class="btn-actu delete" onclick="deleteActu(${item.id})"><i class="fas fa-trash"></i> ${t.deleteBtn}</button>
-                </div>
-            ` : '';
-
-            return `
-                <div class="actu-item" data-id="${item.id}">
-                    <div class="actu-text">${text || ''}</div>
-                    ${fileHtml}
-                    <div class="actu-meta">
-                        <span><span class="author"><i class="fas fa-user"></i> ${item.author || 'Anonyme'}</span></span>
-                        ${item.word_count > 0 ? `<span><span class="word-count">${item.word_count} mots</span></span>` : ''}
-                        <span><span class="status ${statusClass}">${statusText}</span></span>
-                        <span>${new Date(item.created_at).toLocaleDateString()}</span>
-                    </div>
-                    ${adminActions}
-                </div>
-            `;
-        }).join('');
-
-    } catch (error) {
-        console.error('Erreur chargement actu:', error);
-        container.innerHTML = '<div class="no-content">❌ Erreur de chargement</div>';
-    }
-}
         // ============================================================
         // FONCTIONS POUR LES PDF
         // ============================================================
-
-        // Basculer l'aperçu du PDF
         function togglePDFPreview(previewId) {
             var preview = document.getElementById(previewId);
             if (preview) {
@@ -3703,7 +3325,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Ouvrir le PDF en plein écran
         function openPDFFullscreen(pdfData, fileName) {
             var viewer = document.getElementById('fileViewer');
             var content = document.getElementById('viewerContent');
@@ -3727,11 +3348,152 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // ============================================================
-        // ACTUALITÉ - PUBLIER
+        // ADMIN PDF UPLOAD
         // ============================================================
-        async function publishActu(id) {
+        async function uploadAdminPDF() {
             var t = getLang();
-            if (!confirm('Publier cette actualité ?')) return;
+
+            if (!document.body.classList.contains('admin-mode')) {
+                showAlert('Vous devez être connecté en tant qu\'admin', 'error');
+                return;
+            }
+
+            if (!selectedAdminPdfFile) {
+                showAlert('Veuillez d\'abord sélectionner un fichier PDF', 'error');
+                return;
+            }
+
+            if (selectedAdminPdfFile.size > 10 * 1024 * 1024) {
+                showAlert('Le PDF est trop volumineux (max 10MB)', 'error');
+                return;
+            }
+
+            if (selectedAdminPdfFile.type !== 'application/pdf') {
+                showAlert('Veuillez sélectionner un fichier PDF valide', 'error');
+                return;
+            }
+
+            try {
+                var reader = new FileReader();
+                reader.onload = async function(e) {
+                    var base64Data = e.target.result;
+                    var publisher = document.getElementById('userName').textContent || 'admin';
+
+                    var { error } = await supabase
+                        .from('actu')
+                        .insert([{
+                            text_fr: '📄 ' + selectedAdminPdfFile.name,
+                            text_ar: '📄 ' + selectedAdminPdfFile.name,
+                            author: publisher,
+                            status: 'draft',
+                            file_name: selectedAdminPdfFile.name,
+                            file_data: base64Data,
+                            file_type: 'pdf',
+                            created_at: new Date().toISOString(),
+                            word_count: 0
+                        }]);
+
+                    if (error) throw error;
+
+                    showAlert('✅ PDF uploadé avec succès ! En attente de publication.', 'success');
+                    selectedAdminPdfFile = null;
+                    document.getElementById('adminPdfInput').value = '';
+                    document.getElementById('adminPdfInfo').innerHTML = '<i class="fas fa-file-pdf" style="color:var(--pdf);"></i> Cliquez pour sélectionner un PDF (max 10MB)';
+                    loadAdminPDFs();
+                    loadActu();
+
+                };
+                reader.readAsDataURL(selectedAdminPdfFile);
+
+            } catch (error) {
+                console.error('Erreur upload PDF:', error);
+                showAlert('Erreur: ' + error.message, 'error');
+            }
+        }
+
+        async function loadAdminPDFs() {
+            var container = document.getElementById('adminPdfList');
+            if (!container) return;
+
+            try {
+                var { data, error } = await supabase
+                    .from('actu')
+                    .select('*')
+                    .eq('file_type', 'pdf')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                var count = document.getElementById('pdfCount');
+                if (count) count.textContent = '(' + (data ? data.length : 0) + ')';
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="no-content">Aucun PDF uploadé.</div>';
+                    return;
+                }
+
+                container.innerHTML = data.map(function(pdf) {
+                    var isAdmin = document.body.classList.contains('admin-mode');
+                    var statusClass = pdf.status === 'published' ? 'published' : 'draft';
+                    var statusText = pdf.status === 'published' ? '✅ Publié' : '⏳ En attente';
+
+                    var actionButtons = '';
+                    if (isAdmin) {
+                        if (pdf.status === 'draft') {
+                            actionButtons = `
+                                <button class="btn-action" onclick="publishPDF(${pdf.id})" style="background:var(--success);width:auto;padding:4px 12px;border-radius:4px;color:white;border:none;cursor:pointer;">
+                                    <i class="fas fa-check"></i> Publier
+                                </button>
+                                <button class="btn-action" onclick="deleteActu(${pdf.id})" style="background:var(--danger);width:auto;padding:4px 12px;border-radius:4px;color:white;border:none;cursor:pointer;">
+                                    <i class="fas fa-times"></i> Refuser
+                                </button>
+                            `;
+                        } else {
+                            actionButtons = `
+                                <button class="btn-action" onclick="deleteActu(${pdf.id})" style="background:var(--danger);width:auto;padding:4px 12px;border-radius:4px;color:white;border:none;cursor:pointer;">
+                                    <i class="fas fa-trash"></i> Supprimer
+                                </button>
+                            `;
+                        }
+                    }
+
+                    return `
+                        <div class="dashboard-item" style="border-left-color:${pdf.status === 'published' ? 'var(--success)' : 'var(--warning)'};">
+                            <div class="item-icon" style="color:var(--pdf);">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="item-info">
+                                <h4>${pdf.file_name || 'Document PDF'}</h4>
+                                <small>
+                                    <i class="fas fa-user"></i> ${pdf.author || 'admin'} 
+                                    <i class="fas fa-calendar" style="margin-left:10px;"></i> ${new Date(pdf.created_at).toLocaleDateString()}
+                                    <span style="margin-left:10px;padding:2px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;background:${pdf.status === 'published' ? 'var(--success)' : 'var(--warning)'};color:white;">
+                                        ${statusText}
+                                    </span>
+                                </small>
+                            </div>
+                            <div class="item-actions">
+                                <button class="btn-action view" onclick="viewPDF(${pdf.id})" title="Voir le PDF">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <a href="${pdf.file_data}" download="${pdf.file_name || 'document.pdf'}" class="btn-action view" style="background:var(--info);" title="Télécharger">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                                ${actionButtons}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Erreur chargement PDF:', error);
+                container.innerHTML = '<div class="no-content">❌ Erreur de chargement</div>';
+            }
+        }
+
+        async function publishPDF(id) {
+            var t = getLang();
+            if (!confirm('Publier ce PDF dans la page Actualité ?')) return;
 
             try {
                 var { error } = await supabase
@@ -3741,7 +3503,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (error) throw error;
 
-                showAlert(t.alertActuPublished, 'success');
+                showAlert('✅ PDF publié avec succès !', 'success');
+                loadAdminPDFs();
                 loadActu();
 
             } catch (error) {
@@ -3750,28 +3513,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // ============================================================
-        // ACTUALITÉ - SUPPRIMER
-        // ============================================================
-        async function deleteActu(id) {
-            var t = getLang();
-            if (!confirm(t.alertActuDeleted + ' ?')) return;
-
-            try {
-                var { error } = await supabase
-                    .from('actu')
-                    .delete()
-                    .eq('id', id);
-
-                if (error) throw error;
-
-                showAlert(t.alertActuDeleted, 'success');
-                loadActu();
-
-            } catch (error) {
-                console.error('Erreur suppression:', error);
-                showAlert('Erreur: ' + error.message, 'error');
-            }
+        function viewPDF(id) {
+            openPDFFullscreen(id);
         }
 
         // ============================================================
@@ -3788,7 +3531,7 @@ document.addEventListener('DOMContentLoaded', function() {
             var amount = document.getElementById('amount').value.trim();
 
             if (!cardNumber || !expiryDate || !cvv || !cardName || !amount) {
-                showAlert(t.alertFillFields, 'error');
+                showAlert('Veuillez remplir tous les champs', 'error');
                 return;
             }
 
@@ -3810,7 +3553,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 status: 'completed'
             });
 
-            showAlert(t.alertPaymentSuccess, 'success');
+            showAlert('Merci pour votre don ! 💚', 'success');
 
             document.getElementById('paymentForm').reset();
             document.querySelectorAll('.card-item').forEach(function(el) {
@@ -3820,9 +3563,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('.card-item[data-card="visa"]').classList.add('active');
         }
 
-        // ============================================================
-        // SAUVEGARDE DON DANS SUPABASE
-        // ============================================================
         async function saveDonation(data) {
             try {
                 var { error } = await supabase
@@ -3937,271 +3677,253 @@ document.addEventListener('DOMContentLoaded', function() {
         function addUrlMedia() {
             var t = getLang();
             var url = document.getElementById('mediaUrl').value.trim();
-            if (!url) { showAlert(t.alertInvalidURL, 'error'); return; }
+            if (!url) { showAlert('URL invalide', 'error'); return; }
             selectedFiles.push({ name: document.getElementById('mediaTitle').value || url, url: url });
             updateFilePreview();
             document.getElementById('mediaUrl').value = '';
             document.getElementById('mediaTitle').value = '';
             document.getElementById('noFiles').style.display = 'none';
-            showAlert(t.alertURLAdded, 'success');
+            showAlert('URL ajoutée', 'success');
         }
 
+        async function uploadFiles() {
+            var t = getLang();
 
-// ============================================================
-// TÉLÉVERSER LES FICHIERS VERS SUPABASE STORAGE
-// ============================================================
-async function uploadFiles() {
-    var t = getLang();
-
-    if (selectedFiles.length === 0) {
-        showAlert(t.alertNoFile, 'error');
-        return;
-    }
-
-    document.getElementById('uploadProgress').style.display = 'block';
-    document.getElementById('actionButtons').style.display = 'none';
-
-    var total = selectedFiles.length;
-    var uploaded = 0;
-    var errors = [];
-
-    var publisher = document.getElementById('userName').textContent || 'admin';
-
-    for (var i = 0; i < selectedFiles.length; i++) {
-        var file = selectedFiles[i];
-
-        try {
-            var isVideo = file.type && file.type.startsWith('video/');
-            var isImage = file.type && file.type.startsWith('image/');
-            
-            // Vérification du type
-            if (currentUploadType === 'image' && isVideo) {
-                errors.push(file.name + ': Les vidéos vont dans la section Vidéos');
-                continue;
-            }
-            if (currentUploadType === 'video' && !isVideo) {
-                errors.push(file.name + ': Les images vont dans la section Galerie');
-                continue;
-            }
-            
-            var bucketName = isVideo ? 'videos' : 'gallery';
-            var tableName = isVideo ? 'videos' : 'gallery';
-            
-            // Nom unique pour le fichier
-            var timestamp = Date.now();
-            var cleanName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
-            var filePath = timestamp + '_' + cleanName;
-            
-            console.log('📤 Upload vers ' + bucketName + '/' + filePath);
-            
-            // 1. Upload vers le bucket Storage (PAS base64 !)
-            var { data: storageData, error: storageError } = await supabase
-                .storage
-                .from(bucketName)
-                .upload(filePath, file, {
-                    cacheControl: '3600',
-                    upsert: false
-                });
-            
-            if (storageError) {
-                console.error('❌ Erreur storage:', storageError);
-                errors.push(file.name + ': ' + storageError.message);
-                continue;
-            }
-            
-            console.log('✅ Fichier uploadé dans le storage');
-            
-            // 2. Récupérer l'URL publique
-            var { data: urlData } = supabase
-                .storage
-                .from(bucketName)
-                .getPublicUrl(filePath);
-            
-            var publicUrl = urlData.publicUrl;
-            console.log('🔗 URL publique:', publicUrl);
-            
-            // 3. Préparer les données (avec l'URL publique, PAS base64)
-            var data = {
-                title: file.name.split('.')[0] || (isVideo ? 'Vidéo' : 'Image') + ' ' + (i + 1),
-                description: 'Uploadé depuis le site ANSFAL',
-                publisher: publisher,
-                uploaded_at: new Date().toISOString()
-            };
-            
-            if (isVideo) {
-                data.video_url = publicUrl;
-            } else {
-                data.image_url = publicUrl;
-            }
-            
-            console.log('📊 Données à insérer:', data);
-            
-            // 4. Insérer dans la base
-            var { data: result, error: insertError } = await supabase
-                .from(tableName)
-                .insert([data])
-                .select();
-            
-            if (insertError) {
-                console.error('❌ Erreur insertion:', insertError);
-                // Supprimer le fichier du storage si l'insertion échoue
-                await supabase.storage.from(bucketName).remove([filePath]);
-                errors.push(file.name + ': ' + insertError.message);
-            } else {
-                console.log('✅ Insertion réussie!', result);
-                uploaded++;
+            if (selectedFiles.length === 0) {
+                showAlert('Sélectionnez des fichiers', 'error');
+                return;
             }
 
-            var progress = Math.round(((i + 1) / total) * 100);
-            document.getElementById('progressFill').style.width = progress + '%';
-            document.getElementById('progressText').textContent = progress + '% (' + (i + 1) + '/' + total + ')';
+            document.getElementById('uploadProgress').style.display = 'block';
+            document.getElementById('actionButtons').style.display = 'none';
 
-        } catch (error) {
-            console.error('❌ Erreur:', error);
-            errors.push(file.name + ': ' + error.message);
-        }
-    }
+            var total = selectedFiles.length;
+            var uploaded = 0;
+            var errors = [];
 
-    document.getElementById('uploadProgress').style.display = 'none';
+            var publisher = document.getElementById('userName').textContent || 'admin';
 
-    if (errors.length === 0) {
-        document.getElementById('uploadSuccess').style.display = 'block';
-        document.getElementById('successMessage').textContent = uploaded + ' fichier(s) téléversé(s) avec succès !';
-        showAlert(uploaded + ' fichier(s) téléversé(s) avec succès !', 'success');
+            for (var i = 0; i < selectedFiles.length; i++) {
+                var file = selectedFiles[i];
 
-        setTimeout(function() {
-            loadGalleryDashboard();
-            loadVideosDashboard();
-            loadPublicGallery();
-            loadPublicVideos();
-            loadArticles();
-            updateDashboardStats();
-        }, 1000);
-
-    } else {
-        showAlert('❌ Erreur: ' + errors.join(', '), 'error');
-        document.getElementById('actionButtons').style.display = 'flex';
-    }
-
-    if (errors.length === 0) {
-        setTimeout(function() {
-            hideUploadModal();
-        }, 3000);
-    }
-}
-// ============================================================
-// SUPPRIMER UN ÉLÉMENT
-// ============================================================
-async function deleteItem(table, id) {
-    var t = getLang();
-
-    if (!document.body.classList.contains('admin-mode')) {
-        showAlert('Vous devez être connecté pour supprimer', 'error');
-        return;
-    }
-
-    if (!confirm('Supprimer cet élément ?')) return;
-
-    try {
-        // 1. Récupérer l'élément
-        var { data: item, error: fetchError } = await supabase
-            .from(table)
-            .select('*')
-            .eq('id', id)
-            .single();
-
-        if (fetchError) throw fetchError;
-
-        console.log('🔍 Élément à supprimer:', item);
-
-        // 2. Supprimer du storage
-        var bucketName = table === 'videos' ? 'videos' : 'gallery';
-        var fileUrl = table === 'videos' ? item.video_url : item.image_url;
-        
-        if (fileUrl) {
-            var filePath = extractFilePath(fileUrl);
-            if (filePath) {
                 try {
-                    var { error: storageError } = await supabase
+                    var isVideo = file.type && file.type.startsWith('video/');
+                    var isImage = file.type && file.type.startsWith('image/');
+
+                    if (currentUploadType === 'image' && isVideo) {
+                        errors.push(file.name + ': Les vidéos vont dans la section Vidéos');
+                        continue;
+                    }
+                    if (currentUploadType === 'video' && !isVideo) {
+                        errors.push(file.name + ': Les images vont dans la section Galerie');
+                        continue;
+                    }
+
+                    var bucketName = isVideo ? 'videos' : 'gallery';
+                    var tableName = isVideo ? 'videos' : 'gallery';
+
+                    var timestamp = Date.now();
+                    var cleanName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+                    var filePath = timestamp + '_' + cleanName;
+
+                    console.log('📤 Upload vers ' + bucketName + '/' + filePath);
+
+                    var { data: storageData, error: storageError } = await supabase
                         .storage
                         .from(bucketName)
-                        .remove([filePath]);
-                    
+                        .upload(filePath, file, {
+                            cacheControl: '3600',
+                            upsert: false
+                        });
+
                     if (storageError) {
-                        console.warn('⚠️ Erreur suppression storage:', storageError);
-                    } else {
-                        console.log('✅ Fichier supprimé du storage');
+                        console.error('❌ Erreur storage:', storageError);
+                        errors.push(file.name + ': ' + storageError.message);
+                        continue;
                     }
-                } catch (e) {
-                    console.warn('⚠️ Erreur:', e);
+
+                    console.log('✅ Fichier uploadé dans le storage');
+
+                    var { data: urlData } = supabase
+                        .storage
+                        .from(bucketName)
+                        .getPublicUrl(filePath);
+
+                    var publicUrl = urlData.publicUrl;
+                    console.log('🔗 URL publique:', publicUrl);
+
+                    var data = {
+                        title: file.name.split('.')[0] || (isVideo ? 'Vidéo' : 'Image') + ' ' + (i + 1),
+                        description: 'Uploadé depuis le site ANSFAL',
+                        publisher: publisher,
+                        uploaded_at: new Date().toISOString()
+                    };
+
+                    if (isVideo) {
+                        data.video_url = publicUrl;
+                    } else {
+                        data.image_url = publicUrl;
+                    }
+
+                    console.log('📊 Données à insérer:', data);
+
+                    var { data: result, error: insertError } = await supabase
+                        .from(tableName)
+                        .insert([data])
+                        .select();
+
+                    if (insertError) {
+                        console.error('❌ Erreur insertion:', insertError);
+                        await supabase.storage.from(bucketName).remove([filePath]);
+                        errors.push(file.name + ': ' + insertError.message);
+                    } else {
+                        console.log('✅ Insertion réussie!', result);
+                        uploaded++;
+                    }
+
+                    var progress = Math.round(((i + 1) / total) * 100);
+                    document.getElementById('progressFill').style.width = progress + '%';
+                    document.getElementById('progressText').textContent = progress + '% (' + (i + 1) + '/' + total + ')';
+
+                } catch (error) {
+                    console.error('❌ Erreur:', error);
+                    errors.push(file.name + ': ' + error.message);
                 }
             }
-        }
 
-        // 3. Supprimer de la base de données
-        var { error } = await supabase
-            .from(table)
-            .delete()
-            .eq('id', id);
+            document.getElementById('uploadProgress').style.display = 'none';
 
-        if (error) throw error;
+            if (errors.length === 0) {
+                document.getElementById('uploadSuccess').style.display = 'block';
+                document.getElementById('successMessage').textContent = uploaded + ' fichier(s) téléversé(s) avec succès !';
+                showAlert(uploaded + ' fichier(s) téléversé(s) avec succès !', 'success');
 
-        showAlert('✅ Élément supprimé avec succès', 'success');
+                setTimeout(function() {
+                    loadGalleryDashboard();
+                    loadVideosDashboard();
+                    loadPublicGallery();
+                    loadPublicVideos();
+                    loadArticles();
+                    updateDashboardStats();
+                }, 1000);
 
-        // 4. Rafraîchir les listes
-        if (table === 'videos') {
-            loadVideosDashboard();
-            loadPublicVideos();
-        } else if (table === 'gallery') {
-            loadGalleryDashboard();
-            loadPublicGallery();
-        }
-        
-        loadPublicationsDashboard();
-        loadTextDashboard();
-        loadArticles();
-        updateDashboardStats();
+            } else {
+                showAlert('❌ Erreur: ' + errors.join(', '), 'error');
+                document.getElementById('actionButtons').style.display = 'flex';
+            }
 
-    } catch (error) {
-        console.error('❌ Erreur suppression:', error);
-        showAlert('Erreur: ' + error.message, 'error');
-    }
-}
-
-// Fonction helper pour extraire le chemin du fichier depuis l'URL
-function extractFilePath(url) {
-    if (!url) return null;
-    
-    try {
-        // Si l'URL est une URL Supabase Storage
-        if (url.includes('supabase.co/storage/v1/object/public/')) {
-            var parts = url.split('/object/public/');
-            if (parts.length > 1) {
-                var path = parts[1];
-                // Enlever le nom du bucket si présent
-                var pathParts = path.split('/');
-                if (pathParts.length > 1) {
-                    return pathParts.slice(1).join('/'); // Retourne le chemin sans le nom du bucket
-                }
-                return path;
+            if (errors.length === 0) {
+                setTimeout(function() {
+                    hideUploadModal();
+                }, 3000);
             }
         }
-        
-        // Si c'est une URL directe, essayer d'extraire le nom du fichier
-        var urlObj = new URL(url);
-        var pathname = urlObj.pathname;
-        var filename = pathname.split('/').pop();
-        if (filename) return filename;
-        
-        return null;
-    } catch (e) {
-        console.warn('Erreur extraction chemin:', e);
-        return null;
-    }
-}
 
         // ============================================================
-        // CONTACTS - STOCKAGE SUPABASE
+        // SUPPRIMER UN ÉLÉMENT
+        // ============================================================
+        async function deleteItem(table, id) {
+            var t = getLang();
+
+            if (!document.body.classList.contains('admin-mode')) {
+                showAlert('Vous devez être connecté pour supprimer', 'error');
+                return;
+            }
+
+            if (!confirm('Supprimer cet élément ?')) return;
+
+            try {
+                var { data: item, error: fetchError } = await supabase
+                    .from(table)
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+
+                if (fetchError) throw fetchError;
+
+                console.log('🔍 Élément à supprimer:', item);
+
+                var bucketName = table === 'videos' ? 'videos' : 'gallery';
+                var fileUrl = table === 'videos' ? item.video_url : item.image_url;
+
+                if (fileUrl) {
+                    var filePath = extractFilePath(fileUrl);
+                    if (filePath) {
+                        try {
+                            var { error: storageError } = await supabase
+                                .storage
+                                .from(bucketName)
+                                .remove([filePath]);
+
+                            if (storageError) {
+                                console.warn('⚠️ Erreur suppression storage:', storageError);
+                            } else {
+                                console.log('✅ Fichier supprimé du storage');
+                            }
+                        } catch (e) {
+                            console.warn('⚠️ Erreur:', e);
+                        }
+                    }
+                }
+
+                var { error } = await supabase
+                    .from(table)
+                    .delete()
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                showAlert('✅ Élément supprimé avec succès', 'success');
+
+                if (table === 'videos') {
+                    loadVideosDashboard();
+                    loadPublicVideos();
+                } else if (table === 'gallery') {
+                    loadGalleryDashboard();
+                    loadPublicGallery();
+                }
+
+                loadPublicationsDashboard();
+                loadTextDashboard();
+                loadArticles();
+                updateDashboardStats();
+
+            } catch (error) {
+                console.error('❌ Erreur suppression:', error);
+                showAlert('Erreur: ' + error.message, 'error');
+            }
+        }
+
+        function extractFilePath(url) {
+            if (!url) return null;
+
+            try {
+                if (url.includes('supabase.co/storage/v1/object/public/')) {
+                    var parts = url.split('/object/public/');
+                    if (parts.length > 1) {
+                        var path = parts[1];
+                        var pathParts = path.split('/');
+                        if (pathParts.length > 1) {
+                            return pathParts.slice(1).join('/');
+                        }
+                        return path;
+                    }
+                }
+
+                var urlObj = new URL(url);
+                var pathname = urlObj.pathname;
+                var filename = pathname.split('/').pop();
+                if (filename) return filename;
+
+                return null;
+            } catch (e) {
+                console.warn('Erreur extraction chemin:', e);
+                return null;
+            }
+        }
+
+        // ============================================================
+        // CONTACTS
         // ============================================================
         async function saveContactInfo() {
             var t = getLang();
@@ -4210,7 +3932,7 @@ function extractFilePath(url) {
             var address = document.getElementById('editAddress').value.trim();
 
             if (!phone || !email || !address) {
-                showAlert(t.alertFillFields, 'error');
+                showAlert('Veuillez remplir tous les champs', 'error');
                 return;
             }
 
@@ -4255,7 +3977,7 @@ function extractFilePath(url) {
                 document.getElementById('contactEmailValue').textContent = email;
                 document.getElementById('contactLocation').textContent = address;
 
-                showAlert(t.alertContactSaved || 'Contacts mis à jour', 'success');
+                showAlert('Contacts mis à jour', 'success');
 
             } catch (error) {
                 console.error('Erreur sauvegarde contacts:', error);
@@ -4264,57 +3986,53 @@ function extractFilePath(url) {
         }
 
         async function loadContactsFromSupabase() {
-    try {
-        var { data, error } = await supabase
-            .from('settings')
-            .select('*')
-            .eq('key', 'contact_info')
-            .limit(1);
+            try {
+                var { data, error } = await supabase
+                    .from('settings')
+                    .select('*')
+                    .eq('key', 'contact_info')
+                    .limit(1);
 
-        if (error) throw error;
+                if (error) throw error;
 
-        if (data && data.length > 0) {
-            var contact = data[0].value;
-            
-            // 1. Mettre à jour l'affichage du numéro
-            if (contact.phone) {
-                document.getElementById('contactPhoneValue').innerHTML = '<bdi>' + contact.phone + '</bdi>';
-                document.getElementById('editPhone').value = contact.phone;
-            }
-            if (contact.email) {
-                document.getElementById('contactEmailValue').innerHTML = '<bdi>' + contact.email + '</bdi>';
-                document.getElementById('editEmail').value = contact.email;
-            }
-            if (contact.address) {
-                document.getElementById('contactLocation').innerHTML = '<bdi>' + contact.address + '</bdi>';
-                document.getElementById('editAddress').value = contact.address;
-            }
-            
-            // ✅ 2. METTRE À JOUR LE LIEN WHATSAPP
-            if (contact.phone) {
-                var phoneClean = contact.phone.replace(/[^0-9]/g, '');
-                // S'assurer du bon format (212 sans le 0)
-                if (phoneClean.startsWith('212')) {
-                    // Déjà bon
-                } else if (phoneClean.startsWith('0')) {
-                    phoneClean = '212' + phoneClean.substring(1);
+                if (data && data.length > 0) {
+                    var contact = data[0].value;
+
+                    if (contact.phone) {
+                        document.getElementById('contactPhoneValue').innerHTML = '<bdi>' + contact.phone + '</bdi>';
+                        document.getElementById('editPhone').value = contact.phone;
+                    }
+                    if (contact.email) {
+                        document.getElementById('contactEmailValue').innerHTML = '<bdi>' + contact.email + '</bdi>';
+                        document.getElementById('editEmail').value = contact.email;
+                    }
+                    if (contact.address) {
+                        document.getElementById('contactLocation').innerHTML = '<bdi>' + contact.address + '</bdi>';
+                        document.getElementById('editAddress').value = contact.address;
+                    }
+
+                    if (contact.phone) {
+                        var phoneClean = contact.phone.replace(/[^0-9]/g, '');
+                        if (phoneClean.startsWith('212')) {
+                            // Déjà bon
+                        } else if (phoneClean.startsWith('0')) {
+                            phoneClean = '212' + phoneClean.substring(1);
+                        }
+
+                        var msg = currentLang === 'fr' ? 'Bonjour, je souhaite avoir plus d\'informations sur vos projets et actions à ANSFAL' :
+                            'مرحباً، أود الحصول على معلومات حول جمعية أنسفال';
+
+                        document.getElementById('whatsappBtn').href = 'https://wa.me/' + phoneClean + '?text=' + encodeURIComponent(msg);
+                        console.log('✅ WhatsApp mis à jour avec le numéro:', phoneClean);
+                    }
                 }
-                
-                var t = getLang();
-                var msg = currentLang === 'fr' ? 'Bonjour, je souhaite avoir plus d\'informations sur vos projets et actions à ANSFAL' :
-                    'مرحباً، أود الحصول على معلومات حول جمعية أنسفال';
-                
-                document.getElementById('whatsappBtn').href = 'https://wa.me/' + phoneClean + '?text=' + encodeURIComponent(msg);
-                console.log('✅ WhatsApp mis à jour avec le numéro:', phoneClean);
+            } catch (error) {
+                console.error('Erreur chargement contacts:', error);
             }
         }
-    } catch (error) {
-        console.error('Erreur chargement contacts:', error);
-    }
-}
 
         // ============================================================
-        // LOGO - STOCKAGE SUPABASE
+        // LOGO
         // ============================================================
         async function loadLogoFromSupabase() {
             try {
@@ -4338,7 +4056,7 @@ function extractFilePath(url) {
         }
 
         // ============================================================
-        // TEXTE DÉFILANT - STOCKAGE SUPABASE
+        // TEXTE DÉFILANT
         // ============================================================
         async function saveTickerText() {
             var t = getLang();
@@ -4372,7 +4090,7 @@ function extractFilePath(url) {
 
                 if (result.error) throw result.error;
 
-                showAlert(t.alertTickerSaved || 'Texte défilant mis à jour', 'success');
+                showAlert('Texte défilant mis à jour', 'success');
                 updateTickerText();
 
             } catch (error) {
@@ -4686,61 +4404,57 @@ function extractFilePath(url) {
         }
 
         async function loadPublicVideos() {
-    var container = document.getElementById('videosContainer');
-    if (!container) return;
+            var container = document.getElementById('videosContainer');
+            if (!container) return;
 
-    try {
-        var { data, error } = await supabase
-            .from('videos')
-            .select('*')
-            .order('uploaded_at', { ascending: false });
+            try {
+                var { data, error } = await supabase
+                    .from('videos')
+                    .select('*')
+                    .order('uploaded_at', { ascending: false });
 
-        if (error) throw error;
+                if (error) throw error;
 
-        if (!data || data.length === 0) {
-            container.innerHTML = '<div class="no-content" id="noVideosPublic">Aucune vidéo disponible.</div>';
-            return;
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div class="no-content" id="noVideosPublic">Aucune vidéo disponible.</div>';
+                    return;
+                }
+
+                container.innerHTML = data.map(function(video) {
+                    var videoId = '';
+                    if (video.video_url && video.video_url.includes('youtu.be/')) {
+                        videoId = video.video_url.split('youtu.be/')[1]?.split('?')[0];
+                    } else if (video.video_url && video.video_url.includes('watch?v=')) {
+                        videoId = video.video_url.split('v=')[1]?.split('&')[0];
+                    }
+
+                    var embedHtml = '';
+                    if (videoId) {
+                        embedHtml = '<iframe src="https://www.youtube.com/embed/' + videoId +
+                            '" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>';
+                    } else if (video.video_url && video.video_url.startsWith('https://')) {
+                        embedHtml = '<video controls style="width:100%;height:100%;">' +
+                            '<source src="' + video.video_url + '" type="video/mp4">' +
+                            'Votre navigateur ne supporte pas la lecture vidéo.</video>';
+                    } else if (video.video_url && video.video_url.startsWith('data:')) {
+                        embedHtml = '<video controls style="width:100%;height:100%;">' +
+                            '<source src="' + video.video_url + '" type="video/mp4">' +
+                            'Votre navigateur ne supporte pas la lecture vidéo.</video>';
+                    } else {
+                        embedHtml = '<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#333;color:#fff;">Vidéo non disponible</div>';
+                    }
+
+                    var titleHtml = video.title ? '<div class="video-title"><i class="fas fa-video" style="color:var(--primary);"></i> ' +
+                        video.title + '</div>' : '';
+
+                    return '<div class="video-item">' + embedHtml + '</div>' + titleHtml;
+                }).join('');
+
+            } catch (error) {
+                console.error('Erreur chargement vidéos:', error);
+                container.innerHTML = '<div class="no-content">❌ Erreur de chargement des vidéos.</div>';
+            }
         }
-
-        container.innerHTML = data.map(function(video) {
-            // Vérifier si c'est une URL YouTube
-            var videoId = '';
-            if (video.video_url && video.video_url.includes('youtu.be/')) {
-                videoId = video.video_url.split('youtu.be/')[1]?.split('?')[0];
-            } else if (video.video_url && video.video_url.includes('watch?v=')) {
-                videoId = video.video_url.split('v=')[1]?.split('&')[0];
-            }
-
-            var embedHtml = '';
-            if (videoId) {
-                // Vidéo YouTube
-                embedHtml = '<iframe src="https://www.youtube.com/embed/' + videoId +
-                    '" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>';
-            } else if (video.video_url && video.video_url.startsWith('https://')) {
-                // Vidéo du Storage Supabase
-                embedHtml = '<video controls style="width:100%;height:100%;">' +
-                    '<source src="' + video.video_url + '" type="video/mp4">' +
-                    'Votre navigateur ne supporte pas la lecture vidéo.</video>';
-            } else if (video.video_url && video.video_url.startsWith('data:')) {
-                // Vidéo base64 (ancien format) - à éviter
-                embedHtml = '<video controls style="width:100%;height:100%;">' +
-                    '<source src="' + video.video_url + '" type="video/mp4">' +
-                    'Votre navigateur ne supporte pas la lecture vidéo.</video>';
-            } else {
-                embedHtml = '<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#333;color:#fff;">Vidéo non disponible</div>';
-            }
-
-            var titleHtml = video.title ? '<div class="video-title"><i class="fas fa-video" style="color:var(--primary);"></i> ' +
-                video.title + '</div>' : '';
-
-            return '<div class="video-item">' + embedHtml + '</div>' + titleHtml;
-        }).join('');
-        
-    } catch (error) {
-        console.error('Erreur chargement vidéos:', error);
-        container.innerHTML = '<div class="no-content">❌ Erreur de chargement des vidéos.</div>';
-    }
-}
 
         // ============================================================
         // VISIONNEUSE
@@ -4830,9 +4544,9 @@ function extractFilePath(url) {
             var t = getLang();
             var title = document.getElementById('textTitle').value.trim();
             var content = document.getElementById('textContent').value.trim();
-            if (!title || !content) { showAlert(t.alertFillFields, 'error'); return; }
+            if (!title || !content) { showAlert('Veuillez remplir tous les champs', 'error'); return; }
             hideTextModal();
-            showAlert(t.alertTextSaved, 'success');
+            showAlert('Texte enregistré', 'success');
             loadTextDashboard();
         }
 
@@ -4841,7 +4555,7 @@ function extractFilePath(url) {
             var current = document.getElementById('currentPassword').value;
             var newPwd = document.getElementById('newPassword').value;
             var confirm = document.getElementById('confirmPassword').value;
-            if (!current || !newPwd || !confirm) { showAlert(t.alertFillFields, 'error'); return; }
+            if (!current || !newPwd || !confirm) { showAlert('Veuillez remplir tous les champs', 'error'); return; }
             if (newPwd !== confirm) { showAlert('Les mots de passe ne correspondent pas', 'error'); return; }
             hidePasswordModal();
             showAlert('Mot de passe changé', 'success');
@@ -4849,13 +4563,13 @@ function extractFilePath(url) {
 
         function resetAllData() {
             var t = getLang();
-            if (!confirm(t.alertDataReset + ' ?')) return;
-            showAlert(t.alertDataReset, 'success');
+            if (!confirm('Effacer tout ?')) return;
+            showAlert('Données effacées', 'success');
         }
 
         function exportToJSON() {
             var t = getLang();
-            showAlert(t.alertDataExported, 'success');
+            showAlert('Données exportées', 'success');
         }
 
         // ============================================================
@@ -4901,22 +4615,13 @@ function extractFilePath(url) {
                 if (saved) switchLanguage(saved);
             } catch (e) {}
 
-            // Charger les contacts depuis Supabase
             loadContactsFromSupabase();
-
-            // Charger le logo depuis Supabase
             loadLogoFromSupabase();
-
-            // Charger le texte défilant
             loadTickerFromSupabase();
-
-            // Charger les actualités
             loadActu();
 
-            // Sélectionner Visa par défaut
             selectCard('visa');
 
-            // Bouton d'ajout
             var addBtn = document.getElementById('addBtn');
             if (addBtn) {
                 addBtn.addEventListener('click', function() {
@@ -4924,12 +4629,11 @@ function extractFilePath(url) {
                     if (document.body.classList.contains('admin-mode')) {
                         showUploadModal('image');
                     } else {
-                        showAlert(t.alertLoginRequired, 'error');
+                        showAlert('Veuillez vous connecter', 'error');
                     }
                 });
             }
 
-            // Bouton de connexion
             var loginBtn = document.getElementById('loginBtn');
             if (loginBtn) {
                 loginBtn.addEventListener('click', function() {
@@ -4939,7 +4643,6 @@ function extractFilePath(url) {
                 });
             }
 
-            // Charger les données
             loadArticles();
             loadPublicGallery();
             loadPublicVideos();
@@ -4947,16 +4650,14 @@ function extractFilePath(url) {
             loadVideosDashboard();
             loadPublicationsDashboard();
             loadTextDashboard();
+            loadAdminPDFs();
 
-            // Compteur visiteurs
             setTimeout(trackVisitor, 1500);
             updateStats();
 
-            // Météo
             fetchWeather();
             setInterval(fetchWeather, 600000);
 
-            // Traductions
             var t = getLang();
             var noGallery = document.getElementById('noGalleryPublic');
             if (noGallery) noGallery.textContent = t.noGalleryPublic;
@@ -5013,227 +4714,11 @@ function extractFilePath(url) {
         window.uploadActuPDF = uploadActuPDF;
         window.togglePDFPreview = togglePDFPreview;
         window.openPDFFullscreen = openPDFFullscreen;
-        // ============================================================
-// ADMIN PDF UPLOAD
-// ============================================================
-var selectedAdminPdfFile = null;
-
-// Écouter la sélection du fichier PDF
-document.addEventListener('DOMContentLoaded', function() {
-    var adminPdfInput = document.getElementById('adminPdfInput');
-    if (adminPdfInput) {
-        adminPdfInput.addEventListener('change', function(e) {
-            if (e.target.files.length > 0) {
-                selectedAdminPdfFile = e.target.files[0];
-                document.getElementById('adminPdfInfo').innerHTML = '<i class="fas fa-file-pdf" style="color:var(--pdf);"></i> ' + selectedAdminPdfFile.name + ' (' + (selectedAdminPdfFile.size / 1024 / 1024).toFixed(2) + ' MB)';
-            }
-        });
-    }
-});
-
-// Uploader un PDF par l'admin
-async function uploadAdminPDF() {
-    var t = getLang();
-
-    if (!document.body.classList.contains('admin-mode')) {
-        showAlert('Vous devez être connecté en tant qu\'admin', 'error');
-        return;
-    }
-
-    if (!selectedAdminPdfFile) {
-        showAlert('Veuillez d\'abord sélectionner un fichier PDF', 'error');
-        return;
-    }
-
-    if (selectedAdminPdfFile.size > 10 * 1024 * 1024) {
-        showAlert('Le PDF est trop volumineux (max 10MB)', 'error');
-        return;
-    }
-
-    if (selectedAdminPdfFile.type !== 'application/pdf') {
-        showAlert('Veuillez sélectionner un fichier PDF valide', 'error');
-        return;
-    }
-
-    try {
-        var reader = new FileReader();
-        reader.onload = async function(e) {
-            var base64Data = e.target.result;
-            var publisher = document.getElementById('userName').textContent || 'admin';
-
-            // Uploader le PDF
-            var { error } = await supabase
-                .from('actu')
-                .insert([{
-                    text_fr: '📄 ' + selectedAdminPdfFile.name,
-                    text_ar: '📄 ' + selectedAdminPdfFile.name,
-                    author: publisher,
-                    status: 'published',
-                    file_name: selectedAdminPdfFile.name,
-                    file_data: base64Data,
-                    file_type: 'pdf',
-                    created_at: new Date().toISOString(),
-                    word_count: 0
-                }]);
-
-            if (error) throw error;
-
-            showAlert('✅ PDF uploadé avec succès !', 'success');
-            selectedAdminPdfFile = null;
-            document.getElementById('adminPdfInput').value = '';
-            document.getElementById('adminPdfInfo').innerHTML = '<i class="fas fa-file-pdf" style="color:var(--pdf);"></i> Cliquez pour sélectionner un PDF (max 10MB)';
-            loadAdminPDFs();
-            loadActu();
-
-        };
-        reader.readAsDataURL(selectedAdminPdfFile);
-
-    } catch (error) {
-        console.error('Erreur upload PDF:', error);
-        showAlert('Erreur: ' + error.message, 'error');
-    }
-}
-
-// Charger la liste des PDF uploadés par l'admin
-async function loadAdminPDFs() {
-    var container = document.getElementById('adminPdfList');
-    if (!container) return;
-
-    try {
-        var { data, error } = await supabase
-            .from('actu')
-            .select('*')
-            .eq('file_type', 'pdf')
-            .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        if (!data || data.length === 0) {
-            container.innerHTML = '<div class="no-content">Aucun PDF uploadé.</div>';
-            return;
-        }
-
-        container.innerHTML = data.map(function(pdf) {
-            var previewId = 'adminPdfPreview_' + pdf.id;
-            var isAdmin = document.body.classList.contains('admin-mode');
-            
-            var deleteButton = isAdmin ? `
-                <button class="btn-action delete" onclick="deleteAdminPDF(${pdf.id})" style="width:auto;padding:4px 12px;border-radius:4px;">
-                    <i class="fas fa-trash"></i> Supprimer
-                </button>
-            ` : '';
-
-            return `
-                <div class="dashboard-item" style="border-left-color:var(--pdf);">
-                    <div class="item-icon" style="color:var(--pdf);">
-                        <i class="fas fa-file-pdf"></i>
-                    </div>
-                    <div class="item-info">
-                        <h4>${pdf.file_name || 'Document PDF'}</h4>
-                        <small>
-                            <i class="fas fa-user"></i> ${pdf.author || 'admin'} 
-                            <i class="fas fa-calendar" style="margin-left:10px;"></i> ${new Date(pdf.created_at).toLocaleDateString()}
-                        </small>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn-action view" onclick="viewAdminPDF(${pdf.id})" title="Voir le PDF">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <a href="${pdf.file_data}" download="${pdf.file_name || 'document.pdf'}" class="btn-action view" style="background:var(--info);" title="Télécharger">
-                            <i class="fas fa-download"></i>
-                        </a>
-                        ${deleteButton}
-                    </div>
-                </div>
-            `;
-        }).join('');
-
-    } catch (error) {
-        console.error('Erreur chargement PDF:', error);
-        container.innerHTML = '<div class="no-content">❌ Erreur de chargement</div>';
-    }
-}
-
-// Voir un PDF uploadé par l'admin
-function viewAdminPDF(id) {
-    openPDFFullscreen(id);
-}
-
-// Supprimer un PDF uploadé par l'admin
-async function deleteAdminPDF(id) {
-    var t = getLang();
-    
-    if (!document.body.classList.contains('admin-mode')) {
-        showAlert('Vous devez être connecté en tant qu\'admin', 'error');
-        return;
-    }
-
-    if (!confirm('Supprimer définitivement ce PDF ?')) return;
-
-    try {
-        // Récupérer le PDF
-        var { data: pdf, error: fetchError } = await supabase
-            .from('actu')
-            .select('*')
-            .eq('id', id)
-            .single();
-
-        if (fetchError) throw fetchError;
-
-        // Supprimer de la base
-        var { error } = await supabase
-            .from('actu')
-            .delete()
-            .eq('id', id);
-
-        if (error) throw error;
-
-        showAlert('✅ PDF supprimé avec succès !', 'success');
-        loadAdminPDFs();
-        loadActu();
-
-    } catch (error) {
-        console.error('Erreur suppression PDF:', error);
-        showAlert('Erreur: ' + error.message, 'error');
-    }
-}
-
-// Ouvrir un PDF en plein écran (version améliorée)
-async function openPDFFullscreen(pdfId) {
-    try {
-        var { data: pdf, error } = await supabase
-            .from('actu')
-            .select('*')
-            .eq('id', pdfId)
-            .single();
-
-        if (error) throw error;
-
-        var viewer = document.getElementById('fileViewer');
-        var content = document.getElementById('viewerContent');
-        var titleEl = document.getElementById('viewerTitle');
-
-        if (titleEl) titleEl.textContent = pdf.file_name || 'Document PDF';
-        if (content) {
-            content.innerHTML = `
-                <iframe src="${pdf.file_data}" style="width:100%;height:70vh;border:none;border-radius:8px;"></iframe>
-                <div class="viewer-actions">
-                    <a href="${pdf.file_data}" download="${pdf.file_name || 'document.pdf'}" style="background:var(--success);color:white;padding:8px 20px;border-radius:50px;text-decoration:none;display:inline-block;">
-                        <i class="fas fa-download"></i> Télécharger
-                    </a>
-                    <button onclick="closeFileViewer()" style="background:var(--danger);color:white;padding:8px 20px;border-radius:50px;border:none;cursor:pointer;margin-left:10px;">
-                        <i class="fas fa-times"></i> Fermer
-                    </button>
-                </div>
-            `;
-        }
-        if (viewer) viewer.classList.add('active');
-        
-    } catch (error) {
-        console.error('Erreur ouverture PDF:', error);
-        showAlert('Erreur: ' + error.message, 'error');
-    }
-}
+        window.uploadAdminPDF = uploadAdminPDF;
+        window.loadAdminPDFs = loadAdminPDFs;
+        window.publishPDF = publishPDF;
+        window.viewPDF = viewPDF;
+        window.deleteAdminPDF = deleteActu;
     </script>
 
 </body>
