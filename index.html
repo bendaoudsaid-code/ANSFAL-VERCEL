@@ -3177,137 +3177,107 @@
         }
 
         async function loadActu() {
-            var container = document.getElementById('actuContainer');
-            if (!container) return;
+    var container = document.getElementById('actuContainer');
+    if (!container) {
+        console.error('❌ Container actu introuvable');
+        return;
+    }
 
-            try {
-                var { data, error } = await supabase
-                    .from('actu')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+    try {
+        var { data, error } = await supabase
+            .from('actu')
+            .select('*')
+            .order('created_at', { ascending: false });
 
-                if (error) throw error;
+        if (error) throw error;
 
-                var isAdmin = document.body.classList.contains('admin-mode');
-                var t = getLang();
+        var isAdmin = document.body.classList.contains('admin-mode');
+        var t = getLang();
 
-                var filtered = isAdmin ? data : (data || []).filter(function(item) { return item.status === 'published'; });
+        console.log('📊 Données reçues:', data ? data.length : 0);
+        console.log('👑 Mode admin:', isAdmin);
 
-                if (!filtered || filtered.length === 0) {
-                    container.innerHTML = '<div class="no-content">' + t.noActuPublic + '</div>';
-                    return;
-                }
+        // ✅ Si admin : afficher TOUT (y compris les brouillons)
+        // ✅ Si visiteur : afficher uniquement les publiés
+        var filtered = isAdmin ? data : (data || []).filter(function(item) { return item.status === 'published'; });
 
-                container.innerHTML = filtered.map(function(item) {
-                    var isRTL = document.body.classList.contains('rtl');
-                    var text = isRTL ? (item.text_ar || item.text_fr) : (item.text_fr || item.text_ar);
+        console.log('📊 Filtrés:', filtered ? filtered.length : 0);
 
-                    if (item.file_type === 'pdf' && !text) {
-                        text = '📄 ' + (item.file_name || 'Document PDF');
-                    }
+        if (!filtered || filtered.length === 0) {
+            container.innerHTML = '<div class="no-content">' + (t.noActuPublic || 'Aucune actualité pour le moment.') + '</div>';
+            return;
+        }
 
-                    var statusText = item.status === 'published' ? t.statusPublished : t.statusDraft;
-                    var statusClass = item.status === 'published' ? 'published' : 'draft';
+        container.innerHTML = filtered.map(function(item) {
+            var isRTL = document.body.classList.contains('rtl');
+            var text = isRTL ? (item.text_ar || item.text_fr) : (item.text_fr || item.text_ar);
 
-                    var fileHtml = '';
-                    if (item.file_data && item.file_type === 'pdf') {
-                        var previewId = 'pdfPreview_' + item.id;
-                        fileHtml = `
-                            <div class="actu-file">
-                                <div class="file-name" onclick="togglePDFPreview('${previewId}')">
-                                    <i class="fas fa-file-pdf"></i>
-                                    <span class="file-label">${item.file_name || 'Document PDF'}</span>
-                                    <span class="click-hint">(Cliquez pour aperçu)</span>
-                                </div>
-                                <div class="file-preview" id="${previewId}">
-                                    <iframe src="${item.file_data}" style="width:100%;height:400px;border:none;border-radius:5px;"></iframe>
-                                </div>
-                                <div class="file-actions">
-                                    <button class="btn-file preview" onclick="togglePDFPreview('${previewId}')">
-                                        <i class="fas fa-eye"></i> ${t.previewBtn}
-                                    </button>
-                                    <a href="${item.file_data}" download="${item.file_name || 'document.pdf'}" class="btn-file download">
-                                        <i class="fas fa-download"></i> ${t.downloadBtn}
-                                    </a>
-                                    <button class="btn-file fullscreen" onclick="openPDFFullscreen('${item.file_data}', '${item.file_name || 'Document PDF'}')">
-                                        <i class="fas fa-expand"></i> ${t.fullscreenBtn}
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                    }
+            // ✅ CORRECTION : Si c'est un PDF et qu'il n'y a pas de texte, utiliser le nom du fichier
+            if (item.file_type === 'pdf' && !text) {
+                text = '📄 ' + (item.file_name || 'Document PDF');
+            }
 
-                    var adminActions = isAdmin ? `
-                        <div class="admin-actions">
-                            ${item.status === 'draft' ? `<button class="btn-actu publish" onclick="publishActu(${item.id})"><i class="fas fa-check"></i> ${t.publishBtn}</button>` : ''}
-                            <button class="btn-actu delete" onclick="deleteActu(${item.id})"><i class="fas fa-trash"></i> ${t.deleteBtn}</button>
+            var statusText = item.status === 'published' ? (t.statusPublished || 'Publié') : (t.statusDraft || 'Brouillon');
+            var statusClass = item.status === 'published' ? 'published' : 'draft';
+
+            // Afficher le PDF si présent
+            var fileHtml = '';
+            if (item.file_data && item.file_type === 'pdf') {
+                var previewId = 'pdfPreview_' + item.id;
+                fileHtml = `
+                    <div class="actu-file">
+                        <div class="file-name" onclick="togglePDFPreview('${previewId}')">
+                            <i class="fas fa-file-pdf"></i>
+                            <span class="file-label">${item.file_name || 'Document PDF'}</span>
+                            <span class="click-hint">(Cliquez pour aperçu)</span>
                         </div>
-                    ` : '';
-
-                    return `
-                        <div class="actu-item" data-id="${item.id}">
-                            <div class="actu-text">${text || ''}</div>
-                            ${fileHtml}
-                            <div class="actu-meta">
-                                <span><span class="author"><i class="fas fa-user"></i> ${item.author || 'Anonyme'}</span></span>
-                                ${item.word_count > 0 ? `<span><span class="word-count">${item.word_count} mots</span></span>` : ''}
-                                <span><span class="status ${statusClass}">${statusText}</span></span>
-                                <span>${new Date(item.created_at).toLocaleDateString()}</span>
-                            </div>
-                            ${adminActions}
+                        <div class="file-preview" id="${previewId}">
+                            <iframe src="${item.file_data}" style="width:100%;height:400px;border:none;border-radius:5px;"></iframe>
                         </div>
-                    `;
-                }).join('');
-
-            } catch (error) {
-                console.error('Erreur chargement actu:', error);
-                container.innerHTML = '<div class="no-content">❌ Erreur de chargement</div>';
+                        <div class="file-actions">
+                            <button class="btn-file preview" onclick="togglePDFPreview('${previewId}')">
+                                <i class="fas fa-eye"></i> ${t.previewBtn || 'Aperçu'}
+                            </button>
+                            <a href="${item.file_data}" download="${item.file_name || 'document.pdf'}" class="btn-file download">
+                                <i class="fas fa-download"></i> ${t.downloadBtn || 'Télécharger'}
+                            </a>
+                            <button class="btn-file fullscreen" onclick="openPDFFullscreen('${item.file_data}', '${item.file_name || 'Document PDF'}')">
+                                <i class="fas fa-expand"></i> ${t.fullscreenBtn || 'Plein écran'}
+                            </button>
+                        </div>
+                    </div>
+                `;
             }
-        }
 
-        async function publishActu(id) {
-            var t = getLang();
-            if (!confirm('Publier cette actualité ?')) return;
+            var adminActions = isAdmin ? `
+                <div class="admin-actions">
+                    ${item.status === 'draft' ? `<button class="btn-actu publish" onclick="publishActu(${item.id})"><i class="fas fa-check"></i> ${t.publishBtn || 'Publier'}</button>` : ''}
+                    <button class="btn-actu delete" onclick="deleteActu(${item.id})"><i class="fas fa-trash"></i> ${t.deleteBtn || 'Supprimer'}</button>
+                </div>
+            ` : '';
 
-            try {
-                var { error } = await supabase
-                    .from('actu')
-                    .update({ status: 'published', published_at: new Date().toISOString() })
-                    .eq('id', id);
+            return `
+                <div class="actu-item" data-id="${item.id}">
+                    <div class="actu-text">${text || ''}</div>
+                    ${fileHtml}
+                    <div class="actu-meta">
+                        <span><span class="author"><i class="fas fa-user"></i> ${item.author || 'Anonyme'}</span></span>
+                        ${item.word_count > 0 ? `<span><span class="word-count">${item.word_count} mots</span></span>` : ''}
+                        <span><span class="status ${statusClass}">${statusText}</span></span>
+                        <span>${new Date(item.created_at).toLocaleDateString()}</span>
+                    </div>
+                    ${adminActions}
+                </div>
+            `;
+        }).join('');
 
-                if (error) throw error;
+        console.log('✅ HTML généré avec succès');
 
-                showAlert(t.alertActuPublished, 'success');
-                loadActu();
-                loadAdminPDFs();
-
-            } catch (error) {
-                console.error('Erreur publication:', error);
-                showAlert('Erreur: ' + error.message, 'error');
-            }
-        }
-
-        async function deleteActu(id) {
-            var t = getLang();
-            if (!confirm(t.alertActuDeleted + ' ?')) return;
-
-            try {
-                var { error } = await supabase
-                    .from('actu')
-                    .delete()
-                    .eq('id', id);
-
-                if (error) throw error;
-
-                showAlert(t.alertActuDeleted, 'success');
-                loadActu();
-                loadAdminPDFs();
-
-            } catch (error) {
-                console.error('Erreur suppression:', error);
-                showAlert('Erreur: ' + error.message, 'error');
-            }
-        }
+    } catch (error) {
+        console.error('❌ Erreur chargement actu:', error);
+        container.innerHTML = '<div class="no-content">❌ Erreur de chargement: ' + error.message + '</div>';
+    }
+}
 
         // ============================================================
         // FONCTIONS POUR LES PDF
