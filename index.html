@@ -2868,12 +2868,12 @@
             document.getElementById('menuDashboard').classList.remove('hidden');
             document.getElementById('contactEditForm').style.display = 'block';
 
-            loadGalleryDashboard();
-            loadVideosDashboard();
-            loadPublicationsDashboard();
-            loadTextDashboard();
-            loadActu();
-            loadAdminPDFs();
+                loadGalleryDashboard();
+                loadVideosDashboard();
+                loadPublicationsDashboard();
+                loadTextDashboard();
+                loadActu();        // ✅ AJOUTEZ CETTE LIGNE
+                loadAdminPDFs();   // ✅ ET CELLE-CI
         }
 
         function logout() {
