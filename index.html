@@ -2543,40 +2543,39 @@
                     <!-- ============================================================
                          GESTION DES PDF (ADMIN UNIQUEMENT)
                          ============================================================ -->
-                    <div class="settings-section admin-only">
-                        <h3><i class="fas fa-file-pdf" style="color:var(--pdf);"></i> Gestion des PDF</h3>
-                        <p style="color:#666;margin-bottom:15px;">Uploader, publier ou refuser des PDF</p>
+                    <!-- ============================================================
+     GESTION DES PDF (ADMIN UNIQUEMENT)
+     ============================================================ -->
+<div class="settings-section admin-only">
+    <h3><i class="fas fa-file-pdf" style="color:var(--pdf);"></i> Gestion des PDF</h3>
+    <p style="color:#666;margin-bottom:15px;">Uploader, publier ou refuser des PDF</p>
 
-                        <!-- Upload -->
-                        <div style="display:flex;flex-wrap:wrap;gap:15px;align-items:center;margin-bottom:20px;">
-                            <div class="file-upload-area" onclick="document.getElementById('adminPdfInput').click()" style="flex:1;min-width:200px;padding:20px;border:2px dashed #ddd;border-radius:8px;cursor:pointer;text-align:center;background:var(--light);">
-                                <i class="fas fa-cloud-upload-alt" style="font-size:2rem;color:var(--primary);"></i>
-                                <p class="file-info" id="adminPdfInfo"><i class="fas fa-file-pdf" style="color:var(--pdf);"></i> Cliquez pour sélectionner un PDF (max 10MB)</p>
-                                <input type="file" id="adminPdfInput" accept=".pdf" style="display:none;" />
-                            </div>
-                            <button class="btn-import" onclick="uploadAdminPDF()" style="background:var(--info);">
-                                <i class="fas fa-upload"></i> Uploader le PDF
-                            </button>
-                            <button class="btn-import" onclick="loadAdminPDFs()" style="background:var(--primary);">
-                                <i class="fas fa-refresh"></i> Rafraîchir
-                            </button>
-                        </div>
-
-                        <!-- Liste des PDF -->
-                        <div style="margin-top:20px;">
-                            <h4 style="color:var(--dark);margin-bottom:10px;">
-                                <i class="fas fa-list"></i> PDF uploadés
-                                <span style="font-size:0.8rem;font-weight:normal;color:#888;margin-left:10px;" id="pdfCount"></span>
-                            </h4>
-                            <div id="adminPdfList" style="max-height:400px;overflow-y:auto;">
-                                <div class="no-content">Aucun PDF uploadé.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Upload -->
+    <div style="display:flex;flex-wrap:wrap;gap:15px;align-items:center;margin-bottom:20px;">
+        <div class="file-upload-area" onclick="document.getElementById('adminPdfInput').click()" style="flex:1;min-width:200px;padding:20px;border:2px dashed #ddd;border-radius:8px;cursor:pointer;text-align:center;background:var(--light);">
+            <i class="fas fa-cloud-upload-alt" style="font-size:2rem;color:var(--primary);"></i>
+            <p class="file-info" id="adminPdfInfo"><i class="fas fa-file-pdf" style="color:var(--pdf);"></i> Cliquez pour sélectionner un PDF (max 10MB)</p>
+            <input type="file" id="adminPdfInput" accept=".pdf" style="display:none;" />
         </div>
-    </section>
+        <button class="btn-import" onclick="uploadAdminPDF()" style="background:var(--info);">
+            <i class="fas fa-upload"></i> Uploader le PDF
+        </button>
+        <button class="btn-import" onclick="loadAdminPDFs()" style="background:var(--primary);">
+            <i class="fas fa-refresh"></i> Rafraîchir
+        </button>
+    </div>
+
+    <!-- Liste des PDF -->
+    <div style="margin-top:20px;">
+        <h4 style="color:var(--dark);margin-bottom:10px;">
+            <i class="fas fa-list"></i> PDF uploadés
+            <span style="font-size:0.8rem;font-weight:normal;color:#888;margin-left:10px;" id="pdfCount"></span>
+        </h4>
+        <div id="adminPdfList" style="max-height:400px;overflow-y:auto;">
+            <div class="no-content">Aucun PDF uploadé.</div>
+        </div>
+    </div>
+</div>
 
     <!-- ========== FOOTER ========== -->
     <footer>
