@@ -4014,10 +4014,8 @@ async function uploadFiles() {
         }, 3000);
     }
 }
-        // ============================================================
-        // SUPPRIMER UN ÉLÉMENT
-        // ============================================================
-      // ============================================================
+        
+// ============================================================
 // SUPPRIMER UN ÉLÉMENT
 // ============================================================
 async function deleteItem(table, id) {
@@ -4042,15 +4040,26 @@ async function deleteItem(table, id) {
 
         console.log('🔍 Élément à supprimer:', item);
 
-        // 2. Supprimer le fichier du storage si c'est une vidéo
-        if (table === 'videos' && item && item.video_url) {
-            var filePath = extractFilePath(item.video_url);
+        // 2. Supprimer du storage
+        var bucketName = table === 'videos' ? 'videos' : 'gallery';
+        var fileUrl = table === 'videos' ? item.video_url : item.image_url;
+        
+        if (fileUrl) {
+            var filePath = extractFilePath(fileUrl);
             if (filePath) {
                 try {
-                    await supabase.storage.from('videos').remove([filePath]);
-                    console.log('✅ Vidéo supprimée du storage');
+                    var { error: storageError } = await supabase
+                        .storage
+                        .from(bucketName)
+                        .remove([filePath]);
+                    
+                    if (storageError) {
+                        console.warn('⚠️ Erreur suppression storage:', storageError);
+                    } else {
+                        console.log('✅ Fichier supprimé du storage');
+                    }
                 } catch (e) {
-                    console.warn('⚠️ Erreur suppression fichier:', e);
+                    console.warn('⚠️ Erreur:', e);
                 }
             }
         }
@@ -4082,54 +4091,6 @@ async function deleteItem(table, id) {
     } catch (error) {
         console.error('❌ Erreur suppression:', error);
         showAlert('Erreur: ' + error.message, 'error');
-    }
-}
-
-// Fonction helper pour extraire le chemin du fichier depuis l'URL
-function extractFilePath(url) {
-    if (!url) return null;
-    
-    try {
-        // Cas 1: URL Supabase Storage
-        if (url.includes('supabase.co/storage/v1/object/public/')) {
-            var parts = url.split('/object/public/');
-            if (parts.length > 1) {
-                var path = parts[1];
-                var pathParts = path.split('/');
-                if (pathParts.length > 1) {
-                    // Enlever le nom du bucket
-                    return pathParts.slice(1).join('/');
-                }
-                return path;
-            }
-        }
-        
-        // Cas 2: URL avec data: (base64) - pas de fichier à supprimer
-        if (url.startsWith('data:')) {
-            return null;
-        }
-        
-        // Cas 3: Essayer de prendre le nom du fichier
-        try {
-            var urlObj = new URL(url);
-            var pathname = urlObj.pathname;
-            var filename = pathname.split('/').pop();
-            if (filename && filename.includes('.')) {
-                return filename;
-            }
-        } catch (e) {
-            // Si ce n'est pas une URL valide
-            var parts = url.split('/');
-            var last = parts[parts.length - 1];
-            if (last && last.includes('.')) {
-                return last;
-            }
-        }
-        
-        return null;
-    } catch (e) {
-        console.warn('⚠️ Erreur extraction chemin:', e);
-        return null;
     }
 }
 
