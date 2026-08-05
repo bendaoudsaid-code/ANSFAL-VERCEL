@@ -4597,49 +4597,61 @@ function extractFilePath(url) {
         }
 
         async function loadPublicVideos() {
-            var container = document.getElementById('videosContainer');
-            if (!container) return;
+    var container = document.getElementById('videosContainer');
+    if (!container) return;
 
-            try {
-                var { data, error } = await supabase
-                    .from('videos')
-                    .select('*')
-                    .order('uploaded_at', { ascending: false });
+    try {
+        var { data, error } = await supabase
+            .from('videos')
+            .select('*')
+            .order('uploaded_at', { ascending: false });
 
-                if (error) throw error;
+        if (error) throw error;
 
-                if (!data || data.length === 0) {
-                    container.innerHTML = '<div class="no-content" id="noVideosPublic">Aucune vidéo disponible.</div>';
-                    return;
-                }
-
-                container.innerHTML = data.map(function(video) {
-                    var videoId = '';
-                    if (video.video_url && video.video_url.includes('youtu.be/')) {
-                        videoId = video.video_url.split('youtu.be/')[1]?.split('?')[0];
-                    } else if (video.video_url && video.video_url.includes('watch?v=')) {
-                        videoId = video.video_url.split('v=')[1]?.split('&')[0];
-                    }
-
-                    var embedHtml = '';
-                    if (videoId) {
-                        embedHtml = '<iframe src="https://www.youtube.com/embed/' + videoId +
-                            '" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>';
-                    } else {
-                        embedHtml = '<video controls style="width:100%;height:100%;"><source src="' + video.video_url +
-                            '" type="video/mp4">Votre navigateur ne supporte pas la lecture vidéo.</video>';
-                    }
-
-                    var titleHtml = video.title ? '<div class="video-title"><i class="fas fa-video" style="color:var(--primary);"></i> ' +
-                        video.title + '</div>' : '';
-
-                    return '<div class="video-item">' + embedHtml + '</div>' + titleHtml;
-                }).join('');
-            } catch (error) {
-                console.error('Erreur chargement vidéos:', error);
-                container.innerHTML = '<div class="no-content">❌ Erreur de chargement des vidéos.</div>';
-            }
+        if (!data || data.length === 0) {
+            container.innerHTML = '<div class="no-content" id="noVideosPublic">Aucune vidéo disponible.</div>';
+            return;
         }
+
+        container.innerHTML = data.map(function(video) {
+            // Vérifier si c'est une URL YouTube
+            var videoId = '';
+            if (video.video_url && video.video_url.includes('youtu.be/')) {
+                videoId = video.video_url.split('youtu.be/')[1]?.split('?')[0];
+            } else if (video.video_url && video.video_url.includes('watch?v=')) {
+                videoId = video.video_url.split('v=')[1]?.split('&')[0];
+            }
+
+            var embedHtml = '';
+            if (videoId) {
+                // Vidéo YouTube
+                embedHtml = '<iframe src="https://www.youtube.com/embed/' + videoId +
+                    '" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>';
+            } else if (video.video_url && video.video_url.startsWith('https://')) {
+                // Vidéo du Storage Supabase
+                embedHtml = '<video controls style="width:100%;height:100%;">' +
+                    '<source src="' + video.video_url + '" type="video/mp4">' +
+                    'Votre navigateur ne supporte pas la lecture vidéo.</video>';
+            } else if (video.video_url && video.video_url.startsWith('data:')) {
+                // Vidéo base64 (ancien format) - à éviter
+                embedHtml = '<video controls style="width:100%;height:100%;">' +
+                    '<source src="' + video.video_url + '" type="video/mp4">' +
+                    'Votre navigateur ne supporte pas la lecture vidéo.</video>';
+            } else {
+                embedHtml = '<div style="display:flex;align-items:center;justify-content:center;height:100%;background:#333;color:#fff;">Vidéo non disponible</div>';
+            }
+
+            var titleHtml = video.title ? '<div class="video-title"><i class="fas fa-video" style="color:var(--primary);"></i> ' +
+                video.title + '</div>' : '';
+
+            return '<div class="video-item">' + embedHtml + '</div>' + titleHtml;
+        }).join('');
+        
+    } catch (error) {
+        console.error('Erreur chargement vidéos:', error);
+        container.innerHTML = '<div class="no-content">❌ Erreur de chargement des vidéos.</div>';
+    }
+}
 
         // ============================================================
         // VISIONNEUSE
