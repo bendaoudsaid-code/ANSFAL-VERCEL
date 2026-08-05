@@ -3886,6 +3886,9 @@
  // ============================================================
 // TÉLÉVERSER LES FICHIERS VERS SUPABASE STORAGE
 // ============================================================
+// ============================================================
+// TÉLÉVERSER LES FICHIERS VERS SUPABASE STORAGE
+// ============================================================
 async function uploadFiles() {
     var t = getLang();
 
@@ -3910,18 +3913,16 @@ async function uploadFiles() {
             var isVideo = file.type && file.type.startsWith('video/');
             var isImage = file.type && file.type.startsWith('image/');
             
-            // Déterminer le bucket à utiliser
             var bucketName = isVideo ? 'videos' : 'gallery';
             var tableName = isVideo ? 'videos' : 'gallery';
             
-            // Générer un nom unique pour le fichier
             var timestamp = Date.now();
             var cleanName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
             var filePath = timestamp + '_' + cleanName;
             
             console.log('📤 Upload vers ' + bucketName + '/' + filePath);
             
-            // 1. Uploader le fichier vers le bucket
+            // 1. Upload vers le bucket
             var { data: storageData, error: storageError } = await supabase
                 .storage
                 .from(bucketName)
@@ -3931,7 +3932,8 @@ async function uploadFiles() {
                 });
             
             if (storageError) {
-                errors.push(file.name + ': Erreur storage - ' + storageError.message);
+                console.error('❌ Erreur storage:', storageError);
+                errors.push(file.name + ': ' + storageError.message);
                 continue;
             }
             
@@ -3946,9 +3948,9 @@ async function uploadFiles() {
             var publicUrl = urlData.publicUrl;
             console.log('🔗 URL publique:', publicUrl);
             
-            // 3. Préparer les données pour la base
+            // 3. Préparer les données
             var data = {
-                title: file.name.split('.')[0] || 'Fichier ' + (i + 1),
+                title: file.name.split('.')[0] || (isVideo ? 'Vidéo' : 'Image') + ' ' + (i + 1),
                 description: 'Uploadé depuis le site ANSFAL',
                 publisher: publisher,
                 uploaded_at: new Date().toISOString()
@@ -3956,25 +3958,25 @@ async function uploadFiles() {
             
             if (isVideo) {
                 data.video_url = publicUrl;
-            } else if (isImage) {
-                data.image_url = publicUrl;
             } else {
-                // Par défaut, traiter comme une image
                 data.image_url = publicUrl;
             }
             
-            // 4. Insérer dans la base de données
-            var { error: insertError } = await supabase
+            console.log('📊 Données à insérer:', data);
+            
+            // 4. Insérer dans la base
+            var { data: result, error: insertError } = await supabase
                 .from(tableName)
-                .insert([data]);
+                .insert([data])
+                .select();
             
             if (insertError) {
-                // Si l'insertion échoue, supprimer le fichier du storage
+                console.error('❌ Erreur insertion:', insertError);
                 await supabase.storage.from(bucketName).remove([filePath]);
-                errors.push(file.name + ': Erreur insertion - ' + insertError.message);
+                errors.push(file.name + ': ' + insertError.message);
             } else {
+                console.log('✅ Insertion réussie!', result);
                 uploaded++;
-                console.log('✅ Enregistré dans ' + tableName);
             }
 
             var progress = Math.round(((i + 1) / total) * 100);
