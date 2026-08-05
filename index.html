@@ -3905,6 +3905,8 @@
                 'image': 'gallery',
                 'video': 'videos',
                 'article': 'articles'
+                'projets': 'projets
+                'actualité': 'actualité'
             };
             var tableName = tableMap[currentUploadType] || 'gallery';
             var publisher = document.getElementById('userName').textContent || 'admin';
@@ -3996,7 +3998,11 @@
         // ============================================================
         // SUPPRIMER UN ÉLÉMENT
         // ============================================================
-        async function deleteItem(table, id) {
+       // Dans votre code actuel, la suppression est déclenchée par :
+// <button class="btn-action delete" onclick="deleteItem('videos', 1)">
+
+// La fonction deleteItem() doit être comme ceci :
+async function deleteItem(table, id) {
     var t = getLang();
 
     if (!document.body.classList.contains('admin-mode')) {
@@ -4007,7 +4013,7 @@
     if (!confirm('Supprimer cet élément ?')) return;
 
     try {
-        // 1. Récupérer d'abord les données pour avoir l'URL du fichier
+        // Récupérer l'élément
         var { data: item, error: fetchError } = await supabase
             .from(table)
             .select('*')
@@ -4016,24 +4022,39 @@
 
         if (fetchError) throw fetchError;
 
-        // 2. Si c'est une vidéo, extraire le nom du fichier de l'URL
+        // Si c'est une vidéo, supprimer le fichier du storage
         if (table === 'videos' && item && item.video_url) {
-            // Extraire le chemin du fichier depuis l'URL
             var filePath = extractFilePath(item.video_url);
             if (filePath) {
-                // Supprimer le fichier du bucket Storage
-                var { error: storageError } = await supabase
-                    .storage
-                    .from('videos') // Nom de votre bucket
-                    .remove([filePath]);
-                
-                if (storageError) {
-                    console.warn('Erreur suppression fichier:', storageError);
-                } else {
-                    console.log('✅ Fichier vidéo supprimé du storage');
+                try {
+                    await supabase.storage.from('videos').remove([filePath]);
+                    console.log('✅ Vidéo supprimée du storage');
+                } catch (e) {
+                    console.warn('⚠️ Erreur suppression fichier:', e);
                 }
             }
         }
+
+        // Supprimer de la base de données
+        var { error } = await supabase
+            .from(table)
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+
+        showAlert('✅ Élément supprimé avec succès', 'success');
+
+        // Rafraîchir les listes
+        loadVideosDashboard();
+        loadPublicVideos();
+        updateDashboardStats();
+
+    } catch (error) {
+        console.error('❌ Erreur suppression:', error);
+        showAlert('Erreur: ' + error.message, 'error');
+    }
+}
 
         // 3. Supprimer l'enregistrement de la base de données
         var { error } = await supabase
