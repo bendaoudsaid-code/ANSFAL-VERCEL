@@ -3997,38 +3997,100 @@
         // SUPPRIMER UN ÉLÉMENT
         // ============================================================
         async function deleteItem(table, id) {
-            var t = getLang();
+    var t = getLang();
 
-            if (!document.body.classList.contains('admin-mode')) {
-                showAlert('Vous devez être connecté pour supprimer', 'error');
-                return;
-            }
+    if (!document.body.classList.contains('admin-mode')) {
+        showAlert('Vous devez être connecté pour supprimer', 'error');
+        return;
+    }
 
-            if (!confirm('Supprimer cet élément ?')) return;
+    if (!confirm('Supprimer cet élément ?')) return;
 
-            try {
-                var { error } = await supabase
-                    .from(table)
-                    .delete()
-                    .eq('id', id);
+    try {
+        // 1. Récupérer d'abord les données pour avoir l'URL du fichier
+        var { data: item, error: fetchError } = await supabase
+            .from(table)
+            .select('*')
+            .eq('id', id)
+            .single();
 
-                if (error) throw error;
+        if (fetchError) throw fetchError;
 
-                showAlert(t.alertItemDeleted || 'Élément supprimé', 'success');
-
-                loadGalleryDashboard();
-                loadVideosDashboard();
-                loadPublicationsDashboard();
-                loadTextDashboard();
-                loadPublicGallery();
-                loadPublicVideos();
-                loadArticles();
-                updateDashboardStats();
-
-            } catch (error) {
-                showAlert('Erreur: ' + error.message, 'error');
+        // 2. Si c'est une vidéo, extraire le nom du fichier de l'URL
+        if (table === 'videos' && item && item.video_url) {
+            // Extraire le chemin du fichier depuis l'URL
+            var filePath = extractFilePath(item.video_url);
+            if (filePath) {
+                // Supprimer le fichier du bucket Storage
+                var { error: storageError } = await supabase
+                    .storage
+                    .from('videos') // Nom de votre bucket
+                    .remove([filePath]);
+                
+                if (storageError) {
+                    console.warn('Erreur suppression fichier:', storageError);
+                } else {
+                    console.log('✅ Fichier vidéo supprimé du storage');
+                }
             }
         }
+
+        // 3. Supprimer l'enregistrement de la base de données
+        var { error } = await supabase
+            .from(table)
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+
+        showAlert(t.alertItemDeleted || 'Élément supprimé', 'success');
+
+        // 4. Rafraîchir les listes
+        loadGalleryDashboard();
+        loadVideosDashboard();
+        loadPublicationsDashboard();
+        loadTextDashboard();
+        loadPublicGallery();
+        loadPublicVideos();
+        loadArticles();
+        updateDashboardStats();
+
+    } catch (error) {
+        showAlert('Erreur: ' + error.message, 'error');
+    }
+}
+
+// Fonction helper pour extraire le chemin du fichier depuis l'URL
+function extractFilePath(url) {
+    if (!url) return null;
+    
+    try {
+        // Si l'URL est une URL Supabase Storage
+        if (url.includes('supabase.co/storage/v1/object/public/')) {
+            var parts = url.split('/object/public/');
+            if (parts.length > 1) {
+                var path = parts[1];
+                // Enlever le nom du bucket si présent
+                var pathParts = path.split('/');
+                if (pathParts.length > 1) {
+                    return pathParts.slice(1).join('/'); // Retourne le chemin sans le nom du bucket
+                }
+                return path;
+            }
+        }
+        
+        // Si c'est une URL directe, essayer d'extraire le nom du fichier
+        var urlObj = new URL(url);
+        var pathname = urlObj.pathname;
+        var filename = pathname.split('/').pop();
+        if (filename) return filename;
+        
+        return null;
+    } catch (e) {
+        console.warn('Erreur extraction chemin:', e);
+        return null;
+    }
+}
 
         // ============================================================
         // CONTACTS - STOCKAGE SUPABASE
