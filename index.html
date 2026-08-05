@@ -3883,11 +3883,8 @@
             showAlert(t.alertURLAdded, 'success');
         }
 
-        // ============================================================
-        // TÉLÉVERSER LES FICHIERS VERS SUPABASE
-        // ============================================================
-        // ============================================================
-// TÉLÉVERSER LES FICHIERS VERS SUPABASE
+ // ============================================================
+// TÉLÉVERSER LES FICHIERS VERS SUPABASE STORAGE
 // ============================================================
 async function uploadFiles() {
     var t = getLang();
@@ -3904,15 +3901,6 @@ async function uploadFiles() {
     var uploaded = 0;
     var errors = [];
 
-    var tableMap = {
-        'image': 'gallery',
-        'video': 'videos',
-        'article': 'articles',
-        'projets': 'projets',
-        'actualité': 'actualité'
-    };
-    
-    var tableName = tableMap[currentUploadType] || 'gallery';
     var publisher = document.getElementById('userName').textContent || 'admin';
 
     for (var i = 0; i < selectedFiles.length; i++) {
@@ -3920,33 +3908,73 @@ async function uploadFiles() {
 
         try {
             var isVideo = file.type && file.type.startsWith('video/');
-            var base64 = await readFileAsBase64(file);
-
+            var isImage = file.type && file.type.startsWith('image/');
+            
+            // Déterminer le bucket à utiliser
+            var bucketName = isVideo ? 'videos' : 'gallery';
+            var tableName = isVideo ? 'videos' : 'gallery';
+            
+            // Générer un nom unique pour le fichier
+            var timestamp = Date.now();
+            var cleanName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+            var filePath = timestamp + '_' + cleanName;
+            
+            console.log('📤 Upload vers ' + bucketName + '/' + filePath);
+            
+            // 1. Uploader le fichier vers le bucket
+            var { data: storageData, error: storageError } = await supabase
+                .storage
+                .from(bucketName)
+                .upload(filePath, file, {
+                    cacheControl: '3600',
+                    upsert: false
+                });
+            
+            if (storageError) {
+                errors.push(file.name + ': Erreur storage - ' + storageError.message);
+                continue;
+            }
+            
+            console.log('✅ Fichier uploadé dans le storage');
+            
+            // 2. Récupérer l'URL publique
+            var { data: urlData } = supabase
+                .storage
+                .from(bucketName)
+                .getPublicUrl(filePath);
+            
+            var publicUrl = urlData.publicUrl;
+            console.log('🔗 URL publique:', publicUrl);
+            
+            // 3. Préparer les données pour la base
             var data = {
                 title: file.name.split('.')[0] || 'Fichier ' + (i + 1),
                 description: 'Uploadé depuis le site ANSFAL',
                 publisher: publisher,
                 uploaded_at: new Date().toISOString()
             };
-
-            if (tableName === 'articles') {
-                data.content = file.name.split('.')[0] || 'Contenu';
-                data.category = 'publication';
-                data.status = 'published';
-            } else if (isVideo) {
-                data.video_url = base64;
+            
+            if (isVideo) {
+                data.video_url = publicUrl;
+            } else if (isImage) {
+                data.image_url = publicUrl;
             } else {
-                data.image_url = base64;
+                // Par défaut, traiter comme une image
+                data.image_url = publicUrl;
             }
-
-            var { error } = await supabase
+            
+            // 4. Insérer dans la base de données
+            var { error: insertError } = await supabase
                 .from(tableName)
                 .insert([data]);
-
-            if (error) {
-                errors.push(file.name + ': ' + error.message);
+            
+            if (insertError) {
+                // Si l'insertion échoue, supprimer le fichier du storage
+                await supabase.storage.from(bucketName).remove([filePath]);
+                errors.push(file.name + ': Erreur insertion - ' + insertError.message);
             } else {
                 uploaded++;
+                console.log('✅ Enregistré dans ' + tableName);
             }
 
             var progress = Math.round(((i + 1) / total) * 100);
@@ -3954,6 +3982,7 @@ async function uploadFiles() {
             document.getElementById('progressText').textContent = progress + '% (' + (i + 1) + '/' + total + ')';
 
         } catch (error) {
+            console.error('❌ Erreur:', error);
             errors.push(file.name + ': ' + error.message);
         }
     }
@@ -3966,17 +3995,16 @@ async function uploadFiles() {
         showAlert(uploaded + ' fichier(s) téléversé(s) avec succès !', 'success');
 
         setTimeout(function() {
-            loadGalleryDashboard();
             loadVideosDashboard();
-            loadPublicationsDashboard();
-            loadPublicGallery();
             loadPublicVideos();
+            loadGalleryDashboard();
+            loadPublicGallery();
             loadArticles();
             updateDashboardStats();
         }, 1000);
 
     } else {
-        showAlert('Erreur: ' + errors.join(', '), 'error');
+        showAlert('❌ Erreur: ' + errors.join(', '), 'error');
         document.getElementById('actionButtons').style.display = 'flex';
     }
 
