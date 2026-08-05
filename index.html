@@ -3176,7 +3176,7 @@
             }
         }
 
-        async function loadActu() {
+    async function loadActu() {
     var container = document.getElementById('actuContainer');
     if (!container) {
         console.error('❌ Container actu introuvable');
@@ -3191,7 +3191,11 @@
             .select('*')
             .order('created_at', { ascending: false });
 
-        if (error) throw error;
+        if (error) {
+            console.error('❌ Erreur Supabase:', error);
+            container.innerHTML = '<div class="no-content">❌ Erreur de chargement</div>';
+            return;
+        }
 
         var isAdmin = document.body.classList.contains('admin-mode');
         var t = getLang();
@@ -3199,7 +3203,7 @@
         console.log('📊 Données reçues:', data ? data.length : 0);
         console.log('👑 Mode admin:', isAdmin);
 
-        // 🔥 SIMPLIFICATION : Si admin, tout afficher. Sinon, seulement publiés.
+        // Filtrer : admin voit tout, visiteur voit seulement publié
         var filtered = [];
         if (isAdmin) {
             filtered = data || [];
@@ -3222,7 +3226,7 @@
             var isRTL = document.body.classList.contains('rtl');
             var text = isRTL ? (item.text_ar || item.text_fr) : (item.text_fr || item.text_ar);
 
-            // Si c'est un PDF et qu'il n'y a pas de texte, utiliser le nom du fichier
+            // 🔥 IMPORTANT : Si c'est un PDF, utiliser le nom du fichier
             if (item.file_type === 'pdf' && !text) {
                 text = '📄 ' + (item.file_name || 'Document PDF');
             }
