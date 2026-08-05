@@ -3339,36 +3339,88 @@
                 });
             }
 
-            // Sélectionner un fichier PDF pour l'actualité
-            var actuFileInput = document.getElementById('actuFileInput');
-            if (actuFileInput) {
-                actuFileInput.addEventListener('change', function(e) {
-                    if (e.target.files.length > 0) {
-                        selectedActuFile = e.target.files[0];
-                        document.getElementById('actuFileInfo').innerHTML = '<i class="fas fa-file-pdf"></i> ' + selectedActuFile
-                            .name + ' (' + (selectedActuFile.size / 1024).toFixed(1) + ' KB)';
-                    }
-                });
+            // ============================================================
+// FORMATAGE DES CHAMPS DE CARTE + ADMIN PDF
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+    // ---- Formatage des champs de carte ----
+    var cardNumber = document.getElementById('cardNumber');
+    if (cardNumber) {
+        cardNumber.addEventListener('input', function(e) {
+            var value = this.value.replace(/\D/g, '');
+            if (value.length > 16) value = value.slice(0, 16);
+            var formatted = '';
+            for (var i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) formatted += ' ';
+                formatted += value[i];
             }
+            this.value = formatted;
+        });
+    }
 
-            // Compteur de mots pour l'actualité
-            var actuText = document.getElementById('actuText');
-            if (actuText) {
-                actuText.addEventListener('input', function() {
-                    var words = this.value.trim().split(/\s+/).filter(function(w) { return w.length > 0; });
-                    var count = words.length;
-                    document.getElementById('wordCountDisplay').textContent = count;
-                    var warning = document.getElementById('wordWarning');
-                    if (count > 20) {
-                        warning.style.display = 'inline';
-                        this.style.borderColor = 'var(--danger)';
-                    } else {
-                        warning.style.display = 'none';
-                        this.style.borderColor = '';
-                    }
-                });
+    var expiryDate = document.getElementById('expiryDate');
+    if (expiryDate) {
+        expiryDate.addEventListener('input', function(e) {
+            var value = this.value.replace(/\D/g, '');
+            if (value.length > 4) value = value.slice(0, 4);
+            if (value.length >= 2) {
+                var month = parseInt(value.slice(0, 2));
+                if (month > 12) value = '12' + value.slice(2);
+            }
+            var formatted = '';
+            for (var i = 0; i < value.length; i++) {
+                if (i === 2 && value.length > 2) formatted += '/';
+                formatted += value[i];
+            }
+            this.value = formatted;
+        });
+    }
+
+    var cvv = document.getElementById('cvv');
+    if (cvv) {
+        cvv.addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '').slice(0, 4);
+        });
+    }
+
+    // ---- Sélectionner un fichier logo ----
+    var logoInput = document.getElementById('logoFileInput');
+    if (logoInput) {
+        logoInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                selectedLogoFile = e.target.files[0];
+                document.getElementById('logoFileInfo').textContent = selectedLogoFile.name + ' (' + (selectedLogoFile
+                    .size / 1024).toFixed(1) + ' KB)';
             }
         });
+    }
+
+    // ---- Sélectionner un fichier PDF pour l'actualité ----
+    var actuFileInput = document.getElementById('actuFileInput');
+    if (actuFileInput) {
+        actuFileInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                selectedActuFile = e.target.files[0];
+                document.getElementById('actuFileInfo').innerHTML = '<i class="fas fa-file-pdf"></i> ' + selectedActuFile
+                    .name + ' (' + (selectedActuFile.size / 1024).toFixed(1) + ' KB)';
+            }
+        });
+    }
+
+    // ---- ✅ AJOUT : Admin PDF Input ----
+    var adminPdfInput = document.getElementById('adminPdfInput');
+    if (adminPdfInput) {
+        adminPdfInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                selectedAdminPdfFile = e.target.files[0];
+                document.getElementById('adminPdfInfo').innerHTML = '<i class="fas fa-file-pdf" style="color:var(--pdf);"></i> ' + selectedAdminPdfFile.name + ' (' + (selectedAdminPdfFile.size / 1024 / 1024).toFixed(2) + ' MB)';
+            }
+        });
+    }
+
+    // ---- ✅ AJOUT : Charger les PDF uploadés ----
+    loadAdminPDFs();
+});
 
         // ============================================================
         // UPLOAD LOGO VERS SUPABASE
