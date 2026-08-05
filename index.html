@@ -2498,39 +2498,21 @@
 <div id="settingsDashboard" class="dashboard-section-content">
     <h2 id="settingsTitle"><i class="fas fa-cog"></i> Paramètres</h2>
 
-    <!-- ... autres sections ... -->
+    <!-- Sécurité -->
+    <div class="settings-section">...</div>
 
-    <!-- ✅ NOUVEAU : Upload de PDF (Admin uniquement) -->
+    <!-- Texte défilant -->
+    <div class="settings-section admin-only">...</div>
+
+    <!-- Logo -->
+    <div class="settings-section admin-only">...</div>
+
+    <!-- ✅ AJOUTEZ ICI LA SECTION GESTION DES PDF -->
     <div class="settings-section admin-only">
         <h3><i class="fas fa-file-pdf" style="color:var(--pdf);"></i> Gestion des PDF</h3>
-        <p style="color:#666;margin-bottom:15px;">Uploader des PDF pour les actualités et documents officiels</p>
-        
-        <div style="display:flex;flex-wrap:wrap;gap:15px;align-items:center;">
-            <div class="file-upload-area" onclick="document.getElementById('adminPdfInput').click()" style="flex:1;min-width:200px;padding:20px;border:2px dashed #ddd;border-radius:8px;cursor:pointer;text-align:center;background:var(--light);">
-                <i class="fas fa-cloud-upload-alt" style="font-size:2rem;color:var(--primary);"></i>
-                <p class="file-info" id="adminPdfInfo"><i class="fas fa-file-pdf" style="color:var(--pdf);"></i> Cliquez pour sélectionner un PDF (max 10MB)</p>
-                <input type="file" id="adminPdfInput" accept=".pdf" style="display:none;" />
-            </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                <button class="btn-import" onclick="uploadAdminPDF()" style="background:var(--info);">
-                    <i class="fas fa-upload"></i> Uploader le PDF
-                </button>
-                <button class="btn-import" onclick="loadAdminPDFs()" style="background:var(--primary);">
-                    <i class="fas fa-refresh"></i> Rafraîchir
-                </button>
-            </div>
-        </div>
-        
-        <!-- Liste des PDF uploadés -->
-        <div style="margin-top:20px;">
-            <h4 style="color:var(--dark);margin-bottom:10px;"><i class="fas fa-list"></i> PDF uploadés</h4>
-            <div id="adminPdfList" style="max-height:300px;overflow-y:auto;">
-                <div class="no-content">Aucun PDF uploadé.</div>
-            </div>
-        </div>
+        ...
     </div>
 </div>
-
                     <!-- Texte défilant -->
                     <div class="settings-section admin-only">
                         <h3><i class="fas fa-scroll"></i> Texte défilant (Avis au public)</h3>
@@ -4974,6 +4956,227 @@ function extractFilePath(url) {
         window.uploadActuPDF = uploadActuPDF;
         window.togglePDFPreview = togglePDFPreview;
         window.openPDFFullscreen = openPDFFullscreen;
+        // ============================================================
+// ADMIN PDF UPLOAD
+// ============================================================
+var selectedAdminPdfFile = null;
+
+// Écouter la sélection du fichier PDF
+document.addEventListener('DOMContentLoaded', function() {
+    var adminPdfInput = document.getElementById('adminPdfInput');
+    if (adminPdfInput) {
+        adminPdfInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                selectedAdminPdfFile = e.target.files[0];
+                document.getElementById('adminPdfInfo').innerHTML = '<i class="fas fa-file-pdf" style="color:var(--pdf);"></i> ' + selectedAdminPdfFile.name + ' (' + (selectedAdminPdfFile.size / 1024 / 1024).toFixed(2) + ' MB)';
+            }
+        });
+    }
+});
+
+// Uploader un PDF par l'admin
+async function uploadAdminPDF() {
+    var t = getLang();
+
+    if (!document.body.classList.contains('admin-mode')) {
+        showAlert('Vous devez être connecté en tant qu\'admin', 'error');
+        return;
+    }
+
+    if (!selectedAdminPdfFile) {
+        showAlert('Veuillez d\'abord sélectionner un fichier PDF', 'error');
+        return;
+    }
+
+    if (selectedAdminPdfFile.size > 10 * 1024 * 1024) {
+        showAlert('Le PDF est trop volumineux (max 10MB)', 'error');
+        return;
+    }
+
+    if (selectedAdminPdfFile.type !== 'application/pdf') {
+        showAlert('Veuillez sélectionner un fichier PDF valide', 'error');
+        return;
+    }
+
+    try {
+        var reader = new FileReader();
+        reader.onload = async function(e) {
+            var base64Data = e.target.result;
+            var publisher = document.getElementById('userName').textContent || 'admin';
+
+            // Uploader le PDF
+            var { error } = await supabase
+                .from('actu')
+                .insert([{
+                    text_fr: '📄 ' + selectedAdminPdfFile.name,
+                    text_ar: '📄 ' + selectedAdminPdfFile.name,
+                    author: publisher,
+                    status: 'published',
+                    file_name: selectedAdminPdfFile.name,
+                    file_data: base64Data,
+                    file_type: 'pdf',
+                    created_at: new Date().toISOString(),
+                    word_count: 0
+                }]);
+
+            if (error) throw error;
+
+            showAlert('✅ PDF uploadé avec succès !', 'success');
+            selectedAdminPdfFile = null;
+            document.getElementById('adminPdfInput').value = '';
+            document.getElementById('adminPdfInfo').innerHTML = '<i class="fas fa-file-pdf" style="color:var(--pdf);"></i> Cliquez pour sélectionner un PDF (max 10MB)';
+            loadAdminPDFs();
+            loadActu();
+
+        };
+        reader.readAsDataURL(selectedAdminPdfFile);
+
+    } catch (error) {
+        console.error('Erreur upload PDF:', error);
+        showAlert('Erreur: ' + error.message, 'error');
+    }
+}
+
+// Charger la liste des PDF uploadés par l'admin
+async function loadAdminPDFs() {
+    var container = document.getElementById('adminPdfList');
+    if (!container) return;
+
+    try {
+        var { data, error } = await supabase
+            .from('actu')
+            .select('*')
+            .eq('file_type', 'pdf')
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+            container.innerHTML = '<div class="no-content">Aucun PDF uploadé.</div>';
+            return;
+        }
+
+        container.innerHTML = data.map(function(pdf) {
+            var previewId = 'adminPdfPreview_' + pdf.id;
+            var isAdmin = document.body.classList.contains('admin-mode');
+            
+            var deleteButton = isAdmin ? `
+                <button class="btn-action delete" onclick="deleteAdminPDF(${pdf.id})" style="width:auto;padding:4px 12px;border-radius:4px;">
+                    <i class="fas fa-trash"></i> Supprimer
+                </button>
+            ` : '';
+
+            return `
+                <div class="dashboard-item" style="border-left-color:var(--pdf);">
+                    <div class="item-icon" style="color:var(--pdf);">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="item-info">
+                        <h4>${pdf.file_name || 'Document PDF'}</h4>
+                        <small>
+                            <i class="fas fa-user"></i> ${pdf.author || 'admin'} 
+                            <i class="fas fa-calendar" style="margin-left:10px;"></i> ${new Date(pdf.created_at).toLocaleDateString()}
+                        </small>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-action view" onclick="viewAdminPDF(${pdf.id})" title="Voir le PDF">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <a href="${pdf.file_data}" download="${pdf.file_name || 'document.pdf'}" class="btn-action view" style="background:var(--info);" title="Télécharger">
+                            <i class="fas fa-download"></i>
+                        </a>
+                        ${deleteButton}
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+    } catch (error) {
+        console.error('Erreur chargement PDF:', error);
+        container.innerHTML = '<div class="no-content">❌ Erreur de chargement</div>';
+    }
+}
+
+// Voir un PDF uploadé par l'admin
+function viewAdminPDF(id) {
+    openPDFFullscreen(id);
+}
+
+// Supprimer un PDF uploadé par l'admin
+async function deleteAdminPDF(id) {
+    var t = getLang();
+    
+    if (!document.body.classList.contains('admin-mode')) {
+        showAlert('Vous devez être connecté en tant qu\'admin', 'error');
+        return;
+    }
+
+    if (!confirm('Supprimer définitivement ce PDF ?')) return;
+
+    try {
+        // Récupérer le PDF
+        var { data: pdf, error: fetchError } = await supabase
+            .from('actu')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (fetchError) throw fetchError;
+
+        // Supprimer de la base
+        var { error } = await supabase
+            .from('actu')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+
+        showAlert('✅ PDF supprimé avec succès !', 'success');
+        loadAdminPDFs();
+        loadActu();
+
+    } catch (error) {
+        console.error('Erreur suppression PDF:', error);
+        showAlert('Erreur: ' + error.message, 'error');
+    }
+}
+
+// Ouvrir un PDF en plein écran (version améliorée)
+async function openPDFFullscreen(pdfId) {
+    try {
+        var { data: pdf, error } = await supabase
+            .from('actu')
+            .select('*')
+            .eq('id', pdfId)
+            .single();
+
+        if (error) throw error;
+
+        var viewer = document.getElementById('fileViewer');
+        var content = document.getElementById('viewerContent');
+        var titleEl = document.getElementById('viewerTitle');
+
+        if (titleEl) titleEl.textContent = pdf.file_name || 'Document PDF';
+        if (content) {
+            content.innerHTML = `
+                <iframe src="${pdf.file_data}" style="width:100%;height:70vh;border:none;border-radius:8px;"></iframe>
+                <div class="viewer-actions">
+                    <a href="${pdf.file_data}" download="${pdf.file_name || 'document.pdf'}" style="background:var(--success);color:white;padding:8px 20px;border-radius:50px;text-decoration:none;display:inline-block;">
+                        <i class="fas fa-download"></i> Télécharger
+                    </a>
+                    <button onclick="closeFileViewer()" style="background:var(--danger);color:white;padding:8px 20px;border-radius:50px;border:none;cursor:pointer;margin-left:10px;">
+                        <i class="fas fa-times"></i> Fermer
+                    </button>
+                </div>
+            `;
+        }
+        if (viewer) viewer.classList.add('active');
+        
+    } catch (error) {
+        console.error('Erreur ouverture PDF:', error);
+        showAlert('Erreur: ' + error.message, 'error');
+    }
+}
     </script>
 
 </body>
