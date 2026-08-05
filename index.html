@@ -3883,9 +3883,7 @@
             showAlert(t.alertURLAdded, 'success');
         }
 
- // ============================================================
-// TÉLÉVERSER LES FICHIERS VERS SUPABASE STORAGE
-// ============================================================
+
 // ============================================================
 // TÉLÉVERSER LES FICHIERS VERS SUPABASE STORAGE
 // ============================================================
@@ -3913,16 +3911,18 @@ async function uploadFiles() {
             var isVideo = file.type && file.type.startsWith('video/');
             var isImage = file.type && file.type.startsWith('image/');
             
+            // Déterminer le bucket et la table
             var bucketName = isVideo ? 'videos' : 'gallery';
             var tableName = isVideo ? 'videos' : 'gallery';
             
+            // Générer un nom unique pour le fichier
             var timestamp = Date.now();
             var cleanName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
             var filePath = timestamp + '_' + cleanName;
             
             console.log('📤 Upload vers ' + bucketName + '/' + filePath);
             
-            // 1. Upload vers le bucket
+            // 1. Uploader le fichier vers le bucket Storage
             var { data: storageData, error: storageError } = await supabase
                 .storage
                 .from(bucketName)
@@ -3948,7 +3948,7 @@ async function uploadFiles() {
             var publicUrl = urlData.publicUrl;
             console.log('🔗 URL publique:', publicUrl);
             
-            // 3. Préparer les données
+            // 3. Préparer les données pour la base
             var data = {
                 title: file.name.split('.')[0] || (isVideo ? 'Vidéo' : 'Image') + ' ' + (i + 1),
                 description: 'Uploadé depuis le site ANSFAL',
@@ -3957,14 +3957,16 @@ async function uploadFiles() {
             };
             
             if (isVideo) {
-                data.video_url = publicUrl;
+                data.video_url = publicUrl;  // URL publique, PAS base64 !
+                // Ajouter une vignette si nécessaire
+                data.thumbnail_url = null;
             } else {
                 data.image_url = publicUrl;
             }
             
             console.log('📊 Données à insérer:', data);
             
-            // 4. Insérer dans la base
+            // 4. Insérer dans la base de données
             var { data: result, error: insertError } = await supabase
                 .from(tableName)
                 .insert([data])
@@ -3972,6 +3974,7 @@ async function uploadFiles() {
             
             if (insertError) {
                 console.error('❌ Erreur insertion:', insertError);
+                // Supprimer le fichier du storage si l'insertion échoue
                 await supabase.storage.from(bucketName).remove([filePath]);
                 errors.push(file.name + ': ' + insertError.message);
             } else {
