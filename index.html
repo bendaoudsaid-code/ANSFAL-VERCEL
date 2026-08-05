@@ -4201,34 +4201,35 @@ function extractFilePath(url) {
         }
 
         async function loadContactsFromSupabase() {
-            try {
-                var { data, error } = await supabase
-                    .from('settings')
-                    .select('*')
-                    .eq('key', 'contact_info')
-                    .limit(1);
+    try {
+        var { data, error } = await supabase
+            .from('settings')
+            .select('*')
+            .eq('key', 'contact_info')
+            .limit(1);
 
-                if (error) throw error;
+        if (error) throw error;
 
-                if (data && data.length > 0) {
-                    var contact = data[0].value;
-                    if (contact.phone) {
-                        document.getElementById('contactPhoneValue').textContent = contact.phone;
-                        document.getElementById('editPhone').value = contact.phone;
-                    }
-                    if (contact.email) {
-                        document.getElementById('contactEmailValue').textContent = contact.email;
-                        document.getElementById('editEmail').value = contact.email;
-                    }
-                    if (contact.address) {
-                        document.getElementById('contactLocation').textContent = contact.address;
-                        document.getElementById('editAddress').value = contact.address;
-                    }
-                }
-            } catch (error) {
-                console.error('Erreur chargement contacts:', error);
+        if (data && data.length > 0) {
+            var contact = data[0].value;
+            if (contact.phone) {
+                // ✅ Ajouter <bdi> pour l'affichage en arabe (RTL)
+                document.getElementById('contactPhoneValue').innerHTML = '<bdi>' + contact.phone + '</bdi>';
+                document.getElementById('editPhone').value = contact.phone;
+            }
+            if (contact.email) {
+                document.getElementById('contactEmailValue').innerHTML = '<bdi>' + contact.email + '</bdi>';
+                document.getElementById('editEmail').value = contact.email;
+            }
+            if (contact.address) {
+                document.getElementById('contactLocation').innerHTML = '<bdi>' + contact.address + '</bdi>';
+                document.getElementById('editAddress').value = contact.address;
             }
         }
+    } catch (error) {
+        console.error('Erreur chargement contacts:', error);
+    }
+}
 
         // ============================================================
         // LOGO - STOCKAGE SUPABASE
