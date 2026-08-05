@@ -4212,8 +4212,9 @@ function extractFilePath(url) {
 
         if (data && data.length > 0) {
             var contact = data[0].value;
+            
+            // 1. Mettre à jour l'affichage du numéro
             if (contact.phone) {
-                // ✅ Ajouter <bdi> pour l'affichage en arabe (RTL)
                 document.getElementById('contactPhoneValue').innerHTML = '<bdi>' + contact.phone + '</bdi>';
                 document.getElementById('editPhone').value = contact.phone;
             }
@@ -4224,6 +4225,24 @@ function extractFilePath(url) {
             if (contact.address) {
                 document.getElementById('contactLocation').innerHTML = '<bdi>' + contact.address + '</bdi>';
                 document.getElementById('editAddress').value = contact.address;
+            }
+            
+            // ✅ 2. METTRE À JOUR LE LIEN WHATSAPP
+            if (contact.phone) {
+                var phoneClean = contact.phone.replace(/[^0-9]/g, '');
+                // S'assurer du bon format (212 sans le 0)
+                if (phoneClean.startsWith('212')) {
+                    // Déjà bon
+                } else if (phoneClean.startsWith('0')) {
+                    phoneClean = '212' + phoneClean.substring(1);
+                }
+                
+                var t = getLang();
+                var msg = currentLang === 'fr' ? 'Bonjour, je souhaite avoir plus d\'informations sur vos projets et actions à ANSFAL' :
+                    'مرحباً، أود الحصول على معلومات حول جمعية أنسفال';
+                
+                document.getElementById('whatsappBtn').href = 'https://wa.me/' + phoneClean + '?text=' + encodeURIComponent(msg);
+                console.log('✅ WhatsApp mis à jour avec le numéro:', phoneClean);
             }
         }
     } catch (error) {
