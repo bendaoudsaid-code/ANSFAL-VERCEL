@@ -3184,6 +3184,8 @@
     }
 
     try {
+        console.log('🔄 Chargement des actualités...');
+        
         var { data, error } = await supabase
             .from('actu')
             .select('*')
@@ -3197,9 +3199,15 @@
         console.log('📊 Données reçues:', data ? data.length : 0);
         console.log('👑 Mode admin:', isAdmin);
 
-        // ✅ Si admin : afficher TOUT (y compris les brouillons)
-        // ✅ Si visiteur : afficher uniquement les publiés
-        var filtered = isAdmin ? data : (data || []).filter(function(item) { return item.status === 'published'; });
+        // 🔥 SIMPLIFICATION : Si admin, tout afficher. Sinon, seulement publiés.
+        var filtered = [];
+        if (isAdmin) {
+            filtered = data || [];
+        } else {
+            filtered = (data || []).filter(function(item) { 
+                return item.status === 'published'; 
+            });
+        }
 
         console.log('📊 Filtrés:', filtered ? filtered.length : 0);
 
@@ -3208,11 +3216,13 @@
             return;
         }
 
-        container.innerHTML = filtered.map(function(item) {
+        var html = '';
+        for (var i = 0; i < filtered.length; i++) {
+            var item = filtered[i];
             var isRTL = document.body.classList.contains('rtl');
             var text = isRTL ? (item.text_ar || item.text_fr) : (item.text_fr || item.text_ar);
 
-            // ✅ CORRECTION : Si c'est un PDF et qu'il n'y a pas de texte, utiliser le nom du fichier
+            // Si c'est un PDF et qu'il n'y a pas de texte, utiliser le nom du fichier
             if (item.file_type === 'pdf' && !text) {
                 text = '📄 ' + (item.file_name || 'Document PDF');
             }
@@ -3256,7 +3266,7 @@
                 </div>
             ` : '';
 
-            return `
+            html += `
                 <div class="actu-item" data-id="${item.id}">
                     <div class="actu-text">${text || ''}</div>
                     ${fileHtml}
@@ -3269,16 +3279,16 @@
                     ${adminActions}
                 </div>
             `;
-        }).join('');
+        }
 
-        console.log('✅ HTML généré avec succès');
+        container.innerHTML = html;
+        console.log('✅ HTML généré avec succès, ' + filtered.length + ' éléments affichés');
 
     } catch (error) {
         console.error('❌ Erreur chargement actu:', error);
         container.innerHTML = '<div class="no-content">❌ Erreur de chargement: ' + error.message + '</div>';
     }
 }
-
         // ============================================================
         // FONCTIONS POUR LES PDF
         // ============================================================
