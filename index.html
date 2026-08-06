@@ -10,18 +10,14 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <!-- Supabase JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
     <style>
         /* ============================================================
            STYLES COMPLETS
            ============================================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         :root {
             --primary: #1a6d2c;
             --secondary: #2e8b57;
@@ -30,7 +26,7 @@
             --dark: #145a32;
             --text: #333;
             --white: #fff;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
             --success: #4caf50;
             --danger: #f44336;
             --info: #2196F3;
@@ -44,6 +40,7 @@
             --gold: #f1c40f;
             --ticker-speed: 20s;
         }
+
         body {
             font-family: 'Roboto', 'Cairo', sans-serif;
             line-height: 1.6;
@@ -52,37 +49,16 @@
             transition: all 0.3s ease;
             padding-top: 130px;
         }
-        body.rtl {
-            direction: rtl;
-            text-align: right;
-        }
-        body.rtl .language-switcher {
-            right: auto;
-            left: 15px;
-        }
-        body.rtl .dropdown-content {
-            left: auto;
-            right: 0;
-        }
-        body.rtl .sidebar-menu i {
-            margin-right: 0;
-            margin-left: 10px;
-        }
-        body.rtl .ticker-content {
-            animation: ticker-rtl var(--ticker-speed) linear infinite;
-        }
-        body.rtl .ticker-track {
-            direction: rtl;
-        }
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        .hidden {
-            display: none !important;
-        }
+
+        body.rtl { direction: rtl; text-align: right; }
+        body.rtl .language-switcher { right: auto; left: 15px; }
+        body.rtl .dropdown-content { left: auto; right: 0; }
+        body.rtl .sidebar-menu i { margin-right: 0; margin-left: 10px; }
+        body.rtl .ticker-content { animation: ticker-rtl var(--ticker-speed) linear infinite; }
+        body.rtl .ticker-track { direction: rtl; }
+
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .hidden { display: none !important; }
 
         /* ============================================================
            COMPTEUR VISITEURS
@@ -99,19 +75,8 @@
             left: 0;
             z-index: 1000;
         }
-        .visitor-counter .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .visitor-count {
-            font-weight: bold;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 2px 12px;
-            border-radius: 10px;
-        }
+        .visitor-counter .container { display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; }
+        .visitor-count { font-weight: bold; background: rgba(255,255,255,0.2); padding: 2px 12px; border-radius: 10px; }
 
         /* ============================================================
            BARRE D'AUTH
@@ -129,48 +94,20 @@
             align-items: center;
             z-index: 999;
         }
-        .auth-form {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
+        .auth-form { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
         .auth-form input {
             padding: 5px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255,255,255,0.3);
             border-radius: 6px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.1);
             color: white;
             font-size: 13px;
             min-width: 130px;
         }
-        .auth-form input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-        .auth-form button {
-            background: var(--success);
-            color: white;
-            border: none;
-            padding: 5px 18px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .logout-btn {
-            background: var(--danger);
-            color: white;
-            border: none;
-            padding: 5px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+        .auth-form input::placeholder { color: rgba(255,255,255,0.7); }
+        .auth-form button { background: var(--success); color: white; border: none; padding: 5px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .user-info { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .logout-btn { background: var(--danger); color: white; border: none; padding: 5px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
         /* ============================================================
            SÉLECTEUR DE LANGUE
@@ -194,14 +131,8 @@
             font-weight: 600;
             transition: all 0.3s;
         }
-        .lang-btn.active {
-            background: var(--dark);
-            box-shadow: 0 0 0 2px var(--accent);
-        }
-        .lang-btn:hover {
-            background: var(--secondary);
-            transform: scale(1.05);
-        }
+        .lang-btn.active { background: var(--dark); box-shadow: 0 0 0 2px var(--accent); }
+        .lang-btn:hover { background: var(--secondary); transform: scale(1.05); }
 
         /* ============================================================
            TICKER DÉFILANT
@@ -216,52 +147,22 @@
             padding: 6px 0;
             z-index: 997;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
-        .ticker-track {
-            display: flex;
-            white-space: nowrap;
-            overflow: hidden;
-        }
+        .ticker-track { display: flex; white-space: nowrap; overflow: hidden; }
         .ticker-content {
             display: inline-flex;
             gap: 60px;
             animation: ticker-ltr var(--ticker-speed) linear infinite;
             padding-left: 100%;
         }
-        .ticker-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-        .ticker-item i {
-            font-size: 1rem;
-        }
-        .ticker-item .sep {
-            color: rgba(255, 255, 255, 0.4);
-            margin: 0 10px;
-        }
-        @keyframes ticker-ltr {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-100%);
-            }
-        }
-        @keyframes ticker-rtl {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(100%);
-            }
-        }
-        body.rtl .ticker-content {
-            animation: ticker-rtl var(--ticker-speed) linear infinite;
-        }
+        .ticker-item { display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 500; }
+        .ticker-item i { font-size: 1rem; }
+        .ticker-item .sep { color: rgba(255,255,255,0.4); margin: 0 10px; }
+
+        @keyframes ticker-ltr { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        @keyframes ticker-rtl { 0% { transform: translateX(0); } 100% { transform: translateX(100%); } }
+        body.rtl .ticker-content { animation: ticker-rtl var(--ticker-speed) linear infinite; }
 
         /* ============================================================
            HEADER AVEC TÉLÉPHONE ET LOGO ARABE
@@ -274,13 +175,8 @@
             top: 72px;
             z-index: 998;
         }
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            flex-wrap: wrap;
-        }
+        .header-container { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; flex-wrap: wrap; }
+        
         .logo {
             display: flex;
             flex-direction: column;
@@ -296,10 +192,7 @@
             align-items: center;
             gap: 5px;
         }
-        .logo .logo-phone i {
-            font-size: 0.85rem;
-            color: var(--whatsapp);
-        }
+        .logo .logo-phone i { font-size: 0.85rem; color: var(--whatsapp); }
         .logo .logo-main {
             display: flex;
             align-items: center;
@@ -321,16 +214,9 @@
             margin-top: -4px;
             font-family: 'Cairo', sans-serif;
         }
-        body.rtl .logo .logo-phone {
-            direction: rtl;
-        }
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 3px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
+        body.rtl .logo .logo-phone { direction: rtl; }
+
+        nav ul { display: flex; list-style: none; gap: 3px; flex-wrap: wrap; justify-content: center; }
         nav a {
             text-decoration: none;
             color: var(--text);
@@ -344,24 +230,16 @@
             align-items: center;
             gap: 4px;
         }
-        nav a:hover {
-            color: var(--primary);
-            background: rgba(26, 109, 44, 0.08);
-        }
-        nav a.active {
-            color: var(--primary);
-            background: rgba(26, 109, 44, 0.12);
-        }
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
+        nav a:hover { color: var(--primary); background: rgba(26,109,44,0.08); }
+        nav a.active { color: var(--primary); background: rgba(26,109,44,0.12); }
+
+        .dropdown { position: relative; display: inline-block; }
         .dropdown-content {
             display: none;
             position: absolute;
             background-color: var(--white);
             min-width: 200px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
             border-radius: 8px;
             z-index: 100;
             top: 100%;
@@ -376,75 +254,34 @@
             font-size: 0.78rem;
             border-radius: 0;
         }
-        .dropdown-content a:hover {
-            background: var(--light);
-            color: var(--primary);
-        }
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-        .dropdown:hover .dropbtn {
-            background: rgba(26, 109, 44, 0.08);
-            color: var(--primary);
-        }
+        .dropdown-content a:hover { background: var(--light); color: var(--primary); }
+        .dropdown:hover .dropdown-content { display: block; }
+        .dropdown:hover .dropbtn { background: rgba(26,109,44,0.08); color: var(--primary); }
 
         /* ============================================================
            SECTIONS
            ============================================================ */
-        section {
-            padding: 40px 0;
-            display: none;
-        }
-        section.active {
-            display: block;
-        }
-        .section-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .section-header h2 {
-            font-size: 1.8rem;
-        }
-        .section-header h2:after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background: var(--accent);
-            margin: 10px auto 0;
-        }
-        .section-header p {
-            color: #666;
-            margin-top: 8px;
-        }
+        section { padding: 40px 0; display: none; }
+        section.active { display: block; }
+        .section-header { text-align: center; margin-bottom: 30px; }
+        .section-header h2 { font-size: 1.8rem; }
+        .section-header h2:after { content: ''; display: block; width: 60px; height: 4px; background: var(--accent); margin: 10px auto 0; }
+        .section-header p { color: #666; margin-top: 8px; }
 
         /* ============================================================
            HERO
            ============================================================ */
         .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
             background-size: cover;
             background-position: center;
             color: var(--white);
             text-align: center;
             padding: 120px 0 60px;
         }
-        .hero h2 {
-            font-size: 2.5rem;
-            color: var(--white);
-            font-family: 'Cairo', sans-serif;
-        }
-        .hero h3 {
-            font-size: 1.4rem;
-            color: rgba(255, 255, 255, 0.9);
-            font-family: 'Cairo', sans-serif;
-        }
-        .hero p {
-            font-size: 1rem;
-            max-width: 700px;
-            margin: 0 auto 20px;
-            color: rgba(255, 255, 255, 0.85);
-        }
+        .hero h2 { font-size: 2.5rem; color: var(--white); font-family: 'Cairo', sans-serif; }
+        .hero h3 { font-size: 1.4rem; color: rgba(255,255,255,0.9); font-family: 'Cairo', sans-serif; }
+        .hero p { font-size: 1rem; max-width: 700px; margin: 0 auto 20px; color: rgba(255,255,255,0.85); }
         .hero .hero-phone {
             font-size: 1.2rem;
             color: var(--whatsapp);
@@ -454,16 +291,9 @@
             align-items: center;
             gap: 10px;
         }
-        .hero .hero-phone i {
-            font-size: 1.5rem;
-        }
-        .hero-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 20px;
-        }
+        .hero .hero-phone i { font-size: 1.5rem; }
+        .hero-buttons { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 20px; }
+
         .btn {
             display: inline-block;
             background: var(--accent);
@@ -476,22 +306,10 @@
             border: 2px solid var(--accent);
             cursor: pointer;
         }
-        .btn:hover {
-            background: transparent;
-            color: var(--accent);
-        }
-        .btn-secondary {
-            background: var(--info);
-            border-color: var(--info);
-        }
-        .btn-secondary:hover {
-            background: transparent;
-            color: var(--info);
-        }
-        .btn-sm {
-            padding: 5px 14px;
-            font-size: 0.8rem;
-        }
+        .btn:hover { background: transparent; color: var(--accent); }
+        .btn-secondary { background: var(--info); border-color: var(--info); }
+        .btn-secondary:hover { background: transparent; color: var(--info); }
+        .btn-sm { padding: 5px 14px; font-size: 0.8rem; }
 
         /* ============================================================
            MENU GRID
@@ -510,56 +328,17 @@
             transition: all 0.3s;
             border-left: 5px solid var(--primary);
         }
-        .menu-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-        .menu-card .card-icon {
-            font-size: 2.2rem;
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-        .menu-card h3 {
-            color: var(--dark);
-            margin-bottom: 6px;
-            font-size: 1.1rem;
-        }
-        .menu-card p {
-            color: #666;
-            font-size: 0.9rem;
-        }
-        .menu-card .card-badge {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 15px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-        .badge-green {
-            background: var(--light);
-            color: var(--primary);
-        }
-        .badge-orange {
-            background: #fef5e7;
-            color: var(--orange);
-        }
-        .badge-purple {
-            background: #f4ecf7;
-            color: var(--purple);
-        }
-        .badge-teal {
-            background: #eafaf1;
-            color: var(--teal);
-        }
-        .badge-red {
-            background: #fdedec;
-            color: var(--red);
-        }
-        .badge-gold {
-            background: #fef9e7;
-            color: var(--gold);
-        }
+        .menu-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+        .menu-card .card-icon { font-size: 2.2rem; color: var(--primary); margin-bottom: 10px; }
+        .menu-card h3 { color: var(--dark); margin-bottom: 6px; font-size: 1.1rem; }
+        .menu-card p { color: #666; font-size: 0.9rem; }
+        .menu-card .card-badge { display: inline-block; padding: 2px 10px; border-radius: 15px; font-size: 0.65rem; font-weight: 600; margin-top: 8px; }
+        .badge-green { background: var(--light); color: var(--primary); }
+        .badge-orange { background: #fef5e7; color: var(--orange); }
+        .badge-purple { background: #f4ecf7; color: var(--purple); }
+        .badge-teal { background: #eafaf1; color: var(--teal); }
+        .badge-red { background: #fdedec; color: var(--red); }
+        .badge-gold { background: #fef9e7; color: var(--gold); }
 
         /* ============================================================
            TABLEAUX
@@ -573,25 +352,10 @@
             overflow: hidden;
             box-shadow: var(--shadow);
         }
-        .data-table th {
-            background: var(--primary);
-            color: white;
-            padding: 10px 14px;
-            text-align: left;
-            font-size: 0.9rem;
-        }
-        .data-table td {
-            padding: 8px 14px;
-            border-bottom: 1px solid #eee;
-            font-size: 0.9rem;
-        }
-        .data-table tr:hover {
-            background: var(--light);
-        }
-        body.rtl .data-table th,
-        body.rtl .data-table td {
-            text-align: right;
-        }
+        .data-table th { background: var(--primary); color: white; padding: 10px 14px; text-align: left; font-size: 0.9rem; }
+        .data-table td { padding: 8px 14px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        .data-table tr:hover { background: var(--light); }
+        body.rtl .data-table th, body.rtl .data-table td { text-align: right; }
 
         /* ============================================================
            DASHBOARD - MASQUÉ POUR LE PUBLIC
@@ -600,11 +364,12 @@
             background: #f5f5f5;
             min-height: 100vh;
             padding-top: 10px;
-            display: none !important;
+            display: none !important; /* Masqué par défaut */
         }
         .dashboard-section.visible {
-            display: block !important;
+            display: block !important; /* Visible uniquement pour les admins */
         }
+
         .dashboard-container {
             display: grid;
             grid-template-columns: 200px 1fr;
@@ -620,12 +385,8 @@
             padding: 15px 0;
             border-radius: 0 10px 10px 0;
         }
-        .sidebar-menu {
-            list-style: none;
-        }
-        .sidebar-menu li {
-            margin-bottom: 2px;
-        }
+        .sidebar-menu { list-style: none; }
+        .sidebar-menu li { margin-bottom: 2px; }
         .sidebar-menu a {
             display: block;
             padding: 8px 16px;
@@ -636,19 +397,10 @@
             cursor: pointer;
             font-size: 0.82rem;
         }
-        .sidebar-menu a:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-left-color: var(--accent);
-        }
-        .sidebar-menu a.active {
-            background: rgba(255, 255, 255, 0.15);
-            border-left-color: var(--accent);
-            font-weight: bold;
-        }
-        .sidebar-menu i {
-            width: 18px;
-            margin-right: 8px;
-        }
+        .sidebar-menu a:hover { background: rgba(255,255,255,0.1); border-left-color: var(--accent); }
+        .sidebar-menu a.active { background: rgba(255,255,255,0.15); border-left-color: var(--accent); font-weight: bold; }
+        .sidebar-menu i { width: 18px; margin-right: 8px; }
+
         .dashboard-content {
             padding: 20px;
             background: var(--white);
@@ -662,12 +414,9 @@
             padding-bottom: 10px;
             border-bottom: 2px solid var(--accent);
         }
-        .dashboard-section-content {
-            display: none;
-        }
-        .dashboard-section-content.active {
-            display: block;
-        }
+        .dashboard-section-content { display: none; }
+        .dashboard-section-content.active { display: block; }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -681,14 +430,9 @@
             text-align: center;
             border-left: 4px solid var(--primary);
         }
-        .stat-card h3 {
-            font-size: 0.9rem;
-        }
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary);
-        }
+        .stat-card h3 { font-size: 0.9rem; }
+        .stat-number { font-size: 24px; font-weight: bold; color: var(--primary); }
+
         .section-actions {
             display: flex;
             gap: 10px;
@@ -708,10 +452,8 @@
             align-items: center;
             gap: 6px;
         }
-        .btn-import:hover {
-            opacity: 0.9;
-            transform: scale(1.02);
-        }
+        .btn-import:hover { opacity: 0.9; transform: scale(1.02); }
+
         .items-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -737,17 +479,9 @@
             background: white;
             border-radius: 10px;
         }
-        .item-info {
-            flex-grow: 1;
-        }
-        .item-info h4 {
-            font-size: 0.85rem;
-            color: var(--dark);
-        }
-        .item-info small {
-            color: #666;
-            font-size: 0.65rem;
-        }
+        .item-info { flex-grow: 1; }
+        .item-info h4 { font-size: 0.85rem; color: var(--dark); }
+        .item-info small { color: #666; font-size: 0.65rem; }
         .btn-action {
             width: 28px;
             height: 28px;
@@ -760,21 +494,10 @@
             justify-content: center;
             font-size: 0.7rem;
         }
-        .btn-action.delete {
-            background: var(--danger);
-        }
-        .btn-action.edit {
-            background: var(--info);
-        }
-        .btn-action.view {
-            background: var(--success);
-        }
-        .no-content {
-            color: #888;
-            font-style: italic;
-            text-align: center;
-            padding: 20px;
-        }
+        .btn-action.delete { background: var(--danger); }
+        .btn-action.edit { background: var(--info); }
+        .btn-action.view { background: var(--success); }
+        .no-content { color: #888; font-style: italic; text-align: center; padding: 20px; }
 
         /* ============================================================
            DOCUMENTS ASSOCIATION - Visible uniquement pour les admins
@@ -800,31 +523,20 @@
             gap: 25px;
             margin-bottom: 20px;
         }
-        .social-icons {
-            display: flex;
-            gap: 10px;
-        }
+        .social-icons { display: flex; gap: 10px; }
         .social-icons a {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             width: 34px;
             height: 34px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.1);
             border-radius: 50%;
             color: var(--white);
             transition: all 0.3s;
         }
-        .social-icons a:hover {
-            background: var(--accent);
-            transform: translateY(-4px);
-        }
-        .copyright {
-            text-align: center;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.8rem;
-        }
+        .social-icons a:hover { background: var(--accent); transform: translateY(-4px); }
+        .copyright { text-align: center; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; }
 
         /* ============================================================
            ÉLÉMENTS FLOTTANTS
@@ -844,11 +556,9 @@
             font-size: 1.4rem;
             z-index: 1000;
             text-decoration: none;
-            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+            box-shadow: 0 4px 12px rgba(37,211,102,0.3);
         }
-        .whatsapp-float:hover {
-            transform: scale(1.1);
-        }
+        .whatsapp-float:hover { transform: scale(1.1); }
         .login-btn {
             position: fixed;
             bottom: 20px;
@@ -878,19 +588,11 @@
             cursor: pointer;
             z-index: 1000;
             display: none;
-            box-shadow: 0 3px 10px rgba(39, 174, 96, 0.3);
+            box-shadow: 0 3px 10px rgba(39,174,96,0.3);
         }
-        .admin-mode .btn-add-float {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .admin-mode .dashboard-section {
-            display: block !important;
-        }
-        .admin-mode .documents-admin {
-            display: block;
-        }
+        .admin-mode .btn-add-float { display: flex; align-items: center; justify-content: center; }
+        .admin-mode .dashboard-section { display: block !important; }
+        .admin-mode .documents-admin { display: block; }
 
         /* ============================================================
            MODALES
@@ -901,16 +603,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0,0,0,0.8);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 3000;
             padding: 20px;
         }
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
         .modal {
             background: white;
             border-radius: 20px;
@@ -928,44 +628,19 @@
             justify-content: space-between;
             align-items: center;
         }
-        .modal-title {
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .close-modal {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.6rem;
-            cursor: pointer;
-        }
-        .modal-body {
-            padding: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 4px;
-            font-weight: 500;
-            color: var(--dark);
-        }
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
+        .modal-title { font-size: 1.2rem; display: flex; align-items: center; gap: 8px; }
+        .close-modal { background: none; border: none; color: white; font-size: 1.6rem; cursor: pointer; }
+        .modal-body { padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 4px; font-weight: 500; color: var(--dark); }
+        .form-group input, .form-group textarea, .form-group select {
             width: 100%;
             padding: 8px 12px;
             border: 2px solid #ddd;
             border-radius: 8px;
             font-size: 0.95rem;
         }
-        .form-group textarea {
-            height: 120px;
-            resize: vertical;
-        }
+        .form-group textarea { height: 120px; resize: vertical; }
         .upload-actions {
             display: flex;
             gap: 10px;
@@ -985,18 +660,10 @@
             color: white;
             font-weight: 600;
         }
-        .btn-browse.danger {
-            background: var(--danger);
-        }
-        .btn-browse.success {
-            background: var(--success);
-        }
-        .btn-browse.primary {
-            background: var(--primary);
-        }
-        .btn-browse.info {
-            background: var(--info);
-        }
+        .btn-browse.danger { background: var(--danger); }
+        .btn-browse.success { background: var(--success); }
+        .btn-browse.primary { background: var(--primary); }
+        .btn-browse.info { background: var(--info); }
 
         /* ============================================================
            ALERTES
@@ -1011,134 +678,49 @@
             max-width: 300px;
             font-weight: 500;
             animation: slideIn 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-        .alert.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-        .alert.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        .alert.info {
-            background: #d1ecf1;
-            color: #0c5460;
-            border: 1px solid #bee5eb;
-        }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .alert.success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .alert.error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .alert.info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
 
         /* ============================================================
            RESPONSIVE
            ============================================================ */
         @media (max-width: 1024px) {
-            nav ul {
-                gap: 2px;
-            }
-            nav a {
-                font-size: 0.7rem;
-                padding: 3px 6px;
-            }
-            .dashboard-container {
-                grid-template-columns: 1fr;
-            }
-            .dashboard-sidebar {
-                border-radius: 0;
-            }
+            nav ul { gap: 2px; }
+            nav a { font-size: 0.7rem; padding: 3px 6px; }
+            .dashboard-container { grid-template-columns: 1fr; }
+            .dashboard-sidebar { border-radius: 0; }
         }
         @media (max-width: 768px) {
-            .header-container {
-                flex-direction: column;
-                gap: 6px;
-            }
-            .auth-bar {
-                flex-direction: column;
-                gap: 5px;
-                padding: 5px 12px;
-            }
-            .auth-form {
-                flex-direction: column;
-                width: 100%;
-            }
-            .auth-form input {
-                width: 100%;
-                min-width: auto;
-            }
-            .user-info {
-                flex-direction: column;
-                gap: 5px;
-                width: 100%;
-            }
-            .footer-container {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            .social-icons {
-                justify-content: center;
-            }
-            .hero h2 {
-                font-size: 1.8rem;
-            }
-            .menu-grid {
-                grid-template-columns: 1fr;
-            }
-            .language-switcher {
-                top: 78px;
-                right: 8px;
-            }
-            .dropdown-content {
-                position: static;
-                box-shadow: none;
-                background: var(--light);
-                border-radius: 0;
-            }
-            .ticker-item {
-                font-size: 0.8rem;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .items-grid {
-                grid-template-columns: 1fr;
-            }
-            .logo .logo-main i {
-                font-size: 1.5rem;
-            }
-            .logo-text h1 {
-                font-size: 1.1rem;
-            }
-            .logo-text p {
-                font-size: 0.6rem;
-            }
-            .logo .logo-phone {
-                font-size: 0.7rem;
-            }
+            .header-container { flex-direction: column; gap: 6px; }
+            .auth-bar { flex-direction: column; gap: 5px; padding: 5px 12px; }
+            .auth-form { flex-direction: column; width: 100%; }
+            .auth-form input { width: 100%; min-width: auto; }
+            .user-info { flex-direction: column; gap: 5px; width: 100%; }
+            .footer-container { grid-template-columns: 1fr; text-align: center; }
+            .social-icons { justify-content: center; }
+            .hero h2 { font-size: 1.8rem; }
+            .menu-grid { grid-template-columns: 1fr; }
+            .language-switcher { top: 78px; right: 8px; }
+            .dropdown-content { position: static; box-shadow: none; background: var(--light); border-radius: 0; }
+            .ticker-item { font-size: 0.8rem; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .items-grid { grid-template-columns: 1fr; }
+            .logo .logo-main i { font-size: 1.5rem; }
+            .logo-text h1 { font-size: 1.1rem; }
+            .logo-text p { font-size: 0.6rem; }
+            .logo .logo-phone { font-size: 0.7rem; }
         }
         @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            .data-table {
-                font-size: 0.75rem;
-            }
-            .data-table th,
-            .data-table td {
-                padding: 5px 8px;
-            }
+            .stats-grid { grid-template-columns: 1fr; }
+            .data-table { font-size: 0.75rem; }
+            .data-table th, .data-table td { padding: 5px 8px; }
         }
 
         /* ============================================================
@@ -1151,15 +733,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0,0,0,0.9);
             z-index: 2000;
             justify-content: center;
             align-items: center;
             padding: 20px;
         }
-        .file-viewer.active {
-            display: flex;
-        }
+        .file-viewer.active { display: flex; }
         .file-viewer-content {
             background: white;
             border-radius: 15px;
@@ -1175,142 +755,9 @@
             justify-content: space-between;
             align-items: center;
         }
-        .file-viewer-body {
-            padding: 15px;
-            text-align: center;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-        .file-viewer-body img {
-            max-width: 100%;
-            max-height: 60vh;
-            border-radius: 8px;
-        }
-        .close-viewer {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.4rem;
-            cursor: pointer;
-        }
-
-        /* Spinner */
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Galerie publique */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 18px;
-            margin-top: 20px;
-        }
-        .gallery-item {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            aspect-ratio: 4/3;
-            cursor: pointer;
-            position: relative;
-        }
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-        .gallery-item:hover img {
-            transform: scale(1.05);
-        }
-        .gallery-item .gallery-title {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.6);
-            color: white;
-            padding: 8px 12px;
-            font-size: 0.9rem;
-        }
-
-        /* Vidéos publiques */
-        .videos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 18px;
-            margin-top: 20px;
-        }
-        .video-item {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            aspect-ratio: 16/9;
-            background: #000;
-        }
-        .video-item iframe,
-        .video-item video {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        .video-title {
-            margin-top: 8px;
-            font-weight: 500;
-            color: var(--dark);
-        }
-
-        /* Articles / Projets */
-        .articles-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .article-card {
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 20px;
-            background: var(--white);
-            box-shadow: var(--shadow);
-            transition: transform 0.3s;
-        }
-        .article-card:hover {
-            transform: translateY(-5px);
-        }
-        .article-card h3 {
-            color: var(--primary);
-            margin: 0 0 10px 0;
-        }
-        .article-card p {
-            color: #666;
-            font-size: 0.95rem;
-        }
-        .article-card .article-meta {
-            color: #999;
-            font-size: 0.8rem;
-            margin-top: 10px;
-            display: block;
-        }
-        .article-card img {
-            max-width: 100%;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
+        .file-viewer-body { padding: 15px; text-align: center; max-height: 70vh; overflow-y: auto; }
+        .file-viewer-body img { max-width: 100%; max-height: 60vh; border-radius: 8px; }
+        .close-viewer { background: none; border: none; color: white; font-size: 1.4rem; cursor: pointer; }
     </style>
 </head>
 
@@ -1356,7 +803,7 @@
     <div class="ticker-wrapper" id="tickerWrapper">
         <div class="ticker-track">
             <div class="ticker-content" id="tickerContent">
-                <span class="ticker-item"><i class="fas fa-spinner fa-spin"></i> Chargement...</span>
+                <!-- Rempli dynamiquement par JavaScript -->
             </div>
         </div>
     </div>
@@ -1368,7 +815,7 @@
         <div class="container header-container">
             <div class="logo">
                 <div class="logo-phone" id="headerPhone">
-                    <i class="fas fa-phone"></i>
+                    <i class="fas fa-phone"></i> 
                     <span id="headerPhoneNumber">06 25 93 13 19</span>
                     <i class="fas fa-whatsapp" style="color:#25D366;"></i>
                 </div>
@@ -1380,18 +827,19 @@
                     </div>
                 </div>
             </div>
-
+            
             <nav>
                 <ul id="mainMenu">
                     <li><a href="#" class="active" onclick="showSection('home')" id="menuHome"><i class="fas fa-home"></i> <span id="menuHomeText">Accueil</span></a></li>
                     <li><a href="#" onclick="showSection('about')" id="menuAbout"><i class="fas fa-info-circle"></i> <span id="menuAboutText">À propos</span></a></li>
-
+                    
                     <li class="dropdown">
                         <a href="#" class="dropbtn" id="menuAssociation"><i class="fas fa-users"></i> <span id="menuAssociationText">Association</span> <i class="fas fa-caret-down"></i></a>
                         <div class="dropdown-content">
                             <a href="#" onclick="showSection('conseil')"><i class="fas fa-users-cog"></i> <span id="menuConseilText">Conseil de l'association</span></a>
                             <a href="#" onclick="showSection('adherents')"><i class="fas fa-user-plus"></i> <span id="menuAdherentsText">Habitants adhérents</span></a>
                             <a href="#" onclick="showSection('documents')"><i class="fas fa-file-pdf"></i> <span id="menuDocumentsText">Documents association</span></a>
+                            <!-- Documents ADMIN - visible uniquement après connexion -->
                             <a href="#" onclick="showSection('documents-admin')" class="documents-admin" id="menuDocumentsAdmin"><i class="fas fa-lock"></i> <span id="menuDocumentsAdminText">📄 Documents Admin</span></a>
                         </div>
                     </li>
@@ -1420,7 +868,8 @@
                     <li><a href="#" onclick="showSection('videos')" id="menuVideos"><i class="fas fa-video"></i> <span id="menuVideosText">Vidéos</span></a></li>
                     <li><a href="#" onclick="showSection('projects')" id="menuProjects"><i class="fas fa-project-diagram"></i> <span id="menuProjectsText">Projets</span></a></li>
                     <li><a href="#" onclick="showSection('contact')" id="menuContact"><i class="fas fa-envelope"></i> <span id="menuContactText">Contact</span></a></li>
-                    <li><a href="#" onclick="showSection('dashboard')" id="menuDashboard" class="dashboard-admin hidden"><i class="fas fa-tachometer-alt"></i> <span id="menuDashboardText">Dashboard</span></a></li>
+                    <!-- Dashboard - visible uniquement pour les admins -->
+                    <li><a href="#" onclick="showSection('dashboard')" id="menuDashboard" class="dashboard-admin"><i class="fas fa-tachometer-alt"></i> <span id="menuDashboardText">Dashboard</span></a></li>
                 </ul>
             </nav>
         </div>
@@ -1471,129 +920,78 @@
                 <p id="docAdminSubtitle">Espace réservé aux administrateurs de l'association</p>
             </div>
             <div class="menu-grid" id="documentsAdminGrid">
-                <div class="spinner"></div>
+                <div class="menu-card" style="border-left-color:var(--red);">
+                    <div class="card-icon" style="color:var(--red);"><i class="fas fa-file-pdf"></i></div>
+                    <h3 id="docAdmin1Title">Statuts de l'association</h3>
+                    <p id="docAdmin1Desc">Document officiel des statuts d'ANSFAL - Version 2023</p>
+                    <a href="#" class="btn btn-sm" style="padding:6px 18px;font-size:0.8rem;margin-top:10px;">
+                        <i class="fas fa-download"></i> <span id="docAdmin1Btn">Télécharger</span>
+                    </a>
+                </div>
+                <div class="menu-card" style="border-left-color:var(--orange);">
+                    <div class="card-icon" style="color:var(--orange);"><i class="fas fa-file-pdf"></i></div>
+                    <h3 id="docAdmin2Title">Règlement intérieur</h3>
+                    <p id="docAdmin2Desc">Règles de fonctionnement interne de l'association</p>
+                    <a href="#" class="btn btn-sm" style="padding:6px 18px;font-size:0.8rem;margin-top:10px;">
+                        <i class="fas fa-download"></i> <span id="docAdmin2Btn">Télécharger</span>
+                    </a>
+                </div>
+                <div class="menu-card" style="border-left-color:var(--teal);">
+                    <div class="card-icon" style="color:var(--teal);"><i class="fas fa-file-pdf"></i></div>
+                    <h3 id="docAdmin3Title">Rapport d'activité 2024</h3>
+                    <p id="docAdmin3Desc">Bilan complet des actions réalisées en 2024</p>
+                    <a href="#" class="btn btn-sm" style="padding:6px 18px;font-size:0.8rem;margin-top:10px;">
+                        <i class="fas fa-download"></i> <span id="docAdmin3Btn">Télécharger</span>
+                    </a>
+                </div>
+                <div class="menu-card" style="border-left-color:var(--purple);">
+                    <div class="card-icon" style="color:var(--purple);"><i class="fas fa-file-pdf"></i></div>
+                    <h3 id="docAdmin4Title">Plan stratégique 2024-2026</h3>
+                    <p id="docAdmin4Desc">Vision et objectifs stratégiques à moyen terme</p>
+                    <a href="#" class="btn btn-sm" style="padding:6px 18px;font-size:0.8rem;margin-top:10px;">
+                        <i class="fas fa-download"></i> <span id="docAdmin4Btn">Télécharger</span>
+                    </a>
+                </div>
+                <div class="menu-card" style="border-left-color:var(--gold);">
+                    <div class="card-icon" style="color:var(--gold);"><i class="fas fa-file-pdf"></i></div>
+                    <h3 id="docAdmin5Title">PV des réunions</h3>
+                    <p id="docAdmin5Desc">Procès-verbaux des assemblées générales</p>
+                    <a href="#" class="btn btn-sm" style="padding:6px 18px;font-size:0.8rem;margin-top:10px;">
+                        <i class="fas fa-download"></i> <span id="docAdmin5Btn">Télécharger</span>
+                    </a>
+                </div>
+                <div class="menu-card" style="border-left-color:var(--info);">
+                    <div class="card-icon" style="color:var(--info);"><i class="fas fa-file-pdf"></i></div>
+                    <h3 id="docAdmin6Title">Budget prévisionnel 2025</h3>
+                    <p id="docAdmin6Desc">Prévision budgétaire pour l'exercice 2025</p>
+                    <a href="#" class="btn btn-sm" style="padding:6px 18px;font-size:0.8rem;margin-top:10px;">
+                        <i class="fas fa-download"></i> <span id="docAdmin6Btn">Télécharger</span>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- CONSEIL -->
-    <section id="conseil">
-        <div class="container">
-            <div class="section-header"><h2 id="conseilTitle"><i class="fas fa-users-cog"></i> Conseil de l'association</h2></div>
-            <div class="menu-grid" id="conseilGrid"></div>
-        </div>
-    </section>
-
-    <!-- ADHERENTS -->
-    <section id="adherents">
-        <div class="container">
-            <div class="section-header"><h2 id="adherentsTitle"><i class="fas fa-user-plus"></i> Habitants adhérents</h2></div>
-            <table class="data-table" id="adherentsTable">
-                <thead><tr><th>Nom</th><th>Localité</th><th>Date</th><th>Statut</th></tr></thead>
-                <tbody id="adherentsBody"></tbody>
-            </table>
-        </div>
-    </section>
-
-    <!-- DOCUMENTS -->
-    <section id="documents">
-        <div class="container">
-            <div class="section-header"><h2 id="documentsTitle"><i class="fas fa-file-pdf"></i> Documents association</h2></div>
-            <div class="menu-grid" id="documentsGrid"></div>
-        </div>
-    </section>
-
-    <!-- OFFRES -->
-    <section id="offres">
-        <div class="container">
-            <div class="section-header"><h2 id="offresTitle"><i class="fas fa-briefcase"></i> Offres d'emploi</h2></div>
-            <div class="menu-grid" id="offresGrid"></div>
-        </div>
-    </section>
-
-    <!-- METEO -->
-    <section id="meteo">
-        <div class="container">
-            <div class="section-header"><h2 id="meteoTitle"><i class="fas fa-cloud-sun"></i> Prévision météo</h2></div>
-            <div class="menu-grid" id="meteoGrid"></div>
-        </div>
-    </section>
-
-    <!-- EAU -->
-    <section id="eau">
-        <div class="container">
-            <div class="section-header"><h2 id="eauTitle"><i class="fas fa-tint"></i> Eau potable</h2></div>
-            <div class="menu-grid" id="eauGrid"></div>
-        </div>
-    </section>
-
-    <!-- BETAIL -->
-    <section id="betail">
-        <div class="container">
-            <div class="section-header"><h2 id="betailTitle"><i class="fas fa-horse"></i> Bétails</h2></div>
-            <div class="menu-grid" id="betailGrid"></div>
-        </div>
-    </section>
-
-    <!-- SAGIA -->
-    <section id="sagia">
-        <div class="container">
-            <div class="section-header"><h2 id="sagiaTitle"><i class="fas fa-list"></i> سواقي الري</h2></div>
-            <table class="data-table" id="sagiaTable">
-                <thead><tr><th>Code</th><th>Nom</th><th>Zone</th><th>Date</th><th>Statut</th></tr></thead>
-                <tbody id="sagiaBody"></tbody>
-            </table>
-        </div>
-    </section>
-
-    <!-- PRODUITS -->
-    <section id="produits">
-        <div class="container">
-            <div class="section-header"><h2 id="produitsTitle"><i class="fas fa-apple-alt"></i> Produits de terroir</h2></div>
-            <div class="menu-grid" id="produitsGrid"></div>
-        </div>
-    </section>
-
-    <!-- ARBRES -->
-    <section id="arbres">
-        <div class="container">
-            <div class="section-header"><h2 id="arbresTitle"><i class="fas fa-tree"></i> Arbres fruitiers</h2></div>
-            <table class="data-table" id="arbresTable">
-                <thead><tr><th>Localité</th><th>Oliviers</th><th>Amandiers</th><th>Figuiers</th><th>Noyers</th><th>Total</th><th>Habitants</th><th>Ratio</th></tr></thead>
-                <tbody id="arbresBody"></tbody>
-            </table>
-        </div>
-    </section>
+    <!-- Les autres sections de contenu -->
+    <section id="offres"><div class="container"><div class="section-header"><h2 id="offresTitle"><i class="fas fa-briefcase"></i> Offres d'emploi</h2></div><div class="menu-grid" id="offresGrid"></div></div></section>
+    <section id="meteo"><div class="container"><div class="section-header"><h2 id="meteoTitle"><i class="fas fa-cloud-sun"></i> Prévision météo</h2></div><div class="menu-grid" id="meteoGrid"></div></div></section>
+    <section id="conseil"><div class="container"><div class="section-header"><h2 id="conseilTitle"><i class="fas fa-users-cog"></i> Conseil de l'association</h2></div><div class="menu-grid" id="conseilGrid"></div></div></section>
+    <section id="adherents"><div class="container"><div class="section-header"><h2 id="adherentsTitle"><i class="fas fa-user-plus"></i> Habitants adhérents</h2></div><table class="data-table" id="adherentsTable"><thead><tr><th>Nom</th><th>Localité</th><th>Date</th><th>Statut</th></tr></thead><tbody id="adherentsBody"></tbody></table></div></section>
+    <section id="documents"><div class="container"><div class="section-header"><h2 id="documentsTitle"><i class="fas fa-file-pdf"></i> Documents association</h2></div><div class="menu-grid" id="documentsGrid"></div></div></section>
+    <section id="produits"><div class="container"><div class="section-header"><h2 id="produitsTitle"><i class="fas fa-apple-alt"></i> Produits de terroir</h2></div><div class="menu-grid" id="produitsGrid"></div></div></section>
+    <section id="arbres"><div class="container"><div class="section-header"><h2 id="arbresTitle"><i class="fas fa-tree"></i> Arbres fruitiers</h2></div><table class="data-table" id="arbresTable"><thead><tr><th>Localité</th><th>Oliviers</th><th>Amandiers</th><th>Figuiers</th><th>Noyers</th><th>Total</th><th>Habitants</th><th>Ratio</th></tr></thead><tbody id="arbresBody"></tbody></table></div></section>
+    <section id="betail"><div class="container"><div class="section-header"><h2 id="betailTitle"><i class="fas fa-horse"></i> Bétails</h2></div><div class="menu-grid" id="betailGrid"></div></div></section>
+    <section id="eau"><div class="container"><div class="section-header"><h2 id="eauTitle"><i class="fas fa-tint"></i> Eau potable</h2></div><div class="menu-grid" id="eauGrid"></div></div></section>
+    <section id="sagia"><div class="container"><div class="section-header"><h2 id="sagiaTitle"><i class="fas fa-list"></i> سواقي الري</h2></div><table class="data-table" id="sagiaTable"><thead><tr><th>Code</th><th>Nom</th><th>Zone</th><th>Date</th><th>Statut</th></tr></thead><tbody id="sagiaBody"></tbody></table></div></section>
 
     <!-- GALERIE -->
-    <section id="gallery">
-        <div class="container">
-            <div class="section-header"><h2 id="galleryTitle">Galerie Photos</h2></div>
-            <div id="galleryContainer" class="gallery-grid">
-                <div class="spinner" style="grid-column:1/-1;"></div>
-            </div>
-        </div>
-    </section>
+    <section id="gallery"><div class="container"><div class="section-header"><h2 id="galleryTitle">Galerie Photos</h2></div><div id="galleryContainer"><div class="no-content">Chargement...</div></div></div></section>
 
     <!-- VIDÉOS -->
-    <section id="videos">
-        <div class="container">
-            <div class="section-header"><h2 id="videosTitle">Vidéos</h2></div>
-            <div id="videosContainer" class="videos-grid">
-                <div class="spinner" style="grid-column:1/-1;"></div>
-            </div>
-        </div>
-    </section>
+    <section id="videos"><div class="container"><div class="section-header"><h2 id="videosTitle">Vidéos</h2></div><div id="videosContainer"><div class="no-content">Chargement...</div></div></div></section>
 
     <!-- PROJETS -->
-    <section id="projects">
-        <div class="container">
-            <div class="section-header"><h2 id="projectsTitle">Nos Projets</h2></div>
-            <div id="articlesContainer" class="articles-grid">
-                <div class="spinner" style="grid-column:1/-1;"></div>
-            </div>
-        </div>
-    </section>
+    <section id="projects"><div class="container"><div class="section-header"><h2 id="projectsTitle">Nos Projets</h2></div><div id="articlesContainer"><div class="no-content">Chargement...</div></div></div></section>
 
     <!-- CONTACT -->
     <section id="contact">
@@ -1636,8 +1034,6 @@
                     <li><a href="#" data-section="betail" onclick="showDashboardSection('betail')"><i class="fas fa-horse"></i> <span id="sidebarBetailText">Bétails</span></a></li>
                     <li><a href="#" data-section="eau" onclick="showDashboardSection('eau')"><i class="fas fa-tint"></i> <span id="sidebarEauText">Eau</span></a></li>
                     <li><a href="#" data-section="sagia" onclick="showDashboardSection('sagia')"><i class="fas fa-list"></i> <span id="sidebarSagiaText">SAGIA</span></a></li>
-                    <li><a href="#" data-section="conseil" onclick="showDashboardSection('conseil')"><i class="fas fa-users-cog"></i> <span id="sidebarConseilText">Conseil</span></a></li>
-                    <li><a href="#" data-section="adherents" onclick="showDashboardSection('adherents')"><i class="fas fa-user-plus"></i> <span id="sidebarAdherentsText">Adhérents</span></a></li>
                     <li><a href="#" data-section="documents-admin" onclick="showDashboardSection('documents-admin')"><i class="fas fa-file-pdf"></i> <span id="sidebarDocumentsAdminText">📄 Docs Admin</span></a></li>
                 </ul>
             </div>
@@ -1760,24 +1156,6 @@
                         <button class="btn-import" onclick="showSagiaModal()"><i class="fas fa-plus"></i> Ajouter</button>
                     </div>
                     <div class="items-grid" id="sagiaList"></div>
-                </div>
-
-                <!-- Gestion Conseil -->
-                <div id="conseilDashboard" class="dashboard-section-content">
-                    <h2><i class="fas fa-users-cog"></i> Gestion du conseil</h2>
-                    <div class="section-actions">
-                        <button class="btn-import" onclick="showConseilModal()"><i class="fas fa-plus"></i> Ajouter un membre</button>
-                    </div>
-                    <div class="items-grid" id="conseilList"></div>
-                </div>
-
-                <!-- Gestion Adhérents -->
-                <div id="adherentsDashboard" class="dashboard-section-content">
-                    <h2><i class="fas fa-user-plus"></i> Gestion des adhérents</h2>
-                    <div class="section-actions">
-                        <button class="btn-import" onclick="showAdherentModal()"><i class="fas fa-plus"></i> Ajouter un adhérent</button>
-                    </div>
-                    <div class="items-grid" id="adherentsList"></div>
                 </div>
 
                 <!-- Gestion Documents Admin -->
@@ -1942,44 +1320,50 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- JAVASCRIPT AVEC SUPABASE - TOUTES FONCTIONNALITÉS -->
+    <!-- JAVASCRIPT                                  -->
     <!-- ============================================ -->
     <script>
         // ============================================================
-        // CONFIGURATION SUPABASE
-        // ============================================================
-        const SUPABASE_URL = 'https://ewgrkdlivxgogaysgxje.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_Cu364NmwnWvimRiZ1OMGKQ_r-EoVZOe';
-
-        // Initialisation du client Supabase
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        console.log('✅ Supabase connecté !');
-
-        // ============================================================
-        // DONNÉES LOCALES
+        // DONNÉES
         // ============================================================
         var DATA = {
             phoneNumber: '06 25 93 13 19',
             isAdmin: false,
-            ticker: [],
-            texts: [],
-            offres: [],
-            produits: [],
-            arbres: [],
-            betail: [],
-            eau: [],
-            sagia: [],
+            ticker: [
+                { id: 1, text: 'Bienvenue sur le site ANSFAL', icon: 'fa-star', lang: { fr: 'Bienvenue sur le site ANSFAL', ar: 'مرحباً بكم في موقع أنسفال' } },
+                { id: 2, text: 'Projets de développement durable en cours', icon: 'fa-tree', lang: { fr: 'Projets de développement durable en cours', ar: 'مشاريع التنمية المستدامة جارية' } },
+                { id: 3, text: 'Adhésion ouverte aux habitants de la région', icon: 'fa-user-plus', lang: { fr: 'Adhésion ouverte aux habitants de la région', ar: 'الانخراط مفتوح لسكان المنطقة' } }
+            ],
+            texts: [
+                { id: 1, title: { fr: 'Rapport annuel 2024', ar: 'تقرير سنوي 2024' }, content: { fr: 'Contenu du rapport annuel...', ar: 'محتوى التقرير السنوي...' } }
+            ],
+            offres: [
+                { id: 1, title: { fr: 'Coordinateur de projets', ar: 'منسق المشاريع' }, desc: { fr: 'Gestion et suivi des projets', ar: 'تسيير ومتابعة المشاريع' }, badge: { fr: 'CDI - Rabat', ar: 'عقد دائم - الرباط' }, icon: 'fa-user-tie' }
+            ],
+            produits: [
+                { id: 1, title: { fr: 'Huile d\'olive', ar: 'زيت الزيتون' }, desc: { fr: 'Huile extra vierge', ar: 'زيت بكر ممتاز' }, badge: { fr: '⭐ Produit phare', ar: '⭐ منتج رائد' }, icon: 'fa-olive' }
+            ],
+            arbres: [
+                { id: 1, localite: { fr: 'Douar Tazout', ar: 'دوار تازوت' }, oliviers: 1250, amandiers: 320, figuiers: 180, noyers: 95, habitants: 210 }
+            ],
+            betail: [
+                { id: 1, title: { fr: 'Bovins', ar: 'الأبقار' }, desc: { fr: 'Élevage de vaches', ar: 'تربية الأبقار' }, badge: { fr: '🐄 250 têtes', ar: '🐄 250 رأس' }, icon: 'fa-horse' }
+            ],
+            eau: [
+                { id: 1, title: { fr: 'Forage Aït Bougmez', ar: 'حفر آيت بوكماز' }, desc: { fr: 'Forage 50m', ar: 'حفر 50 متراً' }, badge: { fr: '✅ Réalisé', ar: '✅ منجز' }, icon: 'fa-tint' }
+            ],
+            sagia: [
+                { id: 1, code: 'SAGIA-001', name: { fr: 'Gazoduc Nord', ar: 'ساقية الشمال' }, zone: { fr: 'Tanger', ar: 'طنجة' }, date: '15/03/2020', status: { fr: '✓ Actif', ar: '✓ نشط' } }
+            ],
             gallery: [],
             videos: [],
-            conseil: [],
-            adherents: [],
             documentsAdmin: [
-                { id: 1, title: { fr: 'Statuts de l\'association', ar: 'النظام الأساسي للجمعية' }, desc: { fr: 'Document officiel des statuts d\'ANSFAL', ar: 'الوثيقة الرسمية للنظام الأساسي' },
-                    icon: 'fa-file-pdf', color: 'var(--red)' },
-                { id: 2, title: { fr: 'Règlement intérieur', ar: 'النظام الداخلي' }, desc: { fr: 'Règles de fonctionnement interne', ar: 'قواعد السير الداخلي' },
-                    icon: 'fa-file-pdf', color: 'var(--orange)' },
-                { id: 3, title: { fr: 'Rapport d\'activité 2024', ar: 'تقرير النشاط 2024' }, desc: { fr: 'Bilan complet des actions', ar: 'حصيلة الإجراءات المنجزة' },
-                    icon: 'fa-file-pdf', color: 'var(--teal)' }
+                { id: 1, title: { fr: 'Statuts de l\'association', ar: 'النظام الأساسي للجمعية' }, desc: { fr: 'Document officiel des statuts d\'ANSFAL', ar: 'الوثيقة الرسمية للنظام الأساسي' }, icon: 'fa-file-pdf', color: 'var(--red)' },
+                { id: 2, title: { fr: 'Règlement intérieur', ar: 'النظام الداخلي' }, desc: { fr: 'Règles de fonctionnement interne', ar: 'قواعد السير الداخلي' }, icon: 'fa-file-pdf', color: 'var(--orange)' },
+                { id: 3, title: { fr: 'Rapport d\'activité 2024', ar: 'تقرير النشاط 2024' }, desc: { fr: 'Bilan complet des actions', ar: 'حصيلة الإجراءات المنجزة' }, icon: 'fa-file-pdf', color: 'var(--teal)' },
+                { id: 4, title: { fr: 'Plan stratégique 2024-2026', ar: 'الخطة الاستراتيجية' }, desc: { fr: 'Vision et objectifs stratégiques', ar: 'الرؤية والأهداف الاستراتيجية' }, icon: 'fa-file-pdf', color: 'var(--purple)' },
+                { id: 5, title: { fr: 'PV des réunions', ar: 'محاضر الاجتماعات' }, desc: { fr: 'Procès-verbaux des assemblées', ar: 'محاضر الجمعيات العامة' }, icon: 'fa-file-pdf', color: 'var(--gold)' },
+                { id: 6, title: { fr: 'Budget prévisionnel 2025', ar: 'الميزانية التقديرية 2025' }, desc: { fr: 'Prévision budgétaire', ar: 'التوقعات المالية' }, icon: 'fa-file-pdf', color: 'var(--info)' }
             ]
         };
 
@@ -1994,130 +1378,106 @@
         // ============================================================
         var LANG = {
             fr: {
-                menuHomeText: 'Accueil',
-                menuAboutText: 'À propos',
-                menuAssociationText: 'Association',
-                menuConseilText: 'Conseil de l\'association',
-                menuAdherentsText: 'Habitants adhérents',
-                menuDocumentsText: 'Documents association',
-                menuDocumentsAdminText: '📄 Documents Admin',
-                menuServicesText: 'Services',
-                menuOffresText: 'Offres d\'emploi',
-                menuMeteoText: 'Prévision météo',
-                menuEauText: 'Eau potable',
-                menuBetailText: 'Bétails',
-                menuSagiaText: 'سواقي الري',
-                menuEconomieText: 'Économie',
-                menuProduitsText: 'Produits de terroir',
-                menuArbresText: 'Arbres fruitiers',
-                menuBetailEconomieText: 'Bétails',
-                menuGalleryText: 'Galerie',
-                menuVideosText: 'Vidéos',
-                menuProjectsText: 'Projets',
-                menuContactText: 'Contact',
-                menuDashboardText: 'Dashboard',
-                heroTitle: 'جمعية أنسفال',
-                heroSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
+                menuHomeText: 'Accueil', menuAboutText: 'À propos', menuAssociationText: 'Association',
+                menuConseilText: 'Conseil de l\'association', menuAdherentsText: 'Habitants adhérents',
+                menuDocumentsText: 'Documents association', menuDocumentsAdminText: '📄 Documents Admin',
+                menuServicesText: 'Services', menuOffresText: 'Offres d\'emploi', menuMeteoText: 'Prévision météo',
+                menuEauText: 'Eau potable', menuBetailText: 'Bétails', menuSagiaText: 'سواقي الري',
+                menuEconomieText: 'Économie', menuProduitsText: 'Produits de terroir',
+                menuArbresText: 'Arbres fruitiers', menuBetailEconomieText: 'Bétails',
+                menuGalleryText: 'Galerie', menuVideosText: 'Vidéos', menuProjectsText: 'Projets',
+                menuContactText: 'Contact', menuDashboardText: 'Dashboard',
+                heroTitle: 'جمعية أنسفال', heroSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
                 heroText: 'Œuvrant pour un développement durable, la coopération nationale et la protection de l\'environnement depuis 2023.',
-                heroBtn1Text: 'Découvrir nos actions',
-                heroBtn2Text: 'Galerie Photos',
-                aboutTitle: 'À propos d\'ANSFAL',
-                aboutHistory: 'Notre histoire',
+                heroBtn1Text: 'Découvrir nos actions', heroBtn2Text: 'Galerie Photos',
+                aboutTitle: 'À propos d\'ANSFAL', aboutHistory: 'Notre histoire',
                 aboutText1: 'Fondée en 2023, l\'Association ANSFAL pour la Coopération et le Développement et l\'Environnement est née de la conviction que le développement humain et la protection environnementale doivent aller de pair.',
                 aboutText2: 'Notre nom \'ANSFAL\' symbolise notre engagement pour un avenir meilleur, basé sur la solidarité, le développement durable et la préservation de notre environnement.',
-                sidebarDashboardText: 'Tableau de bord',
-                sidebarSettingsText: 'Paramètres',
-                sidebarGalleryText: 'Galerie',
-                sidebarVideosText: 'Vidéos',
-                sidebarTextsText: 'Textes',
-                sidebarTickerText: 'Ticker',
-                sidebarOffresText: 'Offres',
-                sidebarProduitsText: 'Produits',
-                sidebarArbresText: 'Arbres',
-                sidebarBetailText: 'Bétails',
-                sidebarEauText: 'Eau',
-                sidebarSagiaText: 'SAGIA',
-                sidebarConseilText: 'Conseil',
-                sidebarAdherentsText: 'Adhérents',
+                sidebarDashboardText: 'Tableau de bord', sidebarSettingsText: 'Paramètres',
+                sidebarGalleryText: 'Galerie', sidebarVideosText: 'Vidéos',
+                sidebarTextsText: 'Textes', sidebarTickerText: 'Ticker',
+                sidebarOffresText: 'Offres', sidebarProduitsText: 'Produits',
+                sidebarArbresText: 'Arbres', sidebarBetailText: 'Bétails',
+                sidebarEauText: 'Eau', sidebarSagiaText: 'SAGIA',
                 sidebarDocumentsAdminText: '📄 Docs Admin',
                 dashboardTitle: 'Tableau de Bord',
-                contactTitle: 'Contactez-nous',
-                contactAddress: 'Adresse',
-                contactLocation: 'Maroc',
-                contactPhone: 'Téléphone',
-                contactEmail: 'Email',
-                footerLogoTitle: 'جمعية أنسفال',
-                footerLogoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
-                footerFollow: 'Suivez-nous',
-                footerCopyright: '© 2024 جمعية أنسفال. جميع الحقوق محفوظة',
-                logoTitle: 'جمعية أنسفال',
-                logoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
+                contactTitle: 'Contactez-nous', contactAddress: 'Adresse',
+                contactLocation: 'Maroc', contactPhone: 'Téléphone', contactEmail: 'Email',
+                footerLogoTitle: 'جمعية أنسفال', footerLogoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
+                footerFollow: 'Suivez-nous', footerCopyright: '© 2024 جمعية أنسفال. جميع الحقوق محفوظة',
+                logoTitle: 'جمعية أنسفال', logoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
                 viewerTitle: 'Fichier',
                 docAdminTitle: 'Documents administratifs',
-                docAdminSubtitle: 'Espace réservé aux administrateurs de l\'association'
+                docAdminSubtitle: 'Espace réservé aux administrateurs de l\'association',
+                docAdmin1Title: 'Statuts de l\'association',
+                docAdmin1Desc: 'Document officiel des statuts d\'ANSFAL - Version 2023',
+                docAdmin1Btn: 'Télécharger',
+                docAdmin2Title: 'Règlement intérieur',
+                docAdmin2Desc: 'Règles de fonctionnement interne de l\'association',
+                docAdmin2Btn: 'Télécharger',
+                docAdmin3Title: 'Rapport d\'activité 2024',
+                docAdmin3Desc: 'Bilan complet des actions réalisées en 2024',
+                docAdmin3Btn: 'Télécharger',
+                docAdmin4Title: 'Plan stratégique 2024-2026',
+                docAdmin4Desc: 'Vision et objectifs stratégiques à moyen terme',
+                docAdmin4Btn: 'Télécharger',
+                docAdmin5Title: 'PV des réunions',
+                docAdmin5Desc: 'Procès-verbaux des assemblées générales',
+                docAdmin5Btn: 'Télécharger',
+                docAdmin6Title: 'Budget prévisionnel 2025',
+                docAdmin6Desc: 'Prévision budgétaire pour l\'exercice 2025',
+                docAdmin6Btn: 'Télécharger'
             },
             ar: {
-                menuHomeText: 'الرئيسية',
-                menuAboutText: 'من نحن',
-                menuAssociationText: 'الجمعية',
-                menuConseilText: 'مجلس الجمعية',
-                menuAdherentsText: 'السكان المنخرطون',
-                menuDocumentsText: 'وثائق الجمعية',
-                menuDocumentsAdminText: '📄 وثائق الإدارة',
-                menuServicesText: 'الخدمات',
-                menuOffresText: 'عروض الشغل',
-                menuMeteoText: 'توقعات الطقس',
-                menuEauText: 'الماء الصالح للشرب',
-                menuBetailText: 'الماشية',
-                menuSagiaText: 'سواقي الري',
-                menuEconomieText: 'الاقتصاد',
-                menuProduitsText: 'منتجات محلية',
-                menuArbresText: 'الأشجار المثمرة',
-                menuBetailEconomieText: 'الماشية',
-                menuGalleryText: 'معرض الصور',
-                menuVideosText: 'الفيديوهات',
-                menuProjectsText: 'المشاريع',
-                menuContactText: 'اتصل بنا',
-                menuDashboardText: 'لوحة التحكم',
-                heroTitle: 'جمعية أنسفال',
-                heroSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
+                menuHomeText: 'الرئيسية', menuAboutText: 'من نحن', menuAssociationText: 'الجمعية',
+                menuConseilText: 'مجلس الجمعية', menuAdherentsText: 'السكان المنخرطون',
+                menuDocumentsText: 'وثائق الجمعية', menuDocumentsAdminText: '📄 وثائق الإدارة',
+                menuServicesText: 'الخدمات', menuOffresText: 'عروض الشغل', menuMeteoText: 'توقعات الطقس',
+                menuEauText: 'الماء الصالح للشرب', menuBetailText: 'الماشية', menuSagiaText: 'سواقي الري',
+                menuEconomieText: 'الاقتصاد', menuProduitsText: 'منتجات محلية',
+                menuArbresText: 'الأشجار المثمرة', menuBetailEconomieText: 'الماشية',
+                menuGalleryText: 'معرض الصور', menuVideosText: 'الفيديوهات', menuProjectsText: 'المشاريع',
+                menuContactText: 'اتصل بنا', menuDashboardText: 'لوحة التحكم',
+                heroTitle: 'جمعية أنسفال', heroSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
                 heroText: 'تعمل من أجل التنمية المستدامة والتعاون الوطني وحماية البيئة منذ عام 2023.',
-                heroBtn1Text: 'اكتشف أعمالنا',
-                heroBtn2Text: 'معرض الصور',
-                aboutTitle: 'من نحن - أنسفال',
-                aboutHistory: 'تاريخنا',
+                heroBtn1Text: 'اكتشف أعمالنا', heroBtn2Text: 'معرض الصور',
+                aboutTitle: 'من نحن - أنسفال', aboutHistory: 'تاريخنا',
                 aboutText1: 'تأسست جمعية أنسفال للتعاون والتنمية والبيئة في عام 2023 انطلاقاً من قناعة بأن التنمية البشرية وحماية البيئة يجب أن يسيرا جنباً إلى جنب.',
                 aboutText2: 'يرمز اسمنا \'أنسفال\' إلى التزامنا بمستقبل أفضل، يقوم على التضامن والتنمية المستدامة والحفاظ على بيئتنا.',
-                sidebarDashboardText: 'لوحة التحكم',
-                sidebarSettingsText: 'الإعدادات',
-                sidebarGalleryText: 'معرض الصور',
-                sidebarVideosText: 'الفيديوهات',
-                sidebarTextsText: 'النصوص',
-                sidebarTickerText: 'النص المتحرك',
-                sidebarOffresText: 'عروض الشغل',
-                sidebarProduitsText: 'منتجات',
-                sidebarArbresText: 'الأشجار',
-                sidebarBetailText: 'الماشية',
-                sidebarEauText: 'الماء',
-                sidebarSagiaText: 'سواقي الري',
-                sidebarConseilText: 'المجلس',
-                sidebarAdherentsText: 'المنخرطون',
+                sidebarDashboardText: 'لوحة التحكم', sidebarSettingsText: 'الإعدادات',
+                sidebarGalleryText: 'معرض الصور', sidebarVideosText: 'الفيديوهات',
+                sidebarTextsText: 'النصوص', sidebarTickerText: 'النص المتحرك',
+                sidebarOffresText: 'عروض الشغل', sidebarProduitsText: 'منتجات',
+                sidebarArbresText: 'الأشجار', sidebarBetailText: 'الماشية',
+                sidebarEauText: 'الماء', sidebarSagiaText: 'سواقي الري',
                 sidebarDocumentsAdminText: '📄 وثائق الإدارة',
                 dashboardTitle: 'لوحة التحكم',
-                contactTitle: 'اتصل بنا',
-                contactAddress: 'العنوان',
-                contactLocation: 'المغرب',
-                contactPhone: 'الهاتف',
-                contactEmail: 'البريد الإلكتروني',
-                footerLogoTitle: 'جمعية أنسفال',
-                footerLogoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
-                footerFollow: 'تابعنا',
-                footerCopyright: '© 2024 جمعية أنسفال. جميع الحقوق محفوظة',
-                logoTitle: 'جمعية أنسفال',
-                logoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
+                contactTitle: 'اتصل بنا', contactAddress: 'العنوان',
+                contactLocation: 'المغرب', contactPhone: 'الهاتف', contactEmail: 'البريد الإلكتروني',
+                footerLogoTitle: 'جمعية أنسفال', footerLogoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
+                footerFollow: 'تابعنا', footerCopyright: '© 2024 جمعية أنسفال. جميع الحقوق محفوظة',
+                logoTitle: 'جمعية أنسفال', logoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
                 viewerTitle: 'ملف',
                 docAdminTitle: 'الوثائق الإدارية',
-                docAdminSubtitle: 'مساحة خاصة بإداريي الجمعية'
+                docAdminSubtitle: 'مساحة خاصة بإداريي الجمعية',
+                docAdmin1Title: 'النظام الأساسي للجمعية',
+                docAdmin1Desc: 'الوثيقة الرسمية للنظام الأساسي لأنسفال - نسخة 2023',
+                docAdmin1Btn: 'تحميل',
+                docAdmin2Title: 'النظام الداخلي',
+                docAdmin2Desc: 'قواعد السير الداخلي للجمعية',
+                docAdmin2Btn: 'تحميل',
+                docAdmin3Title: 'تقرير النشاط 2024',
+                docAdmin3Desc: 'حصيلة كاملة للإجراءات المنجزة في 2024',
+                docAdmin3Btn: 'تحميل',
+                docAdmin4Title: 'الخطة الاستراتيجية 2024-2026',
+                docAdmin4Desc: 'الرؤية والأهداف الاستراتيجية على المدى المتوسط',
+                docAdmin4Btn: 'تحميل',
+                docAdmin5Title: 'محاضر الاجتماعات',
+                docAdmin5Desc: 'محاضر الجمعيات العامة',
+                docAdmin5Btn: 'تحميل',
+                docAdmin6Title: 'الميزانية التقديرية 2025',
+                docAdmin6Desc: 'التوقعات المالية للسنة المالية 2025',
+                docAdmin6Btn: 'تحميل'
             }
         };
 
@@ -2137,16 +1497,16 @@
             document.body.classList.toggle('rtl', lang === 'ar');
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.querySelector(`.lang-btn[onclick*="${lang}"]`).classList.add('active');
-
+            
             var t = LANG[lang];
             for (var key in t) {
                 var el = document.getElementById(key);
                 if (el) el.textContent = t[key];
             }
-
+            
             updatePhoneDisplay();
             renderAll();
-            try { localStorage.setItem('ansfal_lang', lang); } catch (e) {}
+            try { localStorage.setItem('ansfal_lang', lang); } catch(e) {}
         }
 
         // ============================================================
@@ -2154,12 +1514,66 @@
         // ============================================================
         function updateAdminVisibility() {
             var isAdmin = DATA.isAdmin;
-            document.getElementById('dashboard').classList.toggle('visible', isAdmin);
-            document.getElementById('menuDashboard').classList.toggle('hidden', !isAdmin);
-            document.getElementById('documents-admin').classList.toggle('visible', isAdmin);
-            document.getElementById('menuDocumentsAdmin').classList.toggle('hidden', !isAdmin);
-            document.getElementById('addBtn').style.display = isAdmin ? 'flex' : 'none';
-            document.body.classList.toggle('admin-mode', isAdmin);
+            
+            // Dashboard section
+            var dashboardSection = document.getElementById('dashboard');
+            if (dashboardSection) {
+                if (isAdmin) {
+                    dashboardSection.classList.add('visible');
+                } else {
+                    dashboardSection.classList.remove('visible');
+                }
+            }
+            
+            // Menu Dashboard
+            var menuDashboard = document.getElementById('menuDashboard');
+            if (menuDashboard) {
+                if (isAdmin) {
+                    menuDashboard.classList.remove('hidden');
+                } else {
+                    menuDashboard.classList.add('hidden');
+                }
+            }
+            
+            // Documents Admin section
+            var docAdminSection = document.getElementById('documents-admin');
+            if (docAdminSection) {
+                if (isAdmin) {
+                    docAdminSection.classList.add('visible');
+                } else {
+                    docAdminSection.classList.remove('visible');
+                }
+            }
+            
+            // Menu Documents Admin
+            var menuDocAdmin = document.getElementById('menuDocumentsAdmin');
+            if (menuDocAdmin) {
+                if (isAdmin) {
+                    menuDocAdmin.classList.remove('hidden');
+                } else {
+                    menuDocAdmin.classList.add('hidden');
+                }
+            }
+            
+            // Sidebar Documents Admin
+            var sidebarDocAdmin = document.getElementById('sidebarDocumentsAdminText');
+            if (sidebarDocAdmin) {
+                var parent = sidebarDocAdmin.closest('a');
+                if (parent) {
+                    if (isAdmin) {
+                        parent.classList.remove('hidden');
+                    } else {
+                        parent.classList.add('hidden');
+                    }
+                }
+            }
+            
+            // Body class
+            if (isAdmin) {
+                document.body.classList.add('admin-mode');
+            } else {
+                document.body.classList.remove('admin-mode');
+            }
         }
 
         // ============================================================
@@ -2167,7 +1581,8 @@
         // ============================================================
         function updatePhoneDisplay() {
             var phone = DATA.phoneNumber || '06 25 93 13 19';
-            ['headerPhoneNumber', 'heroPhoneNumber', 'contactPhoneNumber', 'footerPhoneNumber'].forEach(function(id) {
+            var elements = ['headerPhoneNumber', 'heroPhoneNumber', 'contactPhoneNumber', 'footerPhoneNumber'];
+            elements.forEach(function(id) {
                 var el = document.getElementById(id);
                 if (el) el.textContent = phone;
             });
@@ -2186,68 +1601,7 @@
         }
 
         // ============================================================
-        // CHARGEMENT DEPUIS SUPABASE
-        // ============================================================
-        async function loadFromSupabase() {
-            try {
-                // Articles
-                const { data: articles } = await supabase.from('articles').select('*').order('created_at', { ascending: false });
-                if (articles) renderArticles(articles);
-
-                // Galerie
-                const { data: gallery } = await supabase.from('gallery').select('*').order('uploaded_at', { ascending: false });
-                if (gallery) {
-                    DATA.gallery = gallery;
-                    renderGalleryPublic(gallery);
-                    renderGalleryDashboard(gallery);
-                }
-
-                // Vidéos
-                const { data: videos } = await supabase.from('videos').select('*').order('uploaded_at', { ascending: false });
-                if (videos) {
-                    DATA.videos = videos;
-                    renderVideosPublic(videos);
-                    renderVideosDashboard(videos);
-                }
-
-                // Visiteurs
-                const { count } = await supabase.from('visitors').select('*', { count: 'exact', head: true });
-                if (count !== null) {
-                    document.getElementById('totalVisitors').textContent = count;
-                    document.getElementById('totalVisitorsStat').textContent = count;
-                }
-
-                // Médias totaux
-                const mediaCount = (DATA.gallery?.length || 0) + (DATA.videos?.length || 0);
-                document.getElementById('totalMediaStat').textContent = mediaCount;
-
-                // Heure
-                document.getElementById('lastVisit').textContent = new Date().toLocaleString();
-
-                // Données locales
-                renderTicker();
-                renderTexts();
-                renderOffres();
-                renderProduits();
-                renderArbres();
-                renderBetail();
-                renderEau();
-                renderSagia();
-                renderConseil();
-                renderAdherents();
-                renderDocumentsAdmin();
-                renderDashboardLists();
-
-                console.log('✅ Toutes les données chargées depuis Supabase');
-
-            } catch (error) {
-                console.error('Erreur chargement:', error);
-                showAlert('Erreur de chargement des données', 'error');
-            }
-        }
-
-        // ============================================================
-        // RENDU DES DONNÉES
+        // RENDER
         // ============================================================
         function renderAll() {
             renderTicker();
@@ -2258,300 +1612,27 @@
             renderBetail();
             renderEau();
             renderSagia();
-            renderConseil();
-            renderAdherents();
-            renderDocumentsAdmin();
+            renderGallery();
+            renderVideos();
             renderDashboardLists();
+            renderDocumentsAdmin();
             updateStats();
             updatePhoneDisplay();
             updateAdminVisibility();
         }
 
-        // ============================================================
-        // RENDU TICKER
-        // ============================================================
         function renderTicker() {
             var container = document.getElementById('tickerContent');
             if (!container) return;
             var items = DATA.ticker || [];
-            if (items.length === 0) {
-                container.innerHTML = '<span class="ticker-item"><i class="fas fa-star"></i> Bienvenue sur ANSFAL <span class="sep">|</span></span>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var text = getLocalized(item.lang) || item.text || '';
-                var icon = item.icon || 'fa-star';
-                return '<span class="ticker-item"><i class="fas ' + icon + '"></i> ' + text + ' <span class="sep">|</span></span>';
-            }).join('') + items.map(function(item) {
+            var html = items.map(function(item) {
                 var text = getLocalized(item.lang) || item.text || '';
                 var icon = item.icon || 'fa-star';
                 return '<span class="ticker-item"><i class="fas ' + icon + '"></i> ' + text + ' <span class="sep">|</span></span>';
             }).join('');
+            container.innerHTML = html + html;
         }
 
-        // ============================================================
-        // RENDU GALERIE PUBLIQUE
-        // ============================================================
-        function renderGalleryPublic(images) {
-            var container = document.getElementById('galleryContainer');
-            if (!container) return;
-            if (!images || images.length === 0) {
-                container.innerHTML = '<div class="no-content" style="grid-column:1/-1;">Aucune image disponible.</div>';
-                return;
-            }
-            container.innerHTML = images.map(function(img) {
-                return '<div class="gallery-item" onclick="openImageViewer(\'' + (img.image_url || '') + '\', \'' + (img
-                    .title || 'Image') + '\')">' +
-                    '<img src="' + (img.image_url || '') + '" alt="' + (img.title || 'Image') + '" loading="lazy" />' +
-                    (img.title ? '<div class="gallery-title">' + img.title + '</div>' : '') +
-                    '</div>';
-            }).join('');
-        }
-
-        // ============================================================
-        // RENDU VIDÉOS PUBLIQUE
-        // ============================================================
-        function renderVideosPublic(videos) {
-            var container = document.getElementById('videosContainer');
-            if (!container) return;
-            if (!videos || videos.length === 0) {
-                container.innerHTML = '<div class="no-content" style="grid-column:1/-1;">Aucune vidéo disponible.</div>';
-                return;
-            }
-            container.innerHTML = videos.map(function(video) {
-                var url = video.video_url || '';
-                var embedHtml = '';
-                var videoId = '';
-                if (url.includes('youtu.be/')) {
-                    videoId = url.split('youtu.be/')[1]?.split('?')[0];
-                } else if (url.includes('watch?v=')) {
-                    videoId = url.split('v=')[1]?.split('&')[0];
-                }
-                if (videoId) {
-                    embedHtml = '<iframe src="https://www.youtube.com/embed/' + videoId +
-                        '" allowfullscreen></iframe>';
-                } else {
-                    embedHtml = '<video controls><source src="' + url + '" type="video/mp4"></video>';
-                }
-                return '<div class="video-item">' + embedHtml + '</div>' +
-                    (video.title ? '<div class="video-title"><i class="fas fa-video" style="color:var(--primary);"></i> ' +
-                        video.title + '</div>' : '');
-            }).join('');
-        }
-
-        // ============================================================
-        // RENDU ARTICLES (PROJETS)
-        // ============================================================
-        function renderArticles(articles) {
-            var container = document.getElementById('articlesContainer');
-            if (!container) return;
-            if (!articles || articles.length === 0) {
-                container.innerHTML = '<div class="no-content" style="grid-column:1/-1;">Aucun projet disponible.</div>';
-                return;
-            }
-            container.innerHTML = articles.map(function(article) {
-                return '<div class="article-card">' +
-                    '<h3><i class="fas fa-newspaper" style="color:var(--primary);"></i> ' + article.title + '</h3>' +
-                    (article.image_url ? '<img src="' + article.image_url + '" alt="' + article.title + '" />' : '') +
-                    '<p>' + article.content + '</p>' +
-                    '<span class="article-meta"><i class="far fa-calendar-alt"></i> ' + new Date(article.created_at)
-                    .toLocaleDateString('fr-FR') +
-                    (article.category ? ' <span style="background:var(--primary);color:white;padding:2px 10px;border-radius:12px;font-size:0.7rem;">' +
-                        article.category + '</span>' : '') +
-                    '</span>' +
-                    '</div>';
-            }).join('');
-        }
-
-        // ============================================================
-        // RENDU CONSEIL
-        // ============================================================
-        function renderConseil() {
-            var container = document.getElementById('conseilGrid');
-            if (!container) return;
-            var items = DATA.conseil || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun membre du conseil</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var name = getLocalized(item.name) || 'Membre';
-                var role = getLocalized(item.role) || '';
-                return '<div class="menu-card" style="border-left-color:var(--purple);">' +
-                    '<div class="card-icon" style="color:var(--purple);"><i class="fas fa-user-tie"></i></div>' +
-                    '<h3>' + name + '</h3>' +
-                    '<p>' + role + '</p>' +
-                    (item.badge ? '<span class="card-badge badge-purple">' + getLocalized(item.badge) + '</span>' : '') +
-                    '</div>';
-            }).join('');
-        }
-
-        // ============================================================
-        // RENDU ADHERENTS
-        // ============================================================
-        function renderAdherents() {
-            var container = document.getElementById('adherentsBody');
-            if (!container) return;
-            var items = DATA.adherents || [];
-            if (items.length === 0) {
-                container.innerHTML = '<tr><td colspan="4" class="no-content">Aucun adhérent</td></tr>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var name = getLocalized(item.name) || 'Adhérent';
-                var localite = getLocalized(item.localite) || '';
-                var status = getLocalized(item.status) || 'Actif';
-                return '<tr><td>' + name + '</td><td>' + localite + '</td><td>' + (item.date || '') +
-                    '</td><td><span class="badge-green" style="padding:2px 10px;border-radius:12px;">' + status +
-                    '</span></td></tr>';
-            }).join('');
-        }
-
-        // ============================================================
-        // RENDU OFFRE
-        // ============================================================
-        function renderOffres() {
-            var container = document.getElementById('offresGrid');
-            if (!container) return;
-            var items = DATA.offres || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucune offre d\'emploi</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var title = getLocalized(item.title) || 'Offre';
-                var desc = getLocalized(item.desc) || '';
-                var badge = getLocalized(item.badge) || '';
-                return '<div class="menu-card" style="border-left-color:var(--info);">' +
-                    '<div class="card-icon" style="color:var(--info);"><i class="fas ' + (item.icon ||
-                        'fa-briefcase') + '"></i></div>' +
-                    '<h3>' + title + '</h3>' +
-                    '<p>' + desc + '</p>' +
-                    (badge ? '<span class="card-badge badge-green">' + badge + '</span>' : '') +
-                    '</div>';
-            }).join('');
-        }
-
-        // ============================================================
-        // RENDU PRODUITS
-        // ============================================================
-        function renderProduits() {
-            var container = document.getElementById('produitsGrid');
-            if (!container) return;
-            var items = DATA.produits || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun produit de terroir</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var title = getLocalized(item.title) || 'Produit';
-                var desc = getLocalized(item.desc) || '';
-                var badge = getLocalized(item.badge) || '';
-                return '<div class="menu-card" style="border-left-color:var(--orange);">' +
-                    '<div class="card-icon" style="color:var(--orange);"><i class="fas ' + (item.icon ||
-                        'fa-apple-alt') + '"></i></div>' +
-                    '<h3>' + title + '</h3>' +
-                    '<p>' + desc + '</p>' +
-                    (badge ? '<span class="card-badge badge-orange">' + badge + '</span>' : '') +
-                    '</div>';
-            }).join('');
-        }
-
-        // ============================================================
-        // RENDU ARBRES
-        // ============================================================
-        function renderArbres() {
-            var container = document.getElementById('arbresBody');
-            if (!container) return;
-            var items = DATA.arbres || [];
-            if (items.length === 0) {
-                container.innerHTML = '<tr><td colspan="8" class="no-content">Aucune donnée</td></tr>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var localite = getLocalized(item.localite) || 'Localité';
-                var total = (item.oliviers || 0) + (item.amandiers || 0) + (item.figuiers || 0) + (item.noyers || 0);
-                var ratio = item.habitants ? Math.round(total / item.habitants) : 0;
-                return '<tr><td>' + localite + '</td><td>' + (item.oliviers || 0) + '</td><td>' + (item.amandiers ||
-                    0) + '</td><td>' + (item.figuiers || 0) + '</td><td>' + (item.noyers || 0) +
-                    '</td><td><strong>' + total + '</strong></td><td>' + (item.habitants || 0) +
-                    '</td><td>' + ratio + '</td></tr>';
-            }).join('');
-        }
-
-        // ============================================================
-        // RENDU BETAIL
-        // ============================================================
-        function renderBetail() {
-            var container = document.getElementById('betailGrid');
-            if (!container) return;
-            var items = DATA.betail || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun élevage</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var title = getLocalized(item.title) || 'Élevage';
-                var desc = getLocalized(item.desc) || '';
-                var badge = getLocalized(item.badge) || '';
-                return '<div class="menu-card" style="border-left-color:var(--teal);">' +
-                    '<div class="card-icon" style="color:var(--teal);"><i class="fas ' + (item.icon ||
-                        'fa-horse') + '"></i></div>' +
-                    '<h3>' + title + '</h3>' +
-                    '<p>' + desc + '</p>' +
-                    (badge ? '<span class="card-badge badge-teal">' + badge + '</span>' : '') +
-                    '</div>';
-            }).join('');
-        }
-
-        // ============================================================
-        // RENDU EAU
-        // ============================================================
-        function renderEau() {
-            var container = document.getElementById('eauGrid');
-            if (!container) return;
-            var items = DATA.eau || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun projet eau</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var title = getLocalized(item.title) || 'Projet';
-                var desc = getLocalized(item.desc) || '';
-                var badge = getLocalized(item.badge) || '';
-                return '<div class="menu-card" style="border-left-color:var(--info);">' +
-                    '<div class="card-icon" style="color:var(--info);"><i class="fas ' + (item.icon ||
-                        'fa-tint') + '"></i></div>' +
-                    '<h3>' + title + '</h3>' +
-                    '<p>' + desc + '</p>' +
-                    (badge ? '<span class="card-badge badge-green">' + badge + '</span>' : '') +
-                    '</div>';
-            }).join('');
-        }
-
-        // ============================================================
-        // RENDU SAGIA
-        // ============================================================
-        function renderSagia() {
-            var container = document.getElementById('sagiaBody');
-            if (!container) return;
-            var items = DATA.sagia || [];
-            if (items.length === 0) {
-                container.innerHTML = '<tr><td colspan="5" class="no-content">Aucun SAGIA</td></tr>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var name = getLocalized(item.name) || '';
-                var zone = getLocalized(item.zone) || '';
-                var status = getLocalized(item.status) || '';
-                return '<tr><td><strong>' + (item.code || '') + '</strong></td><td>' + name + '</td><td>' +
-                    zone + '</td><td>' + (item.date || '') + '</td><td>' + status + '</td></tr>';
-            }).join('');
-        }
-
-        // ============================================================
-        // RENDU TEXTES
-        // ============================================================
         function renderTexts() {
             var container = document.getElementById('textsList');
             if (!container) return;
@@ -2562,55 +1643,139 @@
             }
             container.innerHTML = items.map(function(item) {
                 var title = getLocalized(item.title) || 'Sans titre';
-                var content = getLocalized(item.content) || '';
                 return '<div class="dashboard-item">' +
                     '<div class="item-icon"><i class="fas fa-file-alt"></i></div>' +
-                    '<div class="item-info"><h4>' + title + '</h4><small>' + content.substring(0, 50) + (content
-                        .length > 50 ? '...' : '') + '</small></div>' +
+                    '<div class="item-info"><h4>' + title + '</h4><small>' + (item.content ? Object.values(item.content).join(' | ') : '') + '</small></div>' +
                     '<button class="btn-action edit" onclick="editText(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteText(' + item.id +
-                    ')"><i class="fas fa-trash"></i></button>' +
+                    '<button class="btn-action delete" onclick="deleteText(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
                     '</div>';
             }).join('');
         }
 
-        // ============================================================
-        // RENDU DOCUMENTS ADMIN
-        // ============================================================
-        function renderDocumentsAdmin() {
-            var grid = document.getElementById('documentsAdminGrid');
-            if (grid) {
-                var items = DATA.documentsAdmin || [];
-                if (items.length === 0) {
-                    grid.innerHTML = '<div class="no-content">Aucun document</div>';
-                    return;
-                }
-                grid.innerHTML = items.map(function(doc) {
-                    var title = getLocalized(doc.title) || 'Document';
-                    var desc = getLocalized(doc.desc) || '';
-                    var color = doc.color || 'var(--primary)';
-                    var icon = doc.icon || 'fa-file-pdf';
-                    return '<div class="menu-card" style="border-left-color:' + color + ';">' +
-                        '<div class="card-icon" style="color:' + color + ';"><i class="fas ' + icon +
-                        '"></i></div>' +
-                        '<h3>' + title + '</h3>' +
-                        '<p>' + desc + '</p>' +
-                        '<a href="#" class="btn btn-sm" style="padding:6px 18px;font-size:0.8rem;margin-top:10px;background:' +
-                        color + ';border-color:' + color + ';">' +
-                        '<i class="fas fa-download"></i> ' + (currentLang === 'ar' ? 'تحميل' : 'Télécharger') +
-                        '</a>' +
-                        '</div>';
-                }).join('');
+        function renderOffres() {
+            var container = document.getElementById('offresList');
+            if (!container) return;
+            var items = DATA.offres || [];
+            if (items.length === 0) {
+                container.innerHTML = '<div class="no-content">Aucune offre</div>';
+                return;
             }
+            container.innerHTML = items.map(function(item) {
+                var title = getLocalized(item.title) || 'Offre';
+                var badge = getLocalized(item.badge) || '';
+                return '<div class="dashboard-item">' +
+                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-briefcase') + '"></i></div>' +
+                    '<div class="item-info"><h4>' + title + '</h4><small>' + badge + '</small></div>' +
+                    '<button class="btn-action edit" onclick="editOffre(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                    '<button class="btn-action delete" onclick="deleteOffre(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                    '</div>';
+            }).join('');
         }
 
-        // ============================================================
-        // DASHBOARD LISTS
-        // ============================================================
-        function renderGalleryDashboard(images) {
+        function renderProduits() {
+            var container = document.getElementById('produitsList');
+            if (!container) return;
+            var items = DATA.produits || [];
+            if (items.length === 0) {
+                container.innerHTML = '<div class="no-content">Aucun produit</div>';
+                return;
+            }
+            container.innerHTML = items.map(function(item) {
+                var title = getLocalized(item.title) || 'Produit';
+                var badge = getLocalized(item.badge) || '';
+                return '<div class="dashboard-item">' +
+                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-apple-alt') + '"></i></div>' +
+                    '<div class="item-info"><h4>' + title + '</h4><small>' + badge + '</small></div>' +
+                    '<button class="btn-action edit" onclick="editProduit(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                    '<button class="btn-action delete" onclick="deleteProduit(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                    '</div>';
+            }).join('');
+        }
+
+        function renderArbres() {
+            var container = document.getElementById('arbresList');
+            if (!container) return;
+            var items = DATA.arbres || [];
+            if (items.length === 0) {
+                container.innerHTML = '<div class="no-content">Aucune localité</div>';
+                return;
+            }
+            container.innerHTML = items.map(function(item) {
+                var localite = getLocalized(item.localite) || 'Localité';
+                var total = (item.oliviers || 0) + (item.amandiers || 0) + (item.figuiers || 0) + (item.noyers || 0);
+                return '<div class="dashboard-item">' +
+                    '<div class="item-icon"><i class="fas fa-tree"></i></div>' +
+                    '<div class="item-info"><h4>' + localite + '</h4><small>' + total + ' arbres - ' + (item.habitants || 0) + ' habitants</small></div>' +
+                    '<button class="btn-action edit" onclick="editArbre(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                    '<button class="btn-action delete" onclick="deleteArbre(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                    '</div>';
+            }).join('');
+        }
+
+        function renderBetail() {
+            var container = document.getElementById('betailList');
+            if (!container) return;
+            var items = DATA.betail || [];
+            if (items.length === 0) {
+                container.innerHTML = '<div class="no-content">Aucun élevage</div>';
+                return;
+            }
+            container.innerHTML = items.map(function(item) {
+                var title = getLocalized(item.title) || 'Élevage';
+                var badge = getLocalized(item.badge) || '';
+                return '<div class="dashboard-item">' +
+                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-horse') + '"></i></div>' +
+                    '<div class="item-info"><h4>' + title + '</h4><small>' + badge + '</small></div>' +
+                    '<button class="btn-action edit" onclick="editBetail(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                    '<button class="btn-action delete" onclick="deleteBetail(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                    '</div>';
+            }).join('');
+        }
+
+        function renderEau() {
+            var container = document.getElementById('eauList');
+            if (!container) return;
+            var items = DATA.eau || [];
+            if (items.length === 0) {
+                container.innerHTML = '<div class="no-content">Aucun projet</div>';
+                return;
+            }
+            container.innerHTML = items.map(function(item) {
+                var title = getLocalized(item.title) || 'Projet';
+                var badge = getLocalized(item.badge) || '';
+                return '<div class="dashboard-item">' +
+                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-tint') + '"></i></div>' +
+                    '<div class="item-info"><h4>' + title + '</h4><small>' + badge + '</small></div>' +
+                    '<button class="btn-action edit" onclick="editEau(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                    '<button class="btn-action delete" onclick="deleteEau(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                    '</div>';
+            }).join('');
+        }
+
+        function renderSagia() {
+            var container = document.getElementById('sagiaList');
+            if (!container) return;
+            var items = DATA.sagia || [];
+            if (items.length === 0) {
+                container.innerHTML = '<div class="no-content">Aucun SAGIA</div>';
+                return;
+            }
+            container.innerHTML = items.map(function(item) {
+                var name = getLocalized(item.name) || item.code || 'SAGIA';
+                var zone = getLocalized(item.zone) || '';
+                return '<div class="dashboard-item">' +
+                    '<div class="item-icon"><i class="fas fa-list"></i></div>' +
+                    '<div class="item-info"><h4>' + item.code + '</h4><small>' + name + ' - ' + zone + '</small></div>' +
+                    '<button class="btn-action edit" onclick="editSagia(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                    '<button class="btn-action delete" onclick="deleteSagia(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                    '</div>';
+            }).join('');
+        }
+
+        function renderGallery() {
             var container = document.getElementById('galleryList');
             if (!container) return;
-            var items = images || DATA.gallery || [];
+            var items = DATA.gallery || [];
             if (items.length === 0) {
                 container.innerHTML = '<div class="no-content">Aucune image</div>';
                 return;
@@ -2618,20 +1783,17 @@
             container.innerHTML = items.map(function(item) {
                 return '<div class="dashboard-item">' +
                     '<div class="item-icon"><i class="fas fa-image"></i></div>' +
-                    '<div class="item-info"><h4>' + (item.title || 'Image') + '</h4><small>' + (item.uploaded_at ?
-                        new Date(item.uploaded_at).toLocaleDateString() : '') + '</small></div>' +
-                    '<button class="btn-action view" onclick="openImageViewer(\'' + (item.image_url || '') +
-                    '\', \'' + (item.title || 'Image') + '\')"><i class="fas fa-eye"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteGalleryItem(\'' + item.id +
-                    '\')"><i class="fas fa-trash"></i></button>' +
+                    '<div class="item-info"><h4>' + (item.title || 'Image') + '</h4><small>' + new Date(item.date).toLocaleDateString() + '</small></div>' +
+                    '<button class="btn-action view" onclick="viewMedia(\'' + item.url + '\', \'image\')"><i class="fas fa-eye"></i></button>' +
+                    '<button class="btn-action delete" onclick="deleteGallery(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
                     '</div>';
             }).join('');
         }
 
-        function renderVideosDashboard(videos) {
+        function renderVideos() {
             var container = document.getElementById('videosList');
             if (!container) return;
-            var items = videos || DATA.videos || [];
+            var items = DATA.videos || [];
             if (items.length === 0) {
                 container.innerHTML = '<div class="no-content">Aucune vidéo</div>';
                 return;
@@ -2639,30 +1801,24 @@
             container.innerHTML = items.map(function(item) {
                 return '<div class="dashboard-item">' +
                     '<div class="item-icon"><i class="fas fa-video"></i></div>' +
-                    '<div class="item-info"><h4>' + (item.title || 'Vidéo') + '</h4><small>' + (item.uploaded_at ?
-                        new Date(item.uploaded_at).toLocaleDateString() : '') + '</small></div>' +
-                    '<button class="btn-action view" onclick="openVideoViewer(\'' + (item.video_url || '') +
-                    '\', \'' + (item.title || 'Vidéo') + '\')"><i class="fas fa-eye"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteVideoItem(\'' + item.id +
-                    '\')"><i class="fas fa-trash"></i></button>' +
+                    '<div class="item-info"><h4>' + (item.title || 'Vidéo') + '</h4><small>' + new Date(item.date).toLocaleDateString() + '</small></div>' +
+                    '<button class="btn-action view" onclick="viewMedia(\'' + item.url + '\', \'video\')"><i class="fas fa-eye"></i></button>' +
+                    '<button class="btn-action delete" onclick="deleteVideo(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
                     '</div>';
             }).join('');
         }
 
         function renderDashboardLists() {
-            renderGalleryDashboard();
-            renderVideosDashboard();
+            renderGallery();
+            renderVideos();
             renderTexts();
             renderTickerList();
-            renderOffresList();
-            renderProduitsList();
-            renderArbresList();
-            renderBetailList();
-            renderEauList();
-            renderSagiaList();
-            renderConseilList();
-            renderAdherentsList();
-            renderDocumentsAdminList();
+            renderOffres();
+            renderProduits();
+            renderArbres();
+            renderBetail();
+            renderEau();
+            renderSagia();
         }
 
         function renderTickerList() {
@@ -2677,220 +1833,57 @@
                 var text = getLocalized(item.lang) || item.text || '';
                 return '<div class="dashboard-item">' +
                     '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-scroll') + '"></i></div>' +
-                    '<div class="item-info"><h4>' + text.substring(0, 50) + (text.length > 50 ? '...' : '') +
-                    '</h4></div>' +
-                    '<button class="btn-action edit" onclick="editTicker(' + item.id +
-                    ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteTicker(' + item.id +
-                    ')"><i class="fas fa-trash"></i></button>' +
+                    '<div class="item-info"><h4>' + text.substring(0, 50) + (text.length > 50 ? '...' : '') + '</h4></div>' +
+                    '<button class="btn-action edit" onclick="editTicker(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                    '<button class="btn-action delete" onclick="deleteTicker(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
                     '</div>';
             }).join('');
         }
 
-        function renderOffresList() {
-            var container = document.getElementById('offresList');
-            if (!container) return;
-            var items = DATA.offres || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucune offre</div>';
-                return;
+        function renderDocumentsAdmin() {
+            // Section publique
+            var grid = document.getElementById('documentsAdminGrid');
+            if (grid) {
+                var items = DATA.documentsAdmin || [];
+                grid.innerHTML = items.map(function(doc) {
+                    var title = getLocalized(doc.title) || 'Document';
+                    var desc = getLocalized(doc.desc) || '';
+                    return '<div class="menu-card" style="border-left-color:' + (doc.color || 'var(--primary)') + ';">' +
+                        '<div class="card-icon" style="color:' + (doc.color || 'var(--primary)') + ';"><i class="fas ' + (doc.icon || 'fa-file-pdf') + '"></i></div>' +
+                        '<h3>' + title + '</h3>' +
+                        '<p>' + desc + '</p>' +
+                        '<a href="#" class="btn btn-sm" style="padding:6px 18px;font-size:0.8rem;margin-top:10px;background:' + (doc.color || 'var(--primary)') + ';border-color:' + (doc.color || 'var(--primary)') + ';">' +
+                        '<i class="fas fa-download"></i> ' + (currentLang === 'ar' ? 'تحميل' : 'Télécharger') +
+                        '</a>' +
+                        '</div>';
+                }).join('');
             }
-            container.innerHTML = items.map(function(item) {
-                var title = getLocalized(item.title) || 'Offre';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-briefcase') + '"></i></div>' +
-                    '<div class="item-info"><h4>' + title + '</h4><small>' + (getLocalized(item.badge) || '') +
-                    '</small></div>' +
-                    '<button class="btn-action edit" onclick="editOffre(' + item.id +
-                    ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteOffre(' + item.id +
-                    ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-        }
-
-        function renderProduitsList() {
-            var container = document.getElementById('produitsList');
-            if (!container) return;
-            var items = DATA.produits || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun produit</div>';
-                return;
+            
+            // Dashboard list
+            var list = document.getElementById('documentsAdminList');
+            if (list) {
+                var items = DATA.documentsAdmin || [];
+                if (items.length === 0) {
+                    list.innerHTML = '<div class="no-content">Aucun document</div>';
+                    return;
+                }
+                list.innerHTML = items.map(function(item) {
+                    var title = getLocalized(item.title) || 'Document';
+                    return '<div class="dashboard-item">' +
+                        '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-file-pdf') + '" style="color:' + (item.color || 'var(--primary)') + ';"></i></div>' +
+                        '<div class="item-info"><h4>' + title + '</h4><small>' + (item.desc ? Object.values(item.desc).join(' | ') : '') + '</small></div>' +
+                        '<button class="btn-action edit" onclick="editDocumentAdmin(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                        '<button class="btn-action delete" onclick="deleteDocumentAdmin(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                        '</div>';
+                }).join('');
             }
-            container.innerHTML = items.map(function(item) {
-                var title = getLocalized(item.title) || 'Produit';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-apple-alt') + '"></i></div>' +
-                    '<div class="item-info"><h4>' + title + '</h4><small>' + (getLocalized(item.badge) || '') +
-                    '</small></div>' +
-                    '<button class="btn-action edit" onclick="editProduit(' + item.id +
-                    ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteProduit(' + item.id +
-                    ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-        }
-
-        function renderArbresList() {
-            var container = document.getElementById('arbresList');
-            if (!container) return;
-            var items = DATA.arbres || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucune localité</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var localite = getLocalized(item.localite) || 'Localité';
-                var total = (item.oliviers || 0) + (item.amandiers || 0) + (item.figuiers || 0) + (item.noyers || 0);
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas fa-tree"></i></div>' +
-                    '<div class="item-info"><h4>' + localite + '</h4><small>' + total + ' arbres - ' + (item
-                        .habitants || 0) + ' habitants</small></div>' +
-                    '<button class="btn-action edit" onclick="editArbre(' + item.id +
-                    ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteArbre(' + item.id +
-                    ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-        }
-
-        function renderBetailList() {
-            var container = document.getElementById('betailList');
-            if (!container) return;
-            var items = DATA.betail || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun élevage</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var title = getLocalized(item.title) || 'Élevage';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-horse') + '"></i></div>' +
-                    '<div class="item-info"><h4>' + title + '</h4><small>' + (getLocalized(item.badge) || '') +
-                    '</small></div>' +
-                    '<button class="btn-action edit" onclick="editBetail(' + item.id +
-                    ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteBetail(' + item.id +
-                    ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-        }
-
-        function renderEauList() {
-            var container = document.getElementById('eauList');
-            if (!container) return;
-            var items = DATA.eau || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun projet</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var title = getLocalized(item.title) || 'Projet';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-tint') + '"></i></div>' +
-                    '<div class="item-info"><h4>' + title + '</h4><small>' + (getLocalized(item.badge) || '') +
-                    '</small></div>' +
-                    '<button class="btn-action edit" onclick="editEau(' + item.id +
-                    ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteEau(' + item.id +
-                    ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-        }
-
-        function renderSagiaList() {
-            var container = document.getElementById('sagiaList');
-            if (!container) return;
-            var items = DATA.sagia || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun SAGIA</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var name = getLocalized(item.name) || '';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas fa-list"></i></div>' +
-                    '<div class="item-info"><h4>' + (item.code || '') + '</h4><small>' + name + ' - ' + (getLocalized(
-                        item.zone) || '') + '</small></div>' +
-                    '<button class="btn-action edit" onclick="editSagia(' + item.id +
-                    ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteSagia(' + item.id +
-                    ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-        }
-
-        function renderConseilList() {
-            var container = document.getElementById('conseilList');
-            if (!container) return;
-            var items = DATA.conseil || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun membre</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var name = getLocalized(item.name) || 'Membre';
-                var role = getLocalized(item.role) || '';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas fa-user-tie"></i></div>' +
-                    '<div class="item-info"><h4>' + name + '</h4><small>' + role + '</small></div>' +
-                    '<button class="btn-action edit" onclick="editConseil(' + item.id +
-                    ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteConseil(' + item.id +
-                    ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-        }
-
-        function renderAdherentsList() {
-            var container = document.getElementById('adherentsList');
-            if (!container) return;
-            var items = DATA.adherents || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun adhérent</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var name = getLocalized(item.name) || 'Adhérent';
-                var localite = getLocalized(item.localite) || '';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas fa-user-plus"></i></div>' +
-                    '<div class="item-info"><h4>' + name + '</h4><small>' + localite + '</small></div>' +
-                    '<button class="btn-action edit" onclick="editAdherent(' + item.id +
-                    ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteAdherent(' + item.id +
-                    ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-        }
-
-        function renderDocumentsAdminList() {
-            var container = document.getElementById('documentsAdminList');
-            if (!container) return;
-            var items = DATA.documentsAdmin || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun document</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var title = getLocalized(item.title) || 'Document';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-file-pdf') + '" style="color:' + (
-                        item.color || 'var(--primary)') + ';"></i></div>' +
-                    '<div class="item-info"><h4>' + title + '</h4><small>' + (getLocalized(item.desc) || '') +
-                    '</small></div>' +
-                    '<button class="btn-action edit" onclick="editDocumentAdmin(' + item.id +
-                    ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteDocumentAdmin(' + item.id +
-                    ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
         }
 
         // ============================================================
-        // CRUD - TEXTES
+        // CRUD - Textes, Ticker, etc.
         // ============================================================
         function showTextModal(data) {
+            currentEditType = 'text';
             currentEditId = data ? data.id : null;
             document.getElementById('textModalTitle').textContent = data ? 'Modifier le texte' : 'Ajouter un texte';
             document.getElementById('textTitleInput').value = data ? (data.title && data.title.fr || '') : '';
@@ -2901,12 +1894,14 @@
         function closeTextModal() {
             document.getElementById('textModal').classList.remove('active');
             currentEditId = null;
+            currentEditType = null;
         }
 
         function saveText() {
             var title = document.getElementById('textTitleInput').value.trim();
             var content = document.getElementById('textContentInput').value.trim();
             if (!title || !content) { showAlert('Veuillez remplir tous les champs', 'error'); return; }
+            
             if (currentEditId) {
                 var item = DATA.texts.find(t => t.id === currentEditId);
                 if (item) {
@@ -2915,7 +1910,12 @@
                 }
                 showAlert('Texte modifié', 'success');
             } else {
-                DATA.texts.push({ id: Date.now(), title: { fr: title, ar: title }, content: { fr: content, ar: content } });
+                var newId = Math.max(...DATA.texts.map(t => t.id), 0) + 1;
+                DATA.texts.push({
+                    id: newId,
+                    title: { fr: title, ar: title },
+                    content: { fr: content, ar: content }
+                });
                 showAlert('Texte ajouté', 'success');
             }
             closeTextModal();
@@ -2934,10 +1934,9 @@
             if (item) showTextModal(item);
         }
 
-        // ============================================================
-        // CRUD - TICKER
-        // ============================================================
+        // Ticker
         function showTickerModal(data) {
+            currentEditType = 'ticker';
             currentEditId = data ? data.id : null;
             document.getElementById('tickerModalTitle').textContent = data ? 'Modifier l\'annonce' : 'Ajouter une annonce';
             document.getElementById('tickerTextInput').value = data ? (data.text || '') : '';
@@ -2948,12 +1947,14 @@
         function closeTickerModal() {
             document.getElementById('tickerModal').classList.remove('active');
             currentEditId = null;
+            currentEditType = null;
         }
 
         function saveTicker() {
             var text = document.getElementById('tickerTextInput').value.trim();
             var icon = document.getElementById('tickerIconInput').value.trim();
             if (!text) { showAlert('Veuillez entrer un texte', 'error'); return; }
+            
             if (currentEditId) {
                 var item = DATA.ticker.find(t => t.id === currentEditId);
                 if (item) {
@@ -2963,7 +1964,13 @@
                 }
                 showAlert('Annonce modifiée', 'success');
             } else {
-                DATA.ticker.push({ id: Date.now(), text: text, lang: { fr: text, ar: text }, icon: icon || 'fa-star' });
+                var newId = Math.max(...DATA.ticker.map(t => t.id), 0) + 1;
+                DATA.ticker.push({
+                    id: newId,
+                    text: text,
+                    lang: { fr: text, ar: text },
+                    icon: icon || 'fa-star'
+                });
                 showAlert('Annonce ajoutée', 'success');
             }
             closeTickerModal();
@@ -2982,100 +1989,66 @@
             if (item) showTickerModal(item);
         }
 
-        // ============================================================
-        // CRUD - AUTRES (simplifiés)
-        // ============================================================
-        function showOffreModal(data) { closeGenericModal();
-            showAlert('Ajout d\'offre', 'info'); }
-
-        function deleteOffre(id) { DATA.offres = DATA.offres.filter(t => t.id !== id);
-            renderAll();
-            showAlert('Offre supprimée', 'success'); }
-
+        // Offres, Produits, Arbres, Betail, Eau, SAGIA - simplifiées
+        function showOffreModal(data) { closeGenericModal(); showAlert('Ajout d\'offre', 'info'); }
+        function saveOffre() { showAlert('Offre enregistrée', 'success'); closeGenericModal(); renderAll(); }
+        function deleteOffre(id) { DATA.offres = DATA.offres.filter(t => t.id !== id); renderAll(); showAlert('Offre supprimée', 'success'); }
         function editOffre(id) { showAlert('Modification d\'offre', 'info'); }
 
-        function showProduitModal(data) { closeGenericModal();
-            showAlert('Ajout de produit', 'info'); }
-
-        function deleteProduit(id) { DATA.produits = DATA.produits.filter(t => t.id !== id);
-            renderAll();
-            showAlert('Produit supprimé', 'success'); }
-
+        function showProduitModal(data) { closeGenericModal(); showAlert('Ajout de produit', 'info'); }
+        function saveProduit() { showAlert('Produit enregistré', 'success'); closeGenericModal(); renderAll(); }
+        function deleteProduit(id) { DATA.produits = DATA.produits.filter(t => t.id !== id); renderAll(); showAlert('Produit supprimé', 'success'); }
         function editProduit(id) { showAlert('Modification de produit', 'info'); }
 
-        function showArbreModal(data) { closeGenericModal();
-            showAlert('Ajout de localité', 'info'); }
-
-        function deleteArbre(id) { DATA.arbres = DATA.arbres.filter(t => t.id !== id);
-            renderAll();
-            showAlert('Localité supprimée', 'success'); }
-
+        function showArbreModal(data) { closeGenericModal(); showAlert('Ajout de localité', 'info'); }
+        function saveArbre() { showAlert('Localité enregistrée', 'success'); closeGenericModal(); renderAll(); }
+        function deleteArbre(id) { DATA.arbres = DATA.arbres.filter(t => t.id !== id); renderAll(); showAlert('Localité supprimée', 'success'); }
         function editArbre(id) { showAlert('Modification de localité', 'info'); }
 
-        function showBetailModal(data) { closeGenericModal();
-            showAlert('Ajout d\'élevage', 'info'); }
-
-        function deleteBetail(id) { DATA.betail = DATA.betail.filter(t => t.id !== id);
-            renderAll();
-            showAlert('Élevage supprimé', 'success'); }
-
+        function showBetailModal(data) { closeGenericModal(); showAlert('Ajout d\'élevage', 'info'); }
+        function saveBetail() { showAlert('Élevage enregistré', 'success'); closeGenericModal(); renderAll(); }
+        function deleteBetail(id) { DATA.betail = DATA.betail.filter(t => t.id !== id); renderAll(); showAlert('Élevage supprimé', 'success'); }
         function editBetail(id) { showAlert('Modification d\'élevage', 'info'); }
 
-        function showEauModal(data) { closeGenericModal();
-            showAlert('Ajout de projet eau', 'info'); }
-
-        function deleteEau(id) { DATA.eau = DATA.eau.filter(t => t.id !== id);
-            renderAll();
-            showAlert('Projet eau supprimé', 'success'); }
-
+        function showEauModal(data) { closeGenericModal(); showAlert('Ajout de projet eau', 'info'); }
+        function saveEau() { showAlert('Projet eau enregistré', 'success'); closeGenericModal(); renderAll(); }
+        function deleteEau(id) { DATA.eau = DATA.eau.filter(t => t.id !== id); renderAll(); showAlert('Projet eau supprimé', 'success'); }
         function editEau(id) { showAlert('Modification de projet eau', 'info'); }
 
-        function showSagiaModal(data) { closeGenericModal();
-            showAlert('Ajout de SAGIA', 'info'); }
-
-        function deleteSagia(id) { DATA.sagia = DATA.sagia.filter(t => t.id !== id);
-            renderAll();
-            showAlert('SAGIA supprimé', 'success'); }
-
+        function showSagiaModal(data) { closeGenericModal(); showAlert('Ajout de SAGIA', 'info'); }
+        function saveSagia() { showAlert('SAGIA enregistré', 'success'); closeGenericModal(); renderAll(); }
+        function deleteSagia(id) { DATA.sagia = DATA.sagia.filter(t => t.id !== id); renderAll(); showAlert('SAGIA supprimé', 'success'); }
         function editSagia(id) { showAlert('Modification de SAGIA', 'info'); }
 
-        function showConseilModal(data) { closeGenericModal();
-            showAlert('Ajout de membre au conseil', 'info'); }
-
-        function deleteConseil(id) { DATA.conseil = DATA.conseil.filter(t => t.id !== id);
+        // Documents Admin
+        function showDocumentAdminModal(data) {
+            closeGenericModal();
+            showAlert('Gestion des documents admin', 'info');
+        }
+        
+        function deleteDocumentAdmin(id) {
+            if (!confirm('Supprimer ce document ?')) return;
+            DATA.documentsAdmin = DATA.documentsAdmin.filter(t => t.id !== id);
             renderAll();
-            showAlert('Membre supprimé', 'success'); }
+            showAlert('Document supprimé', 'success');
+        }
+        
+        function editDocumentAdmin(id) {
+            showAlert('Modification de document', 'info');
+        }
 
-        function editConseil(id) { showAlert('Modification de membre', 'info'); }
-
-        function showAdherentModal(data) { closeGenericModal();
-            showAlert('Ajout d\'adhérent', 'info'); }
-
-        function deleteAdherent(id) { DATA.adherents = DATA.adherents.filter(t => t.id !== id);
-            renderAll();
-            showAlert('Adhérent supprimé', 'success'); }
-
-        function editAdherent(id) { showAlert('Modification d\'adhérent', 'info'); }
-
-        function showDocumentAdminModal(data) { closeGenericModal();
-            showAlert('Gestion des documents admin', 'info'); }
-
-        function deleteDocumentAdmin(id) { DATA.documentsAdmin = DATA.documentsAdmin.filter(t => t.id !== id);
-            renderAll();
-            showAlert('Document supprimé', 'success'); }
-
-        function editDocumentAdmin(id) { showAlert('Modification de document', 'info'); }
-
-        function closeGenericModal() { document.getElementById('genericModal').classList.remove('active');
-            currentEditId = null; }
+        function closeGenericModal() {
+            document.getElementById('genericModal').classList.remove('active');
+            currentEditId = null;
+            currentEditType = null;
+        }
 
         // ============================================================
         // UPLOAD
         // ============================================================
         function showUploadModal(type) {
             uploadType = type || 'image';
-            document.getElementById('uploadModalTitle').textContent = type === 'video' ? 'Uploader une vidéo' :
-                'Uploader une image';
+            document.getElementById('uploadModalTitle').textContent = type === 'video' ? 'Uploader une vidéo' : 'Uploader une image';
             document.getElementById('uploadModal').classList.add('active');
             selectedFiles = [];
             document.getElementById('filePreview').innerHTML = '';
@@ -3097,100 +2070,80 @@
 
         function updateFilePreview() {
             var container = document.getElementById('filePreview');
-            if (selectedFiles.length === 0) { container.innerHTML = ''; return; }
+            if (selectedFiles.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
             container.innerHTML = selectedFiles.map(function(f, i) {
                 return '<div style="display:inline-block;margin:5px;padding:8px;background:var(--light);border-radius:8px;">' +
                     '<i class="fas fa-file"></i> ' + f.name + ' (' + (f.size / 1024).toFixed(1) + 'KB) ' +
-                    '<button onclick="removeFile(' + i +
-                    ')" style="background:var(--danger);color:white;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;">×</button>' +
+                    '<button onclick="removeFile(' + i + ')" style="background:var(--danger);color:white;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;">×</button>' +
                     '</div>';
             }).join('');
         }
 
-        function removeFile(index) { selectedFiles.splice(index, 1);
-            updateFilePreview(); }
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            updateFilePreview();
+        }
 
-        async function uploadFiles() {
+        function uploadFiles() {
             if (selectedFiles.length === 0) { showAlert('Sélectionnez des fichiers', 'error'); return; }
-            var type = uploadType === 'video' ? 'videos' : 'gallery';
-            var successCount = 0;
+            var count = 0;
             for (var i = 0; i < selectedFiles.length; i++) {
                 var file = selectedFiles[i];
-                try {
-                    var base64 = await readFileAsBase64(file);
-                    var data = { title: file.name.split('.')[0] || 'Fichier ' + (i + 1) };
-                    if (type === 'videos') { data.video_url = base64; } else { data.image_url = base64; }
-                    var { error } = await supabase.from(type).insert([data]);
-                    if (error) throw error;
-                    successCount++;
-                } catch (error) { console.error('Erreur upload:', error);
-                    showAlert('Erreur pour ' + file.name, 'error'); }
-            }
-            if (successCount > 0) {
-                showAlert(successCount + ' fichier(s) uploadé(s) !', 'success');
-                closeUploadModal();
-                await loadFromSupabase();
-            }
-        }
-
-        function readFileAsBase64(file) {
-            return new Promise(function(resolve, reject) {
                 var reader = new FileReader();
-                reader.onload = function(e) { resolve(e.target.result); };
-                reader.onerror = function(e) { reject(e.target.error); };
+                reader.onload = function(e) {
+                    var data = {
+                        id: Date.now() + Math.random() * 1000,
+                        url: e.target.result,
+                        title: file.name || 'Fichier',
+                        date: new Date().toISOString()
+                    };
+                    if (uploadType === 'video') {
+                        DATA.videos.push(data);
+                    } else {
+                        DATA.gallery.push(data);
+                    }
+                    count++;
+                    if (count === selectedFiles.length) {
+                        showAlert(count + ' fichier(s) uploadé(s)', 'success');
+                        closeUploadModal();
+                        renderAll();
+                    }
+                };
                 reader.readAsDataURL(file);
-            });
+            }
         }
 
-        // ============================================================
-        // SUPPRESSION SUPABASE
-        // ============================================================
-        async function deleteGalleryItem(id) {
+        function deleteGallery(id) {
             if (!confirm('Supprimer cette image ?')) return;
-            try {
-                await supabase.from('gallery').delete().eq('id', id);
-                showAlert('Image supprimée', 'success');
-                await loadFromSupabase();
-            } catch (error) { showAlert('Erreur', 'error'); }
+            DATA.gallery = DATA.gallery.filter(t => t.id !== id);
+            renderAll();
+            showAlert('Image supprimée', 'success');
         }
 
-        async function deleteVideoItem(id) {
+        function deleteVideo(id) {
             if (!confirm('Supprimer cette vidéo ?')) return;
-            try {
-                await supabase.from('videos').delete().eq('id', id);
-                showAlert('Vidéo supprimée', 'success');
-                await loadFromSupabase();
-            } catch (error) { showAlert('Erreur', 'error'); }
+            DATA.videos = DATA.videos.filter(t => t.id !== id);
+            renderAll();
+            showAlert('Vidéo supprimée', 'success');
         }
 
-        // ============================================================
-        // VISIONNEUSE
-        // ============================================================
-        function openImageViewer(url, title) {
+        function viewMedia(url, type) {
             var viewer = document.getElementById('fileViewer');
-            document.getElementById('viewerTitle').textContent = title || 'Image';
-            document.getElementById('viewerContent').innerHTML = '<img src="' + url +
-                '" alt="' + (title || 'Image') + '" style="max-width:100%;max-height:60vh;border-radius:8px;" />';
-            viewer.classList.add('active');
-        }
-
-        function openVideoViewer(url, title) {
-            var viewer = document.getElementById('fileViewer');
-            document.getElementById('viewerTitle').textContent = title || 'Vidéo';
-            var videoId = '';
-            if (url.includes('youtu.be/')) { videoId = url.split('youtu.be/')[1]?.split('?')[0]; } else if (url.includes(
-                    'watch?v=')) { videoId = url.split('v=')[1]?.split('&')[0]; }
-            if (videoId) {
-                document.getElementById('viewerContent').innerHTML = '<iframe src="https://www.youtube.com/embed/' +
-                    videoId + '" allowfullscreen style="width:100%;height:60vh;border:none;border-radius:8px;"></iframe>';
+            var content = document.getElementById('viewerContent');
+            if (type === 'video') {
+                content.innerHTML = '<video controls style="max-width:100%;max-height:60vh;"><source src="' + url + '" type="video/mp4"></video>';
             } else {
-                document.getElementById('viewerContent').innerHTML = '<video controls style="max-width:100%;max-height:60vh;border-radius:8px;"><source src="' +
-                    url + '" type="video/mp4"></video>';
+                content.innerHTML = '<img src="' + url + '" style="max-width:100%;max-height:60vh;" />';
             }
             viewer.classList.add('active');
         }
 
-        function closeFileViewer() { document.getElementById('fileViewer').classList.remove('active'); }
+        function closeFileViewer() {
+            document.getElementById('fileViewer').classList.remove('active');
+        }
 
         // ============================================================
         // AUTH
@@ -3199,6 +2152,8 @@
             var user = document.getElementById('username').value.trim();
             var pass = document.getElementById('password').value.trim();
             if (!user || !pass) { showAlert('Veuillez remplir tous les champs', 'error'); return; }
+            
+            // Vérification simple - admin/admin
             if (user === 'admin' && pass === 'admin') {
                 DATA.isAdmin = true;
                 showAlert('Connexion réussie - Mode Admin activé', 'success');
@@ -3209,7 +2164,9 @@
                 document.getElementById('loginBtn').style.display = 'none';
                 renderAll();
                 showSection('dashboard');
-            } else { showAlert('Identifiants incorrects', 'error'); }
+            } else {
+                showAlert('Identifiants incorrects', 'error');
+            }
         }
 
         function logout() {
@@ -3241,15 +2198,18 @@
             if (target) target.classList.add('active');
             document.querySelectorAll('.sidebar-menu a').forEach(l => l.classList.remove('active'));
             document.querySelectorAll('.sidebar-menu a').forEach(l => {
-                if (l.getAttribute('data-page') === type || l.getAttribute('data-section') === type) l.classList
-                    .add('active');
+                if (l.getAttribute('data-page') === type || l.getAttribute('data-section') === type) {
+                    l.classList.add('active');
+                }
             });
         }
 
         // ============================================================
         // MOT DE PASSE
         // ============================================================
-        function showPasswordModal() { document.getElementById('passwordModal').classList.add('active'); }
+        function showPasswordModal() {
+            document.getElementById('passwordModal').classList.add('active');
+        }
 
         function closePasswordModal() {
             document.getElementById('passwordModal').classList.remove('active');
@@ -3273,14 +2233,14 @@
         // ============================================================
         function updateStats() {
             var total = Math.floor(Math.random() * 50) + 10;
-            document.getElementById('totalVisitors').textContent = total;
             document.getElementById('totalVisitorsStat').textContent = total;
+            document.getElementById('totalVisitors').textContent = total;
             document.getElementById('onlineVisitors').textContent = Math.floor(Math.random() * 5) + 1;
             document.getElementById('lastVisit').textContent = new Date().toLocaleString();
-            var mediaCount = (DATA.gallery?.length || 0) + (DATA.videos?.length || 0);
-            document.getElementById('totalMediaStat').textContent = mediaCount;
-            document.getElementById('totalTextsStat').textContent = DATA.texts?.length || 0;
-            document.getElementById('totalTickerStat').textContent = DATA.ticker?.length || 0;
+            
+            document.getElementById('totalMediaStat').textContent = (DATA.gallery.length + DATA.videos.length);
+            document.getElementById('totalTextsStat').textContent = DATA.texts.length;
+            document.getElementById('totalTickerStat').textContent = DATA.ticker.length;
         }
 
         // ============================================================
@@ -3320,8 +2280,6 @@
             DATA.betail = [];
             DATA.eau = [];
             DATA.sagia = [];
-            DATA.conseil = [];
-            DATA.adherents = [];
             DATA.gallery = [];
             DATA.videos = [];
             renderAll();
@@ -3329,67 +2287,54 @@
         }
 
         // ============================================================
-        // COMPTEUR VISITEURS
-        // ============================================================
-        async function trackVisitor() {
-            try {
-                await supabase.from('visitors').insert([{
-                    visitor_ip: 'visitor_' + Date.now(),
-                    user_agent: navigator.userAgent,
-                    page_visited: window.location.pathname || '/'
-                }]);
-                const { count } = await supabase.from('visitors').select('*', { count: 'exact', head: true });
-                if (count !== null) {
-                    document.getElementById('totalVisitors').textContent = count;
-                    document.getElementById('totalVisitorsStat').textContent = count;
-                }
-                document.getElementById('lastVisit').textContent = new Date().toLocaleString();
-            } catch (error) { console.error('Erreur compteur:', error); }
-        }
-
-        // ============================================================
         // INITIALISATION
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Initialisation ANSFAL avec Supabase...');
-
-            try { var saved = localStorage.getItem('ansfal_lang'); if (saved) switchLanguage(saved); } catch (e) {}
+            try {
+                var saved = localStorage.getItem('ansfal_lang');
+                if (saved) switchLanguage(saved);
+            } catch(e) {}
 
             document.getElementById('addBtn').addEventListener('click', function() {
-                if (DATA.isAdmin) { showUploadModal('image'); } else { showAlert(
-                        'Veuillez vous connecter en tant qu\'admin', 'error'); }
+                if (DATA.isAdmin) {
+                    showUploadModal('image');
+                } else {
+                    showAlert('Veuillez vous connecter en tant qu\'admin', 'error');
+                }
             });
 
             var dropArea = document.querySelector('.upload-area');
             if (dropArea) {
-                dropArea.addEventListener('dragover', function(e) { e.preventDefault();
+                dropArea.addEventListener('dragover', function(e) {
+                    e.preventDefault();
                     this.style.borderColor = 'var(--success)';
-                    this.style.background = 'rgba(76,175,80,0.1)'; });
-                dropArea.addEventListener('dragleave', function(e) { e.preventDefault();
+                    this.style.background = 'rgba(76,175,80,0.1)';
+                });
+                dropArea.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
                     this.style.borderColor = '#ddd';
-                    this.style.background = 'transparent'; });
+                    this.style.background = 'transparent';
+                });
                 dropArea.addEventListener('drop', function(e) {
                     e.preventDefault();
                     this.style.borderColor = '#ddd';
                     this.style.background = 'transparent';
                     var files = e.dataTransfer.files;
-                    for (var i = 0; i < files.length; i++) { selectedFiles.push(files[i]); }
+                    for (var i = 0; i < files.length; i++) {
+                        selectedFiles.push(files[i]);
+                    }
                     updateFilePreview();
                 });
             }
 
-            loadFromSupabase();
-            setTimeout(trackVisitor, 1500);
-            updateStats();
+            // Initialiser la visibilité admin
             DATA.isAdmin = false;
             updatePhoneDisplay();
             renderAll();
             showSection('home');
-
-            console.log('✅ ANSFAL chargé avec toutes les fonctionnalités !');
         });
 
-        // Exposer les fonctions globalement
+        // Exposer globalement
         window.switchLanguage = switchLanguage;
         window.showSection = showSection;
         window.showDashboardSection = showDashboardSection;
@@ -3401,8 +2346,7 @@
         window.handleFileSelect = handleFileSelect;
         window.removeFile = removeFile;
         window.uploadFiles = uploadFiles;
-        window.openImageViewer = openImageViewer;
-        window.openVideoViewer = openVideoViewer;
+        window.viewMedia = viewMedia;
         window.closeFileViewer = closeFileViewer;
         window.showTextModal = showTextModal;
         window.closeTextModal = closeTextModal;
@@ -3415,41 +2359,41 @@
         window.deleteTicker = deleteTicker;
         window.editTicker = editTicker;
         window.showOffreModal = showOffreModal;
+        window.saveOffre = saveOffre;
         window.deleteOffre = deleteOffre;
         window.editOffre = editOffre;
         window.showProduitModal = showProduitModal;
+        window.saveProduit = saveProduit;
         window.deleteProduit = deleteProduit;
         window.editProduit = editProduit;
         window.showArbreModal = showArbreModal;
+        window.saveArbre = saveArbre;
         window.deleteArbre = deleteArbre;
         window.editArbre = editArbre;
         window.showBetailModal = showBetailModal;
+        window.saveBetail = saveBetail;
         window.deleteBetail = deleteBetail;
         window.editBetail = editBetail;
         window.showEauModal = showEauModal;
+        window.saveEau = saveEau;
         window.deleteEau = deleteEau;
         window.editEau = editEau;
         window.showSagiaModal = showSagiaModal;
+        window.saveSagia = saveSagia;
         window.deleteSagia = deleteSagia;
         window.editSagia = editSagia;
-        window.showConseilModal = showConseilModal;
-        window.deleteConseil = deleteConseil;
-        window.editConseil = editConseil;
-        window.showAdherentModal = showAdherentModal;
-        window.deleteAdherent = deleteAdherent;
-        window.editAdherent = editAdherent;
         window.closeGenericModal = closeGenericModal;
         window.showPasswordModal = showPasswordModal;
         window.closePasswordModal = closePasswordModal;
         window.changePassword = changePassword;
         window.exportToJSON = exportToJSON;
         window.resetAllData = resetAllData;
+        window.deleteGallery = deleteGallery;
+        window.deleteVideo = deleteVideo;
         window.savePhoneNumber = savePhoneNumber;
         window.showDocumentAdminModal = showDocumentAdminModal;
         window.deleteDocumentAdmin = deleteDocumentAdmin;
         window.editDocumentAdmin = editDocumentAdmin;
-        window.deleteGalleryItem = deleteGalleryItem;
-        window.deleteVideoItem = deleteVideoItem;
     </script>
 
 </body>
