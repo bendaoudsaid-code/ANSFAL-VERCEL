@@ -768,6 +768,48 @@
         }
         .loading i { font-size: 2rem; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+   /* Forcer LTR pour les numéros de téléphone - À AJOUTER DANS LA SECTION STYLE */
+.phone-number, 
+#headerPhoneNumber,
+#heroPhoneNumber,
+#contactPhoneNumber,
+#footerPhoneNumber,
+.logo-phone,
+.hero-phone,
+[class*="phone"] {
+    direction: ltr !important;
+    unicode-bidi: bidi-override !important;
+    display: inline-block !important;
+}
+
+/* Pour les champs de saisie */
+#settingsPhoneInput,
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="tel"],
+textarea {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
+/* En mode RTL, les textes restent à droite */
+body.rtl input[type="text"],
+body.rtl input[type="password"],
+body.rtl input[type="email"],
+body.rtl input[type="tel"],
+body.rtl textarea {
+    text-align: right !important;
+}
+
+/* Mais les numéros de téléphone restent à gauche */
+body.rtl #settingsPhoneInput,
+body.rtl .phone-number,
+body.rtl [id*="PhoneNumber"] {
+    text-align: left !important;
+    direction: ltr !important;
+}
     </style>
 </head>
 
@@ -1475,7 +1517,157 @@
                 if (!settingsError && settingsData && settingsData.length > 0) {
                     DATA.phoneNumber = settingsData[0].phone_number || DATA.phoneNumber;
                 }
+// ============================================================
+// FONCTIONS SUPABASE
+// ============================================================
+async function loadAllData() {
+    try {
+        showLoading(true);
+        
+        // Charger le numéro de téléphone
+        const { data: settingsData, error: settingsError } = await supabaseClient
+            .from('settings')
+            .select('phone_number')
+            .limit(1);
+        
+        if (!settingsError && settingsData && settingsData.length > 0) {
+            DATA.phoneNumber = settingsData[0].phone_number || DATA.phoneNumber;
+        }
 
+        // Charger toutes les tables
+        const tables = [
+            { key: 'ticker', table: 'ticker' },
+            { key: 'texts', table: 'texts' },
+            { key: 'offres', table: 'offres' },
+            { key: 'produits', table: 'produits' },
+            { key: 'arbres', table: 'arbres' },
+            { key: 'betail', table: 'betail' },
+            { key: 'eau', table: 'eau' },
+            { key: 'sagia', table: 'sagia' },
+            { key: 'gallery', table: 'gallery' },
+            { key: 'videos', table: 'videos' },
+            { key: 'documentsAdmin', table: 'documents_admin' }
+        ];
+
+        for (const { key, table } of tables) {
+            const { data, error } = await supabaseClient
+                .from(table)
+                .select('*')
+                .order('id', { ascending: true });
+            
+            if (error) {
+                console.warn(`⚠️ Erreur chargement ${table}:`, error);
+                continue;
+            }
+            
+            if (data && data.length > 0) {
+                DATA[key] = data;
+            } else {
+                DATA[key] = [];
+            }
+        }
+
+        console.log('✅ Données chargées depuis Supabase');
+        renderAll();
+        showLoading(false);
+        
+    } catch (error) {
+        console.error('❌ Erreur chargement des données:', error);
+        showAlert('Erreur de chargement des données', 'error');
+        showLoading(false);
+    }
+}
+
+// ============================================================
+// GESTION DU TÉLÉPHONE  <--- AJOUTER ICI
+// ============================================================
+
+function updatePhoneDisplay() {
+    var phone = DATA.phoneNumber || '06 25 93 13 19';
+    var elements = ['headerPhoneNumber', 'heroPhoneNumber', 'contactPhoneNumber', 'footerPhoneNumber'];
+    elements.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+            el.textContent = phone;
+            el.setAttribute('dir', 'ltr');
+            el.style.direction = 'ltr';
+            el.style.unicodeBidi = 'bidi-override';
+            el.style.display = 'inline-block';
+        }
+    });
+    var settingsInput = document.getElementById('settingsPhoneInput');
+    if (settingsInput) {
+        settingsInput.value = phone;
+        settingsInput.setAttribute('dir', 'ltr');
+        settingsInput.style.direction = 'ltr';
+        settingsInput.style.textAlign = 'left';
+    }
+}
+
+async function savePhoneNumber() {
+    var input = document.getElementById('settingsPhoneInput');
+    if (!input) return;
+    var phone = input.value.trim();
+    if (!phone) { 
+        showAlert('Veuillez entrer un numéro de téléphone', 'error'); 
+        return; 
+    }
+    
+    try {
+        showLoading(true);
+        
+        // Vérifier si un enregistrement existe
+        const { data: existing, error: checkError } = await supabaseClient
+            .from('settings')
+            .select('id')
+            .limit(1);
+        
+        if (checkError) throw checkError;
+        
+        if (existing && existing.length > 0) {
+            // Mise à jour
+            const { error } = await supabaseClient
+                .from('settings')
+                .update({ 
+                    phone_number: phone, 
+                    updated_at: new Date().toISOString() 
+                })
+                .eq('id', existing[0].id);
+            
+            if (error) throw error;
+        } else {
+            // Insertion
+            const { error } = await supabaseClient
+                .from('settings')
+                .insert([{ 
+                    phone_number: phone, 
+                    created_at: new Date().toISOString() 
+                }]);
+            
+            if (error) throw error;
+        }
+        
+        DATA.phoneNumber = phone;
+        updatePhoneDisplay();
+        showAlert('✅ Numéro de téléphone mis à jour', 'success');
+        showLoading(false);
+    } catch (error) {
+        console.error('Erreur:', error);
+        showAlert('❌ Erreur: ' + error.message, 'error');
+        showLoading(false);
+    }
+}
+
+// ============================================================
+// CRUD - TEXTES  <--- CONTINUE ICI
+// ============================================================
+
+async function saveToSupabase(table, data, id = null) {
+    // ... code existant ...
+}
+
+// ... le reste de votre code ...
+                
                 // Charger toutes les tables
                 const tables = [
                     { key: 'ticker', table: 'ticker' },
@@ -1688,16 +1880,27 @@
         // TÉLÉPHONE
         // ============================================================
         function updatePhoneDisplay() {
-    var phone = DATA.phoneNumber || '06 25 93 13 18';
+    var phone = DATA.phoneNumber || '06 25 93 13 19';
     var elements = ['headerPhoneNumber', 'heroPhoneNumber', 'contactPhoneNumber', 'footerPhoneNumber'];
     elements.forEach(function(id) {
         var el = document.getElementById(id);
         if (el) {
             el.textContent = phone;
-            // Ajouter dir="ltr" si ce n'est pas déjà fait
-            if (!el.hasAttribute('dir')) {
-                el.setAttribute('dir', 'ltr');
-            }
+            // Forcer l'affichage LTR pour les numéros
+            el.setAttribute('dir', 'ltr');
+            el.style.direction = 'ltr';
+            el.style.unicodeBidi = 'bidi-override';
+            el.style.display = 'inline-block';
+        }
+    });
+    var settingsInput = document.getElementById('settingsPhoneInput');
+    if (settingsInput) {
+        settingsInput.value = phone;
+        settingsInput.setAttribute('dir', 'ltr');
+        settingsInput.style.direction = 'ltr';
+        settingsInput.style.textAlign = 'left';
+    }
+}
         }
     });
     var settingsInput = document.getElementById('settingsPhoneInput');
