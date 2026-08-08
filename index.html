@@ -964,16 +964,16 @@ body.rtl [id*="PhoneNumber"] {
 
     <!-- DOCUMENTS ADMIN -->
     <section id="documents-admin" class="documents-admin">
-        <div class="container">
-            <div class="section-header">
-                <h2><i class="fas fa-lock" style="color:var(--danger);"></i> <span id="docAdminTitle">Documents administratifs</span></h2>
-                <p id="docAdminSubtitle">Espace réservé aux administrateurs de l'association</p>
-            </div>
-            <div class="menu-grid" id="documentsAdminGrid">
-                <div class="loading"><i class="fas fa-spinner"></i> Chargement...</div>
-            </div>
+    <div class="container">
+        <div class="section-header">
+            <h2><i class="fas fa-lock" style="color:var(--danger);"></i> <span id="docAdminTitle">Documents administratifs</span></h2>
+            <p id="docAdminSubtitle">Espace réservé aux administrateurs de l'association</p>
         </div>
-    </section>
+        <div class="menu-grid" id="documentsAdminGrid">
+            <div class="loading"><i class="fas fa-spinner"></i> Chargement...</div>
+        </div>
+    </div>
+</section>
 
     <!-- Les autres sections -->
     <section id="offres"><div class="container"><div class="section-header"><h2 id="offresTitle"><i class="fas fa-briefcase"></i> Offres d'emploi</h2></div><div class="menu-grid" id="offresGrid"><div class="loading"><i class="fas fa-spinner"></i> Chargement...</div></div></div></section>
@@ -1468,6 +1468,54 @@ body.rtl [id*="PhoneNumber"] {
     <!-- ============================================ -->
     <script>
         // Fonction pour télécharger un document
+function renderDocumentsAdmin() {
+    var grid = document.getElementById('documentsAdminGrid');
+    if (!grid) return;
+    
+    var items = DATA.documentsAdmin || [];
+    if (items.length === 0) {
+        grid.innerHTML = '<div class="no-content">Aucun document administratif</div>';
+        return;
+    }
+    
+    grid.innerHTML = items.map(function(doc) {
+        var title = getLocalized(doc.title) || 'Document';
+        var desc = getLocalized(doc.description) || '';
+        var color = doc.color || 'var(--primary)';
+        var icon = doc.icon || 'fa-file-pdf';
+        
+        return '<div class="menu-card" style="border-left-color:' + color + ';">' +
+            '<div class="card-icon" style="color:' + color + ';"><i class="fas ' + icon + '"></i></div>' +
+            '<h3>' + title + '</h3>' +
+            '<p>' + desc + '</p>' +
+            '<a href="#" class="btn btn-sm" style="padding:6px 18px;font-size:0.8rem;margin-top:10px;background:' + color + ';border-color:' + color + ';" onclick="downloadDocument(' + doc.id + ')">' +
+            '<i class="fas fa-download"></i> ' + (currentLang === 'ar' ? 'تحميل' : 'Télécharger') +
+            '</a>' +
+            '</div>';
+    }).join('');
+}
+        
+        function renderPublicDocuments() {
+    var grid = document.getElementById('documentsGrid');
+    if (!grid) return;
+    
+    var items = DATA.documents || [];
+    if (items.length === 0) {
+        grid.innerHTML = '<div class="no-content">Aucun document disponible</div>';
+        return;
+    }
+    
+    grid.innerHTML = items.map(function(doc) {
+        return '<div class="menu-card" style="border-left-color:#e74c3c;">' +
+            '<div class="card-icon" style="color:#e74c3c;"><i class="fas fa-file-pdf"></i></div>' +
+            '<h3>' + doc.title + '</h3>' +
+            '<p>' + (doc.description || '') + '</p>' +
+            '<a href="#" class="btn btn-sm" style="padding:6px 18px;font-size:0.8rem;margin-top:10px;background:#e74c3c;border-color:#e74c3c;" onclick="viewDocument(\'' + doc.url + '\', \'' + doc.title + '\')">' +
+            '<i class="fas fa-download"></i> ' + (currentLang === 'ar' ? 'تحميل' : 'Télécharger') +
+            '</a>' +
+            '</div>';
+    }).join('');
+}
 function downloadDocument(id) {
     var doc = DATA.documentsAdmin.find(d => d.id === id);
     if (!doc) {
@@ -2397,7 +2445,7 @@ function downloadDocument(id) {
     // ============================================================
     // RENDER
     // ============================================================
-    function renderAll() {
+   function renderAll() {
     renderTicker();
     renderTexts();
     renderOffres();
@@ -2409,12 +2457,13 @@ function downloadDocument(id) {
     renderGallery();
     renderVideos();
     renderDashboardLists();
-    renderDocumentsAdmin(); // <--- Cette ligne doit être présente
+    renderDocumentsAdmin();
+    renderDocumentsPdf();   // Pour le Dashboard
+    renderPublicDocuments(); // Pour la section publique "Documents association"
     updateStats();
     updatePhoneDisplay();
     updateAdminVisibility();
 }
-
     function renderTicker() {
         var container = document.getElementById('tickerContent');
         if (!container) return;
