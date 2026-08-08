@@ -2389,22 +2389,22 @@ function downloadDocument(id) {
     // RENDER
     // ============================================================
     function renderAll() {
-        renderTicker();
-        renderTexts();
-        renderOffres();
-        renderProduits();
-        renderArbres();
-        renderBetail();
-        renderEau();
-        renderSagia();
-        renderGallery();
-        renderVideos();
-        renderDashboardLists();
-        renderDocumentsAdmin();
-        updateStats();
-        updatePhoneDisplay();
-        updateAdminVisibility();
-    }
+    renderTicker();
+    renderTexts();
+    renderOffres();
+    renderProduits();
+    renderArbres();
+    renderBetail();
+    renderEau();
+    renderSagia();
+    renderGallery();
+    renderVideos();
+    renderDashboardLists();
+    renderDocumentsAdmin(); // <--- Cette ligne doit être présente
+    updateStats();
+    updatePhoneDisplay();
+    updateAdminVisibility();
+}
 
     function renderTicker() {
         var container = document.getElementById('tickerContent');
