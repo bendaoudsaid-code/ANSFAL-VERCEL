@@ -2841,38 +2841,6 @@ function downloadDocument(id) {
         }).join('');
     }
 }
-            grid.innerHTML = items.map(function(doc) {
-                var title = getLocalized(doc.title) || 'Document';
-                var desc = getLocalized(doc.description) || '';
-                return '<div class="menu-card" style="border-left-color:' + (doc.color || 'var(--primary)') + ';">' +
-                    '<div class="card-icon" style="color:' + (doc.color || 'var(--primary)') + ';"><i class="fas ' + (doc.icon || 'fa-file-pdf') + '"></i></div>' +
-                    '<h3>' + title + '</h3>' +
-                    '<p>' + desc + '</p>' +
-                    '<a href="#" class="btn btn-sm" style="padding:6px 18px;font-size:0.8rem;margin-top:10px;background:' + (doc.color || 'var(--primary)') + ';border-color:' + (doc.color || 'var(--primary)') + ';">' +
-                    '<i class="fas fa-download"></i> ' + (currentLang === 'ar' ? 'تحميل' : 'Télécharger') +
-                    '</a>' +
-                    '</div>';
-            }).join('');
-        }
-        
-        var list = document.getElementById('documentsAdminList');
-        if (list) {
-            var items = DATA.documentsAdmin || [];
-            if (items.length === 0) {
-                list.innerHTML = '<div class="no-content">Aucun document</div>';
-                return;
-            }
-            list.innerHTML = items.map(function(item) {
-                var title = getLocalized(item.title) || 'Document';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-file-pdf') + '" style="color:' + (item.color || 'var(--primary)') + ';"></i></div>' +
-                    '<div class="item-info"><h4>' + title + '</h4><small>' + (item.description ? Object.values(item.description).join(' | ') : '') + '</small></div>' +
-                    '<button class="btn-action edit" onclick="editDocumentAdmin(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteDocumentAdmin(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-        }
-    }
 
     // ============================================================
     // STATS
