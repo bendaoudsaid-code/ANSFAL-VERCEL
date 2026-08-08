@@ -826,7 +826,7 @@
             <div class="logo">
                 <div class="logo-phone" id="headerPhone">
                     <i class="fas fa-phone"></i> 
-                    <span id="headerPhoneNumber">06 25 93 13 19</span>
+                    <span id="headerPhoneNumber">06 25 93 13 18</span>
                     <i class="fas fa-whatsapp" style="color:#25D366;"></i>
                 </div>
                 <div class="logo-main">
@@ -895,7 +895,7 @@
             <p id="heroText">Œuvrant pour un développement durable, la coopération nationale et la protection de l'environnement depuis 2023.</p>
             <div class="hero-phone">
                 <i class="fas fa-phone"></i>
-                <span id="heroPhoneNumber">06 25 93 13 19</span>
+                <span id="heroPhoneNumber">06 25 93 13 18</span>
                 <i class="fas fa-whatsapp" style="color:#25D366;"></i>
             </div>
             <div class="hero-buttons">
@@ -966,7 +966,7 @@
                 <div style="text-align:center;padding:18px;background:var(--light);border-radius:10px;">
                     <i class="fas fa-phone" style="font-size:1.8rem;color:var(--primary);"></i>
                     <h3 id="contactPhone">Téléphone</h3>
-                    <p id="contactPhoneNumber">06 25 93 13 19</p>
+                    <p id="contactPhoneNumber">06 25 93 13 18</p>
                 </div>
                 <div style="text-align:center;padding:18px;background:var(--light);border-radius:10px;">
                     <i class="fas fa-envelope" style="font-size:1.8rem;color:var(--primary);"></i>
@@ -1018,7 +1018,7 @@
                         <h3 style="color:var(--dark);margin-bottom:15px;"><i class="fas fa-phone"></i> Numéro de téléphone</h3>
                         <div class="form-group">
                             <label>Téléphone</label>
-                            <input type="text" id="settingsPhoneInput" value="06 25 93 13 19" style="width:100%;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:1rem;" />
+                            <input type="text" id="settingsPhoneInput" value="06 25 93 13 18" style="width:100%;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:1rem;" />
                         </div>
                         <button class="btn-import" onclick="savePhoneNumber()" style="background:var(--info);"><i class="fas fa-save"></i> Enregistrer</button>
                     </div>
@@ -1140,7 +1140,7 @@
                 <div>
                     <h3 id="footerLogoTitle" style="font-family:'Cairo',sans-serif;">ASSOCIATION ANSFAL</h3>
                     <p id="footerLogoSubtitle" style="font-family:'Cairo',sans-serif;">Association de Coopération, Développement et Environnement</p>
-                    <p style="margin-top:8px;font-size:0.9rem;"><i class="fas fa-phone"></i> <span id="footerPhoneNumber">06 25 93 13 19</span></p>
+                    <p style="margin-top:8px;font-size:0.9rem;"><i class="fas fa-phone"></i> <span id="footerPhoneNumber">06 25 93 13 18</span></p>
                 </div>
                 <div>
                     <h4 id="footerFollow">Suivez-nous</h4>
@@ -1302,7 +1302,7 @@
         // DONNÉES (chargées depuis Supabase)
         // ============================================================
         var DATA = {
-            phoneNumber: '06 25 93 13 19',
+            phoneNumber: '06 25 93 13 18',
             isAdmin: false,
             ticker: [],
             texts: [],
@@ -1688,24 +1688,26 @@
         // TÉLÉPHONE
         // ============================================================
         function updatePhoneDisplay() {
-            var phone = DATA.phoneNumber || '06 25 93 13 19';
-            var elements = ['headerPhoneNumber', 'heroPhoneNumber', 'contactPhoneNumber', 'footerPhoneNumber'];
-            elements.forEach(function(id) {
-                var el = document.getElementById(id);
-                if (el) el.textContent = phone;
-            });
-            var settingsInput = document.getElementById('settingsPhoneInput');
-            if (settingsInput) settingsInput.value = phone;
-        }
-
-        async function savePhoneNumber() {
-            var input = document.getElementById('settingsPhoneInput');
-            if (!input) return;
-            var phone = input.value.trim();
-            if (!phone) { 
-                showAlert('Veuillez entrer un numéro de téléphone', 'error'); 
-                return; 
+    var phone = DATA.phoneNumber || '06 25 93 13 18';
+    var elements = ['headerPhoneNumber', 'heroPhoneNumber', 'contactPhoneNumber', 'footerPhoneNumber'];
+    elements.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+            el.textContent = phone;
+            // Ajouter dir="ltr" si ce n'est pas déjà fait
+            if (!el.hasAttribute('dir')) {
+                el.setAttribute('dir', 'ltr');
             }
+        }
+    });
+    var settingsInput = document.getElementById('settingsPhoneInput');
+    if (settingsInput) {
+        settingsInput.value = phone;
+        if (!settingsInput.hasAttribute('dir')) {
+            settingsInput.setAttribute('dir', 'ltr');
+        }
+    }
+}
             
             try {
                 showLoading(true);
