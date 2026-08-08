@@ -1329,1628 +1329,1432 @@ body.rtl [id*="PhoneNumber"] {
     <!-- JAVASCRIPT AVEC SUPABASE                     -->
     <!-- ============================================ -->
     <script>
-        // ============================================================
-        // CONFIGURATION SUPABASE
-        // ============================================================
-        const SUPABASE_CONFIG = {
-            url: 'https://ewgrkdlivxgogaysgxje.supabase.co',
-            key: 'sb_publishable_Cu364NmwnWvimRiZ1OMGKQ_r-EoVZOe'
-        };
+       
+    // ============================================================
+    // CONFIGURATION SUPABASE
+    // ============================================================
+    const SUPABASE_CONFIG = {
+        url: 'https://ewgrkdlivxgogaysgxje.supabase.co',
+        key: 'sb_publishable_Cu364NmwnWvimRiZ1OMGKQ_r-EoVZOe'
+    };
 
-        // Initialisation du client Supabase
-        const supabaseClient = supabase.createClient(
-            SUPABASE_CONFIG.url,
-            SUPABASE_CONFIG.key
-        );
+    const supabaseClient = supabase.createClient(
+        SUPABASE_CONFIG.url,
+        SUPABASE_CONFIG.key
+    );
 
-        // ============================================================
-        // DONNÉES (chargées depuis Supabase)
-        // ============================================================
-        var DATA = {
-            phoneNumber: '06 25 93 13 18',
-            isAdmin: false,
-            ticker: [],
-            texts: [],
-            offres: [],
-            produits: [],
-            arbres: [],
-            betail: [],
-            eau: [],
-            sagia: [],
-            gallery: [],
-            videos: [],
-            documentsAdmin: []
-        };
+    // ============================================================
+    // DONNÉES
+    // ============================================================
+    var DATA = {
+        phoneNumber: '06 25 93 13 18',
+        isAdmin: false,
+        ticker: [],
+        texts: [],
+        offres: [],
+        produits: [],
+        arbres: [],
+        betail: [],
+        eau: [],
+        sagia: [],
+        gallery: [],
+        videos: [],
+        documentsAdmin: []
+    };
 
-        var currentLang = 'fr';
-        var selectedFiles = [];
-        var currentEditId = null;
-        var currentEditType = null;
-        var uploadType = 'image';
+    var currentLang = 'fr';
+    var selectedFiles = [];
+    var currentEditId = null;
+    var currentEditType = null;
+    var uploadType = 'image';
 
-        // ============================================================
-        // TRADUCTIONS
-        // ============================================================
-        var LANG = {
-            fr: {
-                menuHomeText: 'Accueil', menuAboutText: 'À propos', menuAssociationText: 'Association',
-                menuConseilText: 'Conseil de l\'association', menuAdherentsText: 'Habitants adhérents',
-                menuDocumentsText: 'Documents association', menuDocumentsAdminText: '📄 Documents Admin',
-                menuServicesText: 'Services', menuOffresText: 'Offres d\'emploi', menuMeteoText: 'Prévision météo',
-                menuEauText: 'Eau potable', menuBetailText: 'Bétails', menuSagiaText: 'sagia',
-                menuEconomieText: 'Économie', menuProduitsText: 'Produits de terroir',
-                menuArbresText: 'Arbres fruitiers', menuBetailEconomieText: 'Bétails',
-                menuGalleryText: 'Galerie', menuVideosText: 'Vidéos', menuProjectsText: 'Projets',
-                menuContactText: 'Contact', menuDashboardText: 'Dashboard',
-                heroTitle: 'ASSOCIATION ANSFAL', heroSubtitle: 'Association de Coopération, Développement et Environnement',
-                heroText: 'Œuvrant pour un développement durable, la coopération nationale et la protection de l\'environnement depuis 2023.',
-                heroBtn1Text: 'Découvrir nos actions', heroBtn2Text: 'Galerie Photos',
-                aboutTitle: 'À propos d\'ASSOCIATION ANSFAL', aboutHistory: 'Notre histoire',
-                aboutText1: 'Fondée en 2023, l\'Association ASSOCIATION ANSFAL pour la Coopération et le Développement et l\'Environnement est née de la conviction que le développement humain et la protection environnementale doivent aller de pair.',
-                aboutText2: 'Notre nom \'ASSOCIATION ANSFAL\' symbolise notre engagement pour un avenir meilleur, basé sur la solidarité, le développement durable et la préservation de notre environnement.',
-                sidebarDashboardText: 'Tableau de bord', sidebarSettingsText: 'Paramètres',
-                sidebarGalleryText: 'Galerie', sidebarVideosText: 'Vidéos',
-                sidebarTextsText: 'Textes', sidebarTickerText: 'Ticker',
-                sidebarOffresText: 'Offres', sidebarProduitsText: 'Produits',
-                sidebarArbresText: 'Arbres', sidebarBetailText: 'Bétails',
-                sidebarEauText: 'Eau', sidebarSagiaText: 'SAGIA',
-                sidebarDocumentsAdminText: '📄 Docs Admin',
-                dashboardTitle: 'Tableau de Bord',
-                contactTitle: 'Contactez-nous', contactAddress: 'Adresse',
-                contactLocation: 'Maroc', contactPhone: 'Téléphone', contactEmail: 'Email',
-                footerLogoTitle: 'ASSOCIATION ANSFAL', footerLogoSubtitle: 'Association de Coopération, Développement et Environnement',
-                footerFollow: 'Suivez-nous', footerCopyright: '© 2024 ASSOCIATION ANSFAL. Tous droits réservés.',
-                logoTitle: 'ASSOCIATION ANSFAL', logoSubtitle: 'Association de Coopération, Développement et Environnement',
-                viewerTitle: 'Fichier',
-                docAdminTitle: 'Documents administratifs',
-                docAdminSubtitle: 'Espace réservé aux administrateurs de l\'association',
-                docAdmin1Title: 'Statuts de l\'association',
-                docAdmin1Desc: 'Document officiel des statuts d\'ASSOCIATION ANSFAL - Version 2023',
-                docAdmin1Btn: 'Télécharger',
-                docAdmin2Title: 'Règlement intérieur',
-                docAdmin2Desc: 'Règles de fonctionnement interne de l\'association',
-                docAdmin2Btn: 'Télécharger',
-                docAdmin3Title: 'Rapport d\'activité 2024',
-                docAdmin3Desc: 'Bilan complet des actions réalisées en 2024',
-                docAdmin3Btn: 'Télécharger',
-                docAdmin4Title: 'Plan stratégique 2024-2026',
-                docAdmin4Desc: 'Vision et objectifs stratégiques à moyen terme',
-                docAdmin4Btn: 'Télécharger',
-                docAdmin5Title: 'PV des réunions',
-                docAdmin5Desc: 'Procès-verbaux des assemblées générales',
-                docAdmin5Btn: 'Télécharger',
-                docAdmin6Title: 'Budget prévisionnel 2025',
-                docAdmin6Desc: 'Prévision budgétaire pour l\'exercice 2025',
-                docAdmin6Btn: 'Télécharger'
-            },
-            ar: {
-                menuHomeText: 'الرئيسية', menuAboutText: 'من نحن', menuAssociationText: 'الجمعية',
-                menuConseilText: 'مجلس الجمعية', menuAdherentsText: 'السكان المنخرطون',
-                menuDocumentsText: 'وثائق الجمعية', menuDocumentsAdminText: '📄 وثائق الإدارة',
-                menuServicesText: 'الخدمات', menuOffresText: 'عروض الشغل', menuMeteoText: 'توقعات الطقس',
-                menuEauText: 'الماء الصالح للشرب', menuBetailText: 'الماشية', menuSagiaText: 'سواقي الري',
-                menuEconomieText: 'الاقتصاد', menuProduitsText: 'منتجات محلية',
-                menuArbresText: 'الأشجار المثمرة', menuBetailEconomieText: 'الماشية',
-                menuGalleryText: 'معرض الصور', menuVideosText: 'الفيديوهات', menuProjectsText: 'المشاريع',
-                menuContactText: 'اتصل بنا', menuDashboardText: 'لوحة التحكم',
-                heroTitle: 'جمعية أنسفال', heroSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
-                heroText: 'تعمل من أجل التنمية المستدامة والتعاون الوطني وحماية البيئة منذ عام 2023.',
-                heroBtn1Text: 'اكتشف أعمالنا', heroBtn2Text: 'معرض الصور',
-                aboutTitle: 'من نحن - أنسفال', aboutHistory: 'تاريخنا',
-                aboutText1: 'تأسست جمعية أنسفال للتعاون والتنمية والبيئة في عام 2023 انطلاقاً من قناعة بأن التنمية البشرية وحماية البيئة يجب أن يسيرا جنباً إلى جنب.',
-                aboutText2: 'يرمز اسمنا \'أنسفال\' إلى التزامنا بمستقبل أفضل، يقوم على التضامن والتنمية المستدامة والحفاظ على بيئتنا.',
-                sidebarDashboardText: 'لوحة التحكم', sidebarSettingsText: 'الإعدادات',
-                sidebarGalleryText: 'معرض الصور', sidebarVideosText: 'الفيديوهات',
-                sidebarTextsText: 'النصوص', sidebarTickerText: 'النص المتحرك',
-                sidebarOffresText: 'عروض الشغل', sidebarProduitsText: 'منتجات',
-                sidebarArbresText: 'الأشجار', sidebarBetailText: 'الماشية',
-                sidebarEauText: 'الماء', sidebarSagiaText: 'سواقي الري',
-                sidebarDocumentsAdminText: '📄 وثائق الإدارة',
-                dashboardTitle: 'لوحة التحكم',
-                contactTitle: 'اتصل بنا', contactAddress: 'العنوان',
-                contactLocation: 'المغرب', contactPhone: 'الهاتف', contactEmail: 'البريد الإلكتروني',
-                footerLogoTitle: 'جمعية أنسفال', footerLogoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
-                footerFollow: 'تابعنا', footerCopyright: '© 2024 جمعية أنسفال. جميع الحقوق محفوظة',
-                logoTitle: 'جمعية أنسفال', logoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
-                viewerTitle: 'ملف',
-                docAdminTitle: 'الوثائق الإدارية',
-                docAdminSubtitle: 'مساحة خاصة بإداريي الجمعية',
-                docAdmin1Title: 'النظام الأساسي للجمعية',
-                docAdmin1Desc: 'الوثيقة الرسمية للنظام الأساسي لأنسفال - نسخة 2023',
-                docAdmin1Btn: 'تحميل',
-                docAdmin2Title: 'النظام الداخلي',
-                docAdmin2Desc: 'قواعد السير الداخلي للجمعية',
-                docAdmin2Btn: 'تحميل',
-                docAdmin3Title: 'تقرير النشاط 2024',
-                docAdmin3Desc: 'حصيلة كاملة للإجراءات المنجزة في 2024',
-                docAdmin3Btn: 'تحميل',
-                docAdmin4Title: 'الخطة الاستراتيجية 2024-2026',
-                docAdmin4Desc: 'الرؤية والأهداف الاستراتيجية على المدى المتوسط',
-                docAdmin4Btn: 'تحميل',
-                docAdmin5Title: 'محاضر الاجتماعات',
-                docAdmin5Desc: 'محاضر الجمعيات العامة',
-                docAdmin5Btn: 'تحميل',
-                docAdmin6Title: 'الميزانية التقديرية 2025',
-                docAdmin6Desc: 'التوقعات المالية للسنة المالية 2025',
-                docAdmin6Btn: 'تحميل'
-            }
-        };
-
-        // ============================================================
-        // FONCTIONS UTILITAIRES
-        // ============================================================
-        function getLang() { return LANG[currentLang]; }
-
-        function getLocalized(obj) {
-            if (!obj) return '';
-            if (typeof obj === 'string') return obj;
-            return obj[currentLang] || obj.fr || '';
+    // ============================================================
+    // TRADUCTIONS
+    // ============================================================
+    var LANG = {
+        fr: {
+            menuHomeText: 'Accueil', menuAboutText: 'À propos', menuAssociationText: 'Association',
+            menuConseilText: 'Conseil de l\'association', menuAdherentsText: 'Habitants adhérents',
+            menuDocumentsText: 'Documents association', menuDocumentsAdminText: '📄 Documents Admin',
+            menuServicesText: 'Services', menuOffresText: 'Offres d\'emploi', menuMeteoText: 'Prévision météo',
+            menuEauText: 'Eau potable', menuBetailText: 'Bétails', menuSagiaText: 'sagia',
+            menuEconomieText: 'Économie', menuProduitsText: 'Produits de terroir',
+            menuArbresText: 'Arbres fruitiers', menuBetailEconomieText: 'Bétails',
+            menuGalleryText: 'Galerie', menuVideosText: 'Vidéos', menuProjectsText: 'Projets',
+            menuContactText: 'Contact', menuDashboardText: 'Dashboard',
+            heroTitle: 'ASSOCIATION ANSFAL', heroSubtitle: 'Association de Coopération, Développement et Environnement',
+            heroText: 'Œuvrant pour un développement durable, la coopération nationale et la protection de l\'environnement depuis 2023.',
+            heroBtn1Text: 'Découvrir nos actions', heroBtn2Text: 'Galerie Photos',
+            aboutTitle: 'À propos d\'ASSOCIATION ANSFAL', aboutHistory: 'Notre histoire',
+            aboutText1: 'Fondée en 2023, l\'Association ASSOCIATION ANSFAL pour la Coopération et le Développement et l\'Environnement est née de la conviction que le développement humain et la protection environnementale doivent aller de pair.',
+            aboutText2: 'Notre nom \'ASSOCIATION ANSFAL\' symbolise notre engagement pour un avenir meilleur, basé sur la solidarité, le développement durable et la préservation de notre environnement.',
+            sidebarDashboardText: 'Tableau de bord', sidebarSettingsText: 'Paramètres',
+            sidebarGalleryText: 'Galerie', sidebarVideosText: 'Vidéos',
+            sidebarTextsText: 'Textes', sidebarTickerText: 'Ticker',
+            sidebarOffresText: 'Offres', sidebarProduitsText: 'Produits',
+            sidebarArbresText: 'Arbres', sidebarBetailText: 'Bétails',
+            sidebarEauText: 'Eau', sidebarSagiaText: 'SAGIA',
+            sidebarDocumentsAdminText: '📄 Docs Admin',
+            dashboardTitle: 'Tableau de Bord',
+            contactTitle: 'Contactez-nous', contactAddress: 'Adresse',
+            contactLocation: 'Maroc', contactPhone: 'Téléphone', contactEmail: 'Email',
+            footerLogoTitle: 'ASSOCIATION ANSFAL', footerLogoSubtitle: 'Association de Coopération, Développement et Environnement',
+            footerFollow: 'Suivez-nous', footerCopyright: '© 2024 ASSOCIATION ANSFAL. Tous droits réservés.',
+            logoTitle: 'ASSOCIATION ANSFAL', logoSubtitle: 'Association de Coopération, Développement et Environnement',
+            viewerTitle: 'Fichier',
+            docAdminTitle: 'Documents administratifs',
+            docAdminSubtitle: 'Espace réservé aux administrateurs de l\'association',
+            docAdmin1Title: 'Statuts de l\'association',
+            docAdmin1Desc: 'Document officiel des statuts d\'ASSOCIATION ANSFAL - Version 2023',
+            docAdmin1Btn: 'Télécharger',
+            docAdmin2Title: 'Règlement intérieur',
+            docAdmin2Desc: 'Règles de fonctionnement interne de l\'association',
+            docAdmin2Btn: 'Télécharger',
+            docAdmin3Title: 'Rapport d\'activité 2024',
+            docAdmin3Desc: 'Bilan complet des actions réalisées en 2024',
+            docAdmin3Btn: 'Télécharger',
+            docAdmin4Title: 'Plan stratégique 2024-2026',
+            docAdmin4Desc: 'Vision et objectifs stratégiques à moyen terme',
+            docAdmin4Btn: 'Télécharger',
+            docAdmin5Title: 'PV des réunions',
+            docAdmin5Desc: 'Procès-verbaux des assemblées générales',
+            docAdmin5Btn: 'Télécharger',
+            docAdmin6Title: 'Budget prévisionnel 2025',
+            docAdmin6Desc: 'Prévision budgétaire pour l\'exercice 2025',
+            docAdmin6Btn: 'Télécharger'
+        },
+        ar: {
+            menuHomeText: 'الرئيسية', menuAboutText: 'من نحن', menuAssociationText: 'الجمعية',
+            menuConseilText: 'مجلس الجمعية', menuAdherentsText: 'السكان المنخرطون',
+            menuDocumentsText: 'وثائق الجمعية', menuDocumentsAdminText: '📄 وثائق الإدارة',
+            menuServicesText: 'الخدمات', menuOffresText: 'عروض الشغل', menuMeteoText: 'توقعات الطقس',
+            menuEauText: 'الماء الصالح للشرب', menuBetailText: 'الماشية', menuSagiaText: 'سواقي الري',
+            menuEconomieText: 'الاقتصاد', menuProduitsText: 'منتجات محلية',
+            menuArbresText: 'الأشجار المثمرة', menuBetailEconomieText: 'الماشية',
+            menuGalleryText: 'معرض الصور', menuVideosText: 'الفيديوهات', menuProjectsText: 'المشاريع',
+            menuContactText: 'اتصل بنا', menuDashboardText: 'لوحة التحكم',
+            heroTitle: 'جمعية أنسفال', heroSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
+            heroText: 'تعمل من أجل التنمية المستدامة والتعاون الوطني وحماية البيئة منذ عام 2023.',
+            heroBtn1Text: 'اكتشف أعمالنا', heroBtn2Text: 'معرض الصور',
+            aboutTitle: 'من نحن - أنسفال', aboutHistory: 'تاريخنا',
+            aboutText1: 'تأسست جمعية أنسفال للتعاون والتنمية والبيئة في عام 2023 انطلاقاً من قناعة بأن التنمية البشرية وحماية البيئة يجب أن يسيرا جنباً إلى جنب.',
+            aboutText2: 'يرمز اسمنا \'أنسفال\' إلى التزامنا بمستقبل أفضل، يقوم على التضامن والتنمية المستدامة والحفاظ على بيئتنا.',
+            sidebarDashboardText: 'لوحة التحكم', sidebarSettingsText: 'الإعدادات',
+            sidebarGalleryText: 'معرض الصور', sidebarVideosText: 'الفيديوهات',
+            sidebarTextsText: 'النصوص', sidebarTickerText: 'النص المتحرك',
+            sidebarOffresText: 'عروض الشغل', sidebarProduitsText: 'منتجات',
+            sidebarArbresText: 'الأشجار', sidebarBetailText: 'الماشية',
+            sidebarEauText: 'الماء', sidebarSagiaText: 'سواقي الري',
+            sidebarDocumentsAdminText: '📄 وثائق الإدارة',
+            dashboardTitle: 'لوحة التحكم',
+            contactTitle: 'اتصل بنا', contactAddress: 'العنوان',
+            contactLocation: 'المغرب', contactPhone: 'الهاتف', contactEmail: 'البريد الإلكتروني',
+            footerLogoTitle: 'جمعية أنسفال', footerLogoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
+            footerFollow: 'تابعنا', footerCopyright: '© 2024 جمعية أنسفال. جميع الحقوق محفوظة',
+            logoTitle: 'جمعية أنسفال', logoSubtitle: 'جمعية أنسفال للتعاون والتنمية والبيئة',
+            viewerTitle: 'ملف',
+            docAdminTitle: 'الوثائق الإدارية',
+            docAdminSubtitle: 'مساحة خاصة بإداريي الجمعية',
+            docAdmin1Title: 'النظام الأساسي للجمعية',
+            docAdmin1Desc: 'الوثيقة الرسمية للنظام الأساسي لأنسفال - نسخة 2023',
+            docAdmin1Btn: 'تحميل',
+            docAdmin2Title: 'النظام الداخلي',
+            docAdmin2Desc: 'قواعد السير الداخلي للجمعية',
+            docAdmin2Btn: 'تحميل',
+            docAdmin3Title: 'تقرير النشاط 2024',
+            docAdmin3Desc: 'حصيلة كاملة للإجراءات المنجزة في 2024',
+            docAdmin3Btn: 'تحميل',
+            docAdmin4Title: 'الخطة الاستراتيجية 2024-2026',
+            docAdmin4Desc: 'الرؤية والأهداف الاستراتيجية على المدى المتوسط',
+            docAdmin4Btn: 'تحميل',
+            docAdmin5Title: 'محاضر الاجتماعات',
+            docAdmin5Desc: 'محاضر الجمعيات العامة',
+            docAdmin5Btn: 'تحميل',
+            docAdmin6Title: 'الميزانية التقديرية 2025',
+            docAdmin6Desc: 'التوقعات المالية للسنة المالية 2025',
+            docAdmin6Btn: 'تحميل'
         }
+    };
 
-        function switchLanguage(lang) {
-            currentLang = lang;
-            document.body.classList.toggle('rtl', lang === 'ar');
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            document.querySelector(`.lang-btn[onclick*="${lang}"]`).classList.add('active');
-            
-            var t = LANG[lang];
-            for (var key in t) {
-                var el = document.getElementById(key);
-                if (el) el.textContent = t[key];
-            }
-            
-            updatePhoneDisplay();
-            renderAll();
-            try { localStorage.setItem('ansfal_lang', lang); } catch(e) {}
-        }
+    // ============================================================
+    // FONCTIONS UTILITAIRES
+    // ============================================================
+    function getLang() { return LANG[currentLang]; }
 
-        // ============================================================
-        // FONCTIONS SUPABASE
-        // ============================================================
-        async function loadAllData() {
-            try {
-                showLoading(true);
-                
-                // Charger le numéro de téléphone
-                const { data: settingsData, error: settingsError } = await supabaseClient
-                    .from('settings')
-                    .select('phone_number')
-                    .limit(1);
-                
-                if (!settingsError && settingsData && settingsData.length > 0) {
-                    DATA.phoneNumber = settingsData[0].phone_number || DATA.phoneNumber;
-                }
-// ============================================================
-// FONCTIONS SUPABASE
-// ============================================================
-async function loadAllData() {
-    try {
-        showLoading(true);
-        
-        // Charger le numéro de téléphone
-        const { data: settingsData, error: settingsError } = await supabaseClient
-            .from('settings')
-            .select('phone_number')
-            .limit(1);
-        
-        if (!settingsError && settingsData && settingsData.length > 0) {
-            DATA.phoneNumber = settingsData[0].phone_number || DATA.phoneNumber;
-        }
-
-        // Charger toutes les tables
-        const tables = [
-            { key: 'ticker', table: 'ticker' },
-            { key: 'texts', table: 'texts' },
-            { key: 'offres', table: 'offres' },
-            { key: 'produits', table: 'produits' },
-            { key: 'arbres', table: 'arbres' },
-            { key: 'betail', table: 'betail' },
-            { key: 'eau', table: 'eau' },
-            { key: 'sagia', table: 'sagia' },
-            { key: 'gallery', table: 'gallery' },
-            { key: 'videos', table: 'videos' },
-            { key: 'documentsAdmin', table: 'documents_admin' }
-        ];
-
-        for (const { key, table } of tables) {
-            const { data, error } = await supabaseClient
-                .from(table)
-                .select('*')
-                .order('id', { ascending: true });
-            
-            if (error) {
-                console.warn(`⚠️ Erreur chargement ${table}:`, error);
-                continue;
-            }
-            
-            if (data && data.length > 0) {
-                DATA[key] = data;
-            } else {
-                DATA[key] = [];
-            }
-        }
-
-        console.log('✅ Données chargées depuis Supabase');
-        renderAll();
-        showLoading(false);
-        
-    } catch (error) {
-        console.error('❌ Erreur chargement des données:', error);
-        showAlert('Erreur de chargement des données', 'error');
-        showLoading(false);
+    function getLocalized(obj) {
+        if (!obj) return '';
+        if (typeof obj === 'string') return obj;
+        return obj[currentLang] || obj.fr || '';
     }
-}
 
-// ============================================================
-// GESTION DU TÉLÉPHONE  <--- AJOUTER ICI
-// ============================================================
-
-function updatePhoneDisplay() {
-    var phone = DATA.phoneNumber || '06 25 93 13 19';
-    var elements = ['headerPhoneNumber', 'heroPhoneNumber', 'contactPhoneNumber', 'footerPhoneNumber'];
-    elements.forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) {
-            el.textContent = phone;
-            el.setAttribute('dir', 'ltr');
-            el.style.direction = 'ltr';
-            el.style.unicodeBidi = 'bidi-override';
-            el.style.display = 'inline-block';
-        }
-    });
-    var settingsInput = document.getElementById('settingsPhoneInput');
-    if (settingsInput) {
-        settingsInput.value = phone;
-        settingsInput.setAttribute('dir', 'ltr');
-        settingsInput.style.direction = 'ltr';
-        settingsInput.style.textAlign = 'left';
-    }
-}
-
-async function savePhoneNumber() {
-    var input = document.getElementById('settingsPhoneInput');
-    if (!input) return;
-    var phone = input.value.trim();
-    if (!phone) { 
-        showAlert('Veuillez entrer un numéro de téléphone', 'error'); 
-        return; 
-    }
-    
-    try {
-        showLoading(true);
+    function switchLanguage(lang) {
+        currentLang = lang;
+        document.body.classList.toggle('rtl', lang === 'ar');
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.lang-btn[onclick*="${lang}"]`).classList.add('active');
         
-        // Vérifier si un enregistrement existe
-        const { data: existing, error: checkError } = await supabaseClient
-            .from('settings')
-            .select('id')
-            .limit(1);
-        
-        if (checkError) throw checkError;
-        
-        if (existing && existing.length > 0) {
-            // Mise à jour
-            const { error } = await supabaseClient
-                .from('settings')
-                .update({ 
-                    phone_number: phone, 
-                    updated_at: new Date().toISOString() 
-                })
-                .eq('id', existing[0].id);
-            
-            if (error) throw error;
-        } else {
-            // Insertion
-            const { error } = await supabaseClient
-                .from('settings')
-                .insert([{ 
-                    phone_number: phone, 
-                    created_at: new Date().toISOString() 
-                }]);
-            
-            if (error) throw error;
+        var t = LANG[lang];
+        for (var key in t) {
+            var el = document.getElementById(key);
+            if (el) el.textContent = t[key];
         }
         
-        DATA.phoneNumber = phone;
         updatePhoneDisplay();
-        showAlert('✅ Numéro de téléphone mis à jour', 'success');
-        showLoading(false);
-    } catch (error) {
-        console.error('Erreur:', error);
-        showAlert('❌ Erreur: ' + error.message, 'error');
-        showLoading(false);
+        renderAll();
+        try { localStorage.setItem('ansfal_lang', lang); } catch(e) {}
     }
-}
 
-// ============================================================
-// CRUD - TEXTES  <--- CONTINUE ICI
-// ============================================================
+    function showLoading(show) {
+        var elements = document.querySelectorAll('.loading');
+        elements.forEach(el => {
+            el.style.display = show ? 'block' : 'none';
+        });
+    }
 
-async function saveToSupabase(table, data, id = null) {
-    // ... code existant ...
-}
+    // ============================================================
+    // FONCTIONS SUPABASE
+    // ============================================================
+    async function loadAllData() {
+        try {
+            showLoading(true);
+            
+            const { data: settingsData, error: settingsError } = await supabaseClient
+                .from('settings')
+                .select('phone_number')
+                .limit(1);
+            
+            if (!settingsError && settingsData && settingsData.length > 0) {
+                DATA.phoneNumber = settingsData[0].phone_number || DATA.phoneNumber;
+            }
 
-// ... le reste de votre code ...
+            const tables = [
+                { key: 'ticker', table: 'ticker' },
+                { key: 'texts', table: 'texts' },
+                { key: 'offres', table: 'offres' },
+                { key: 'produits', table: 'produits' },
+                { key: 'arbres', table: 'arbres' },
+                { key: 'betail', table: 'betail' },
+                { key: 'eau', table: 'eau' },
+                { key: 'sagia', table: 'sagia' },
+                { key: 'gallery', table: 'gallery' },
+                { key: 'videos', table: 'videos' },
+                { key: 'documentsAdmin', table: 'documents_admin' }
+            ];
+
+            for (const { key, table } of tables) {
+                const { data, error } = await supabaseClient
+                    .from(table)
+                    .select('*')
+                    .order('id', { ascending: true });
                 
-                // Charger toutes les tables
-                const tables = [
-                    { key: 'ticker', table: 'ticker' },
-                    { key: 'texts', table: 'texts' },
-                    { key: 'offres', table: 'offres' },
-                    { key: 'produits', table: 'produits' },
-                    { key: 'arbres', table: 'arbres' },
-                    { key: 'betail', table: 'betail' },
-                    { key: 'eau', table: 'eau' },
-                    { key: 'sagia', table: 'sagia' },
-                    { key: 'gallery', table: 'gallery' },
-                    { key: 'videos', table: 'videos' },
-                    { key: 'documentsAdmin', table: 'documents_admin' }
-                ];
-
-                for (const { key, table } of tables) {
-                    const { data, error } = await supabaseClient
-                        .from(table)
-                        .select('*')
-                        .order('id', { ascending: true });
-                    
-                    if (error) {
-                        console.warn(`⚠️ Erreur chargement ${table}:`, error);
-                        continue;
-                    }
-                    
-                    if (data && data.length > 0) {
-                        DATA[key] = data;
-                    } else {
-                        DATA[key] = [];
-                    }
+                if (error) {
+                    console.warn(`⚠️ Erreur chargement ${table}:`, error);
+                    continue;
                 }
+                
+                DATA[key] = data && data.length > 0 ? data : [];
+            }
 
-                console.log('✅ Données chargées depuis Supabase');
-                renderAll();
-                showLoading(false);
+            console.log('✅ Données chargées depuis Supabase');
+            renderAll();
+            showLoading(false);
+            
+        } catch (error) {
+            console.error('❌ Erreur chargement des données:', error);
+            showAlert('Erreur de chargement des données', 'error');
+            showLoading(false);
+        }
+    }
+
+    async function saveToSupabase(table, data, id = null) {
+        try {
+            showLoading(true);
+            let result;
+            
+            if (id) {
+                data.updated_at = new Date().toISOString();
+                const { data: updated, error } = await supabaseClient
+                    .from(table)
+                    .update(data)
+                    .eq('id', id)
+                    .select();
+                
+                if (error) throw error;
+                result = updated;
+                showAlert('✅ Élément mis à jour avec succès', 'success');
+            } else {
+                data.created_at = new Date().toISOString();
+                const { data: inserted, error } = await supabaseClient
+                    .from(table)
+                    .insert([data])
+                    .select();
+                
+                if (error) throw error;
+                result = inserted;
+                showAlert('✅ Élément ajouté avec succès', 'success');
+            }
+            
+            await loadAllData();
+            showLoading(false);
+            return result;
+        } catch (error) {
+            console.error('Erreur sauvegarde:', error);
+            showAlert('❌ Erreur lors de la sauvegarde: ' + error.message, 'error');
+            showLoading(false);
+            return null;
+        }
+    }
+
+    async function deleteFromSupabase(table, id) {
+        try {
+            showLoading(true);
+            
+            const { error } = await supabaseClient
+                .from(table)
+                .delete()
+                .eq('id', id);
+            
+            if (error) throw error;
+            
+            showAlert('🗑️ Élément supprimé avec succès', 'success');
+            await loadAllData();
+            showLoading(false);
+            return true;
+        } catch (error) {
+            console.error('Erreur suppression:', error);
+            showAlert('❌ Erreur lors de la suppression: ' + error.message, 'error');
+            showLoading(false);
+            return false;
+        }
+    }
+
+    // ============================================================
+    // GESTION ADMIN
+    // ============================================================
+    function updateAdminVisibility() {
+        var isAdmin = DATA.isAdmin;
+        
+        var dashboardSection = document.getElementById('dashboard');
+        if (dashboardSection) {
+            dashboardSection.classList.toggle('visible', isAdmin);
+        }
+        
+        var menuDashboard = document.getElementById('menuDashboard');
+        if (menuDashboard) {
+            menuDashboard.classList.toggle('hidden', !isAdmin);
+        }
+        
+        var docAdminSection = document.getElementById('documents-admin');
+        if (docAdminSection) {
+            docAdminSection.classList.toggle('visible', isAdmin);
+        }
+        
+        var menuDocAdmin = document.getElementById('menuDocumentsAdmin');
+        if (menuDocAdmin) {
+            menuDocAdmin.classList.toggle('hidden', !isAdmin);
+        }
+        
+        document.body.classList.toggle('admin-mode', isAdmin);
+        document.getElementById('addBtn').style.display = isAdmin ? 'flex' : 'none';
+        document.getElementById('loginBtn').style.display = isAdmin ? 'none' : 'flex';
+    }
+
+    // ============================================================
+    // AUTHENTIFICATION
+    // ============================================================
+    function login() {
+        var user = document.getElementById('username').value.trim();
+        var pass = document.getElementById('password').value.trim();
+        if (!user || !pass) { 
+            showAlert('Veuillez remplir tous les champs', 'error'); 
+            return; 
+        }
+        
+        if (user === 'admin' && pass === 'admin') {
+            DATA.isAdmin = true;
+            showAlert('✅ Connexion réussie - Mode Admin activé', 'success');
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('userInfo').classList.remove('hidden');
+            document.getElementById('userName').textContent = user;
+            updateAdminVisibility();
+            renderAll();
+            showSection('dashboard');
+        } else {
+            showAlert('❌ Identifiants incorrects', 'error');
+        }
+    }
+
+    function logout() {
+        if (!confirm('Déconnexion ?')) return;
+        DATA.isAdmin = false;
+        document.getElementById('loginForm').classList.remove('hidden');
+        document.getElementById('userInfo').classList.add('hidden');
+        updateAdminVisibility();
+        renderAll();
+        showSection('home');
+        showAlert('Déconnecté', 'info');
+    }
+
+    // ============================================================
+    // GESTION DU TÉLÉPHONE
+    // ============================================================
+    function updatePhoneDisplay() {
+        var phone = DATA.phoneNumber || '06 25 93 13 19';
+        var elements = ['headerPhoneNumber', 'heroPhoneNumber', 'contactPhoneNumber', 'footerPhoneNumber'];
+        elements.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) {
+                el.textContent = phone;
+                el.setAttribute('dir', 'ltr');
+                el.style.direction = 'ltr';
+                el.style.unicodeBidi = 'bidi-override';
+                el.style.display = 'inline-block';
+            }
+        });
+        var settingsInput = document.getElementById('settingsPhoneInput');
+        if (settingsInput) {
+            settingsInput.value = phone;
+            settingsInput.setAttribute('dir', 'ltr');
+            settingsInput.style.direction = 'ltr';
+            settingsInput.style.textAlign = 'left';
+        }
+    }
+
+    async function savePhoneNumber() {
+        var input = document.getElementById('settingsPhoneInput');
+        if (!input) return;
+        var phone = input.value.trim();
+        if (!phone) { 
+            showAlert('Veuillez entrer un numéro de téléphone', 'error'); 
+            return; 
+        }
+        
+        try {
+            showLoading(true);
+            
+            const { data: existing, error: checkError } = await supabaseClient
+                .from('settings')
+                .select('id')
+                .limit(1);
+            
+            if (checkError) throw checkError;
+            
+            if (existing && existing.length > 0) {
+                const { error } = await supabaseClient
+                    .from('settings')
+                    .update({ phone_number: phone, updated_at: new Date().toISOString() })
+                    .eq('id', existing[0].id);
+                
+                if (error) throw error;
+            } else {
+                const { error } = await supabaseClient
+                    .from('settings')
+                    .insert([{ phone_number: phone, created_at: new Date().toISOString() }]);
+                
+                if (error) throw error;
+            }
+            
+            DATA.phoneNumber = phone;
+            updatePhoneDisplay();
+            showAlert('✅ Numéro de téléphone mis à jour', 'success');
+            showLoading(false);
+        } catch (error) {
+            console.error('Erreur:', error);
+            showAlert('❌ Erreur: ' + error.message, 'error');
+            showLoading(false);
+        }
+    }
+
+    // ============================================================
+    // CRUD - TEXTES
+    // ============================================================
+    function showTextModal(data) {
+        currentEditType = 'text';
+        currentEditId = data ? data.id : null;
+        document.getElementById('textModalTitle').textContent = data ? 'Modifier le texte' : 'Ajouter un texte';
+        document.getElementById('textTitleInput').value = data ? getLocalized(data.title) : '';
+        document.getElementById('textContentInput').value = data ? getLocalized(data.content) : '';
+        document.getElementById('textModal').classList.add('active');
+    }
+
+    function closeTextModal() {
+        document.getElementById('textModal').classList.remove('active');
+        currentEditId = null;
+        currentEditType = null;
+    }
+
+    async function saveText() {
+        var title = document.getElementById('textTitleInput').value.trim();
+        var content = document.getElementById('textContentInput').value.trim();
+        if (!title || !content) { 
+            showAlert('Veuillez remplir tous les champs', 'error'); 
+            return; 
+        }
+        
+        const data = {
+            title: { fr: title, ar: title },
+            content: { fr: content, ar: content }
+        };
+        
+        await saveToSupabase('texts', data, currentEditId);
+        closeTextModal();
+        currentEditId = null;
+    }
+
+    function deleteText(id) {
+        if (!confirm('Supprimer ce texte ?')) return;
+        deleteFromSupabase('texts', id);
+    }
+
+    function editText(id) {
+        var item = DATA.texts.find(t => t.id === id);
+        if (item) showTextModal(item);
+    }
+
+    // ============================================================
+    // CRUD - TICKER
+    // ============================================================
+    function showTickerModal(data) {
+        currentEditType = 'ticker';
+        currentEditId = data ? data.id : null;
+        document.getElementById('tickerModalTitle').textContent = data ? 'Modifier l\'annonce' : 'Ajouter une annonce';
+        document.getElementById('tickerTextInput').value = data ? getLocalized(data.lang) || data.text : '';
+        document.getElementById('tickerIconInput').value = data ? (data.icon || 'fa-star') : 'fa-star';
+        document.getElementById('tickerModal').classList.add('active');
+    }
+
+    function closeTickerModal() {
+        document.getElementById('tickerModal').classList.remove('active');
+        currentEditId = null;
+        currentEditType = null;
+    }
+
+    async function saveTicker() {
+        var text = document.getElementById('tickerTextInput').value.trim();
+        var icon = document.getElementById('tickerIconInput').value.trim() || 'fa-star';
+        if (!text) { 
+            showAlert('Veuillez entrer un texte', 'error'); 
+            return; 
+        }
+        
+        const data = {
+            text: text,
+            icon: icon,
+            lang: { fr: text, ar: text }
+        };
+        
+        await saveToSupabase('ticker', data, currentEditId);
+        closeTickerModal();
+        currentEditId = null;
+    }
+
+    function deleteTicker(id) {
+        if (!confirm('Supprimer cette annonce ?')) return;
+        deleteFromSupabase('ticker', id);
+    }
+
+    function editTicker(id) {
+        var item = DATA.ticker.find(t => t.id === id);
+        if (item) showTickerModal(item);
+    }
+
+    // ============================================================
+    // CRUD - OFFRES (simplifié)
+    // ============================================================
+    function showOffreModal(data) {
+        closeGenericModal();
+        showAlert('Fonctionnalité en cours de développement', 'info');
+    }
+
+    function deleteOffre(id) {
+        if (!confirm('Supprimer cette offre ?')) return;
+        deleteFromSupabase('offres', id);
+    }
+
+    function editOffre(id) {
+        showAlert('Fonctionnalité en cours de développement', 'info');
+    }
+
+    // ============================================================
+    // CRUD - PRODUITS (simplifié)
+    // ============================================================
+    function showProduitModal(data) {
+        closeGenericModal();
+        showAlert('Fonctionnalité en cours de développement', 'info');
+    }
+
+    function deleteProduit(id) {
+        if (!confirm('Supprimer ce produit ?')) return;
+        deleteFromSupabase('produits', id);
+    }
+
+    function editProduit(id) {
+        showAlert('Fonctionnalité en cours de développement', 'info');
+    }
+
+    // ============================================================
+    // CRUD - ARBRES (simplifié)
+    // ============================================================
+    function showArbreModal(data) {
+        closeGenericModal();
+        showAlert('Fonctionnalité en cours de développement', 'info');
+    }
+
+    function deleteArbre(id) {
+        if (!confirm('Supprimer cette localité ?')) return;
+        deleteFromSupabase('arbres', id);
+    }
+
+    function editArbre(id) {
+        showAlert('Fonctionnalité en cours de développement', 'info');
+    }
+
+    // ============================================================
+    // CRUD - BETAIL (simplifié)
+    // ============================================================
+    function showBetailModal(data) {
+        closeGenericModal();
+        showAlert('Fonctionnalité en cours de développement', 'info');
+    }
+
+    function deleteBetail(id) {
+        if (!confirm('Supprimer cet élevage ?')) return;
+        deleteFromSupabase('betail', id);
+    }
+
+    function editBetail(id) {
+        showAlert('Fonctionnalité en cours de développement', 'info');
+    }
+
+    // ============================================================
+    // CRUD - EAU (simplifié)
+    // ============================================================
+    function showEauModal(data) {
+        closeGenericModal();
+        showAlert('Fonctionnalité en cours de développement', 'info');
+    }
+
+    function deleteEau(id) {
+        if (!confirm('Supprimer ce projet ?')) return;
+        deleteFromSupabase('eau', id);
+    }
+
+    function editEau(id) {
+        showAlert('Fonctionnalité en cours de développement', 'info');
+    }
+
+    // ============================================================
+    // CRUD - SAGIA (simplifié)
+    // ============================================================
+    function showSagiaModal(data) {
+        closeGenericModal();
+        showAlert('Fonctionnalité en cours de développement', 'info');
+    }
+
+    function deleteSagia(id) {
+        if (!confirm('Supprimer ce SAGIA ?')) return;
+        deleteFromSupabase('sagia', id);
+    }
+
+    function editSagia(id) {
+        showAlert('Fonctionnalité en cours de développement', 'info');
+    }
+
+    // ============================================================
+    // CRUD - DOCUMENTS ADMIN (simplifié)
+    // ============================================================
+    function showDocumentAdminModal(data) {
+        closeGenericModal();
+        showAlert('Fonctionnalité en cours de développement', 'info');
+    }
+
+    function deleteDocumentAdmin(id) {
+        if (!confirm('Supprimer ce document ?')) return;
+        deleteFromSupabase('documents_admin', id);
+    }
+
+    function editDocumentAdmin(id) {
+        showAlert('Fonctionnalité en cours de développement', 'info');
+    }
+
+    function closeGenericModal() {
+        document.getElementById('genericModal').classList.remove('active');
+        currentEditId = null;
+        currentEditType = null;
+    }
+
+    // ============================================================
+    // UPLOAD
+    // ============================================================
+    function showUploadModal(type) {
+        uploadType = type || 'image';
+        document.getElementById('uploadModalTitle').textContent = type === 'video' ? 'Uploader une vidéo' : 'Uploader une image';
+        document.getElementById('uploadModal').classList.add('active');
+        selectedFiles = [];
+        document.getElementById('filePreview').innerHTML = '';
+    }
+
+    function closeUploadModal() {
+        document.getElementById('uploadModal').classList.remove('active');
+        selectedFiles = [];
+    }
+
+    function handleFileSelect(event) {
+        var files = event.target.files;
+        for (var i = 0; i < files.length; i++) {
+            selectedFiles.push(files[i]);
+        }
+        updateFilePreview();
+        event.target.value = '';
+    }
+
+    function updateFilePreview() {
+        var container = document.getElementById('filePreview');
+        if (selectedFiles.length === 0) {
+            container.innerHTML = '';
+            return;
+        }
+        container.innerHTML = selectedFiles.map(function(f, i) {
+            return '<div style="display:inline-block;margin:5px;padding:8px;background:var(--light);border-radius:8px;">' +
+                '<i class="fas fa-file"></i> ' + f.name + ' (' + (f.size / 1024).toFixed(1) + 'KB) ' +
+                '<button onclick="removeFile(' + i + ')" style="background:var(--danger);color:white;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;">×</button>' +
+                '</div>';
+        }).join('');
+    }
+
+    function removeFile(index) {
+        selectedFiles.splice(index, 1);
+        updateFilePreview();
+    }
+
+    async function uploadFiles() {
+        if (selectedFiles.length === 0) { 
+            showAlert('Sélectionnez des fichiers', 'error'); 
+            return; 
+        }
+        
+        var bucketName = uploadType === 'video' ? 'videos' : 'medias';
+        var table = uploadType === 'video' ? 'videos' : 'gallery';
+        var successCount = 0;
+        
+        showLoading(true);
+        
+        for (var i = 0; i < selectedFiles.length; i++) {
+            var file = selectedFiles[i];
+            try {
+                var fileName = Date.now() + '_' + file.name;
+                var { data: uploadData, error: uploadError } = await supabaseClient.storage
+                    .from(bucketName)
+                    .upload(fileName, file);
+                
+                if (uploadError) throw uploadError;
+                
+                var { data: urlData } = supabaseClient.storage
+                    .from(bucketName)
+                    .getPublicUrl(fileName);
+                
+                var fileData = {
+                    url: urlData.publicUrl,
+                    title: file.name,
+                    file_name: fileName,
+                    file_size: file.size,
+                    date: new Date().toISOString()
+                };
+                
+                await saveToSupabase(table, fileData);
+                successCount++;
                 
             } catch (error) {
-                console.error('❌ Erreur chargement des données:', error);
-                showAlert('Erreur de chargement des données', 'error');
-                showLoading(false);
+                console.error('Erreur upload:', error);
+                showAlert('❌ Erreur upload: ' + error.message, 'error');
             }
         }
-
-        function showLoading(show) {
-            var elements = document.querySelectorAll('.loading');
-            elements.forEach(el => {
-                if (show) {
-                    el.style.display = 'block';
-                } else {
-                    el.style.display = 'none';
-                }
-            });
+        
+        showLoading(false);
+        selectedFiles = [];
+        closeUploadModal();
+        
+        if (successCount > 0) {
+            showAlert('✅ ' + successCount + ' fichier(s) uploadé(s) avec succès', 'success');
+            await loadAllData();
         }
+    }
 
-        async function saveToSupabase(table, data, id = null) {
-            try {
-                showLoading(true);
-                let result;
-                
-                if (id) {
-                    // Mise à jour
-                    data.updated_at = new Date().toISOString();
-                    const { data: updated, error } = await supabaseClient
-                        .from(table)
-                        .update(data)
-                        .eq('id', id)
-                        .select();
-                    
-                    if (error) throw error;
-                    result = updated;
-                    showAlert('✅ Élément mis à jour avec succès', 'success');
-                } else {
-                    // Création
-                    data.created_at = new Date().toISOString();
-                    const { data: inserted, error } = await supabaseClient
-                        .from(table)
-                        .insert([data])
-                        .select();
-                    
-                    if (error) throw error;
-                    result = inserted;
-                    showAlert('✅ Élément ajouté avec succès', 'success');
-                }
-                
-                await loadAllData();
-                showLoading(false);
-                return result;
-            } catch (error) {
-                console.error('Erreur sauvegarde:', error);
-                showAlert('❌ Erreur lors de la sauvegarde: ' + error.message, 'error');
-                showLoading(false);
-                return null;
+    function deleteGallery(id) {
+        if (!confirm('Supprimer cette image ?')) return;
+        deleteFromSupabase('gallery', id);
+    }
+
+    function deleteVideo(id) {
+        if (!confirm('Supprimer cette vidéo ?')) return;
+        deleteFromSupabase('videos', id);
+    }
+
+    function viewMedia(url, type) {
+        var viewer = document.getElementById('fileViewer');
+        var content = document.getElementById('viewerContent');
+        if (type === 'video') {
+            content.innerHTML = '<video controls style="max-width:100%;max-height:60vh;"><source src="' + url + '" type="video/mp4"></video>';
+        } else {
+            content.innerHTML = '<img src="' + url + '" style="max-width:100%;max-height:60vh;" />';
+        }
+        viewer.classList.add('active');
+    }
+
+    function closeFileViewer() {
+        document.getElementById('fileViewer').classList.remove('active');
+    }
+
+    // ============================================================
+    // RENDER
+    // ============================================================
+    function renderAll() {
+        renderTicker();
+        renderTexts();
+        renderOffres();
+        renderProduits();
+        renderArbres();
+        renderBetail();
+        renderEau();
+        renderSagia();
+        renderGallery();
+        renderVideos();
+        renderDashboardLists();
+        renderDocumentsAdmin();
+        updateStats();
+        updatePhoneDisplay();
+        updateAdminVisibility();
+    }
+
+    function renderTicker() {
+        var container = document.getElementById('tickerContent');
+        if (!container) return;
+        var items = DATA.ticker || [];
+        if (items.length === 0) {
+            container.innerHTML = '<span class="ticker-item">Bienvenue sur le site ASSOCIATION ANSFAL</span>';
+            return;
+        }
+        var html = items.map(function(item) {
+            var text = getLocalized(item.lang) || item.text || '';
+            var icon = item.icon || 'fa-star';
+            return '<span class="ticker-item"><i class="fas ' + icon + '"></i> ' + text + ' <span class="sep">|</span></span>';
+        }).join('');
+        container.innerHTML = html + html;
+    }
+
+    function renderTexts() {
+        var container = document.getElementById('textsList');
+        if (!container) return;
+        var items = DATA.texts || [];
+        if (items.length === 0) {
+            container.innerHTML = '<div class="no-content">Aucun texte</div>';
+            return;
+        }
+        container.innerHTML = items.map(function(item) {
+            var title = getLocalized(item.title) || 'Sans titre';
+            return '<div class="dashboard-item">' +
+                '<div class="item-icon"><i class="fas fa-file-alt"></i></div>' +
+                '<div class="item-info"><h4>' + title + '</h4><small>' + (item.content ? Object.values(item.content).join(' | ') : '') + '</small></div>' +
+                '<button class="btn-action edit" onclick="editText(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                '<button class="btn-action delete" onclick="deleteText(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                '</div>';
+        }).join('');
+        
+        var docGrid = document.getElementById('documentsGrid');
+        if (docGrid) {
+            docGrid.innerHTML = items.map(function(item) {
+                var title = getLocalized(item.title) || 'Texte';
+                var content = getLocalized(item.content) || '';
+                return '<div class="menu-card">' +
+                    '<div class="card-icon"><i class="fas fa-file-alt"></i></div>' +
+                    '<h3>' + title + '</h3>' +
+                    '<p>' + content.substring(0, 100) + (content.length > 100 ? '...' : '') + '</p>' +
+                    '</div>';
+            }).join('');
+        }
+    }
+
+    function renderOffres() {
+        var container = document.getElementById('offresList');
+        if (!container) return;
+        var items = DATA.offres || [];
+        if (items.length === 0) {
+            container.innerHTML = '<div class="no-content">Aucune offre</div>';
+            return;
+        }
+        container.innerHTML = items.map(function(item) {
+            var title = getLocalized(item.title) || 'Offre';
+            var badge = getLocalized(item.badge) || '';
+            return '<div class="dashboard-item">' +
+                '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-briefcase') + '"></i></div>' +
+                '<div class="item-info"><h4>' + title + '</h4><small>' + badge + '</small></div>' +
+                '<button class="btn-action edit" onclick="editOffre(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                '<button class="btn-action delete" onclick="deleteOffre(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                '</div>';
+        }).join('');
+        
+        var grid = document.getElementById('offresGrid');
+        if (grid) {
+            grid.innerHTML = items.map(function(item) {
+                var title = getLocalized(item.title) || 'Offre';
+                var desc = getLocalized(item.description) || '';
+                var badge = getLocalized(item.badge) || '';
+                return '<div class="menu-card">' +
+                    '<div class="card-icon"><i class="fas ' + (item.icon || 'fa-briefcase') + '"></i></div>' +
+                    '<h3>' + title + '</h3>' +
+                    '<p>' + desc + '</p>' +
+                    '<span class="card-badge badge-green">' + badge + '</span>' +
+                    '</div>';
+            }).join('');
+        }
+    }
+
+    function renderProduits() {
+        var container = document.getElementById('produitsList');
+        if (!container) return;
+        var items = DATA.produits || [];
+        if (items.length === 0) {
+            container.innerHTML = '<div class="no-content">Aucun produit</div>';
+            return;
+        }
+        container.innerHTML = items.map(function(item) {
+            var title = getLocalized(item.title) || 'Produit';
+            var badge = getLocalized(item.badge) || '';
+            return '<div class="dashboard-item">' +
+                '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-apple-alt') + '"></i></div>' +
+                '<div class="item-info"><h4>' + title + '</h4><small>' + badge + '</small></div>' +
+                '<button class="btn-action edit" onclick="editProduit(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                '<button class="btn-action delete" onclick="deleteProduit(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                '</div>';
+        }).join('');
+        
+        var grid = document.getElementById('produitsGrid');
+        if (grid) {
+            grid.innerHTML = items.map(function(item) {
+                var title = getLocalized(item.title) || 'Produit';
+                var desc = getLocalized(item.description) || '';
+                var badge = getLocalized(item.badge) || '';
+                return '<div class="menu-card">' +
+                    '<div class="card-icon"><i class="fas ' + (item.icon || 'fa-apple-alt') + '"></i></div>' +
+                    '<h3>' + title + '</h3>' +
+                    '<p>' + desc + '</p>' +
+                    '<span class="card-badge badge-orange">' + badge + '</span>' +
+                    '</div>';
+            }).join('');
+        }
+    }
+
+    function renderArbres() {
+        var container = document.getElementById('arbresList');
+        if (!container) return;
+        var items = DATA.arbres || [];
+        if (items.length === 0) {
+            container.innerHTML = '<div class="no-content">Aucune localité</div>';
+            return;
+        }
+        container.innerHTML = items.map(function(item) {
+            var localite = getLocalized(item.localite) || 'Localité';
+            var total = (item.oliviers || 0) + (item.amandiers || 0) + (item.figuiers || 0) + (item.noyers || 0);
+            return '<div class="dashboard-item">' +
+                '<div class="item-icon"><i class="fas fa-tree"></i></div>' +
+                '<div class="item-info"><h4>' + localite + '</h4><small>' + total + ' arbres - ' + (item.habitants || 0) + ' habitants</small></div>' +
+                '<button class="btn-action edit" onclick="editArbre(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                '<button class="btn-action delete" onclick="deleteArbre(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                '</div>';
+        }).join('');
+        
+        var body = document.getElementById('arbresBody');
+        if (body) {
+            body.innerHTML = items.map(function(item) {
+                var localite = getLocalized(item.localite) || 'Localité';
+                var total = (item.oliviers || 0) + (item.amandiers || 0) + (item.figuiers || 0) + (item.noyers || 0);
+                var ratio = item.habitants ? (total / item.habitants).toFixed(1) : '0';
+                return '<tr>' +
+                    '<td>' + localite + '</td>' +
+                    '<td>' + (item.oliviers || 0) + '</td>' +
+                    '<td>' + (item.amandiers || 0) + '</td>' +
+                    '<td>' + (item.figuiers || 0) + '</td>' +
+                    '<td>' + (item.noyers || 0) + '</td>' +
+                    '<td><strong>' + total + '</strong></td>' +
+                    '<td>' + (item.habitants || 0) + '</td>' +
+                    '<td>' + ratio + '</td>' +
+                    '</tr>';
+            }).join('');
+        }
+    }
+
+    function renderBetail() {
+        var container = document.getElementById('betailList');
+        if (!container) return;
+        var items = DATA.betail || [];
+        if (items.length === 0) {
+            container.innerHTML = '<div class="no-content">Aucun élevage</div>';
+            return;
+        }
+        container.innerHTML = items.map(function(item) {
+            var title = getLocalized(item.title) || 'Élevage';
+            var badge = getLocalized(item.badge) || '';
+            return '<div class="dashboard-item">' +
+                '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-horse') + '"></i></div>' +
+                '<div class="item-info"><h4>' + title + '</h4><small>' + badge + '</small></div>' +
+                '<button class="btn-action edit" onclick="editBetail(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                '<button class="btn-action delete" onclick="deleteBetail(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                '</div>';
+        }).join('');
+        
+        var grid = document.getElementById('betailGrid');
+        if (grid) {
+            grid.innerHTML = items.map(function(item) {
+                var title = getLocalized(item.title) || 'Élevage';
+                var desc = getLocalized(item.description) || '';
+                var badge = getLocalized(item.badge) || '';
+                return '<div class="menu-card">' +
+                    '<div class="card-icon"><i class="fas ' + (item.icon || 'fa-horse') + '"></i></div>' +
+                    '<h3>' + title + '</h3>' +
+                    '<p>' + desc + '</p>' +
+                    '<span class="card-badge badge-purple">' + badge + '</span>' +
+                    '</div>';
+            }).join('');
+        }
+    }
+
+    function renderEau() {
+        var container = document.getElementById('eauList');
+        if (!container) return;
+        var items = DATA.eau || [];
+        if (items.length === 0) {
+            container.innerHTML = '<div class="no-content">Aucun projet</div>';
+            return;
+        }
+        container.innerHTML = items.map(function(item) {
+            var title = getLocalized(item.title) || 'Projet';
+            var badge = getLocalized(item.badge) || '';
+            return '<div class="dashboard-item">' +
+                '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-tint') + '"></i></div>' +
+                '<div class="item-info"><h4>' + title + '</h4><small>' + badge + '</small></div>' +
+                '<button class="btn-action edit" onclick="editEau(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                '<button class="btn-action delete" onclick="deleteEau(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                '</div>';
+        }).join('');
+        
+        var grid = document.getElementById('eauGrid');
+        if (grid) {
+            grid.innerHTML = items.map(function(item) {
+                var title = getLocalized(item.title) || 'Projet';
+                var desc = getLocalized(item.description) || '';
+                var badge = getLocalized(item.badge) || '';
+                return '<div class="menu-card">' +
+                    '<div class="card-icon"><i class="fas ' + (item.icon || 'fa-tint') + '"></i></div>' +
+                    '<h3>' + title + '</h3>' +
+                    '<p>' + desc + '</p>' +
+                    '<span class="card-badge badge-teal">' + badge + '</span>' +
+                    '</div>';
+            }).join('');
+        }
+    }
+
+    function renderSagia() {
+        var container = document.getElementById('sagiaList');
+        if (!container) return;
+        var items = DATA.sagia || [];
+        if (items.length === 0) {
+            container.innerHTML = '<div class="no-content">Aucun SAGIA</div>';
+            return;
+        }
+        container.innerHTML = items.map(function(item) {
+            var name = getLocalized(item.name) || item.code || 'SAGIA';
+            var zone = getLocalized(item.zone) || '';
+            return '<div class="dashboard-item">' +
+                '<div class="item-icon"><i class="fas fa-list"></i></div>' +
+                '<div class="item-info"><h4>' + item.code + '</h4><small>' + name + ' - ' + zone + '</small></div>' +
+                '<button class="btn-action edit" onclick="editSagia(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                '<button class="btn-action delete" onclick="deleteSagia(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                '</div>';
+        }).join('');
+        
+        var body = document.getElementById('sagiaBody');
+        if (body) {
+            body.innerHTML = items.map(function(item) {
+                var name = getLocalized(item.name) || '';
+                var zone = getLocalized(item.zone) || '';
+                var status = getLocalized(item.status) || '';
+                return '<tr>' +
+                    '<td><strong>' + item.code + '</strong></td>' +
+                    '<td>' + name + '</td>' +
+                    '<td>' + zone + '</td>' +
+                    '<td>' + (item.date || '') + '</td>' +
+                    '<td>' + status + '</td>' +
+                    '</tr>';
+            }).join('');
+        }
+    }
+
+    function renderGallery() {
+        var container = document.getElementById('galleryList');
+        if (!container) return;
+        var items = DATA.gallery || [];
+        if (items.length === 0) {
+            container.innerHTML = '<div class="no-content">Aucune image</div>';
+            return;
+        }
+        container.innerHTML = items.map(function(item) {
+            return '<div class="dashboard-item">' +
+                '<div class="item-icon"><i class="fas fa-image"></i></div>' +
+                '<div class="item-info"><h4>' + (item.title || 'Image') + '</h4><small>' + new Date(item.date).toLocaleDateString() + '</small></div>' +
+                '<button class="btn-action view" onclick="viewMedia(\'' + item.url + '\', \'image\')"><i class="fas fa-eye"></i></button>' +
+                '<button class="btn-action delete" onclick="deleteGallery(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                '</div>';
+        }).join('');
+        
+        var galleryContainer = document.getElementById('galleryContainer');
+        if (galleryContainer) {
+            if (items.length === 0) {
+                galleryContainer.innerHTML = '<div class="no-content">Aucune photo dans la galerie</div>';
+                return;
             }
+            galleryContainer.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:15px;">' +
+                items.map(function(item) {
+                    return '<div style="cursor:pointer;border-radius:10px;overflow:hidden;box-shadow:var(--shadow);" onclick="viewMedia(\'' + item.url + '\', \'image\')">' +
+                        '<img src="' + item.url + '" alt="' + (item.title || 'Image') + '" style="width:100%;height:200px;object-fit:cover;" />' +
+                        '</div>';
+                }).join('') +
+                '</div>';
         }
+    }
 
-        async function deleteFromSupabase(table, id) {
+    function renderVideos() {
+        var container = document.getElementById('videosList');
+        if (!container) return;
+        var items = DATA.videos || [];
+        if (items.length === 0) {
+            container.innerHTML = '<div class="no-content">Aucune vidéo</div>';
+            return;
+        }
+        container.innerHTML = items.map(function(item) {
+            return '<div class="dashboard-item">' +
+                '<div class="item-icon"><i class="fas fa-video"></i></div>' +
+                '<div class="item-info"><h4>' + (item.title || 'Vidéo') + '</h4><small>' + new Date(item.date).toLocaleDateString() + '</small></div>' +
+                '<button class="btn-action view" onclick="viewMedia(\'' + item.url + '\', \'video\')"><i class="fas fa-eye"></i></button>' +
+                '<button class="btn-action delete" onclick="deleteVideo(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                '</div>';
+        }).join('');
+        
+        var videosContainer = document.getElementById('videosContainer');
+        if (videosContainer) {
+            if (items.length === 0) {
+                videosContainer.innerHTML = '<div class="no-content">Aucune vidéo disponible</div>';
+                return;
+            }
+            videosContainer.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;">' +
+                items.map(function(item) {
+                    return '<div style="border-radius:10px;overflow:hidden;box-shadow:var(--shadow);">' +
+                        '<video controls style="width:100%;max-height:250px;">' +
+                        '<source src="' + item.url + '" type="video/mp4">' +
+                        'Votre navigateur ne supporte pas la vidéo' +
+                        '</video>' +
+                        '<div style="padding:10px;"><strong>' + (item.title || 'Vidéo') + '</strong></div>' +
+                        '</div>';
+                }).join('') +
+                '</div>';
+        }
+    }
+
+    function renderDashboardLists() {
+        renderGallery();
+        renderVideos();
+        renderTexts();
+        renderTickerList();
+        renderOffres();
+        renderProduits();
+        renderArbres();
+        renderBetail();
+        renderEau();
+        renderSagia();
+    }
+
+    function renderTickerList() {
+        var container = document.getElementById('tickerList');
+        if (!container) return;
+        var items = DATA.ticker || [];
+        if (items.length === 0) {
+            container.innerHTML = '<div class="no-content">Aucune annonce</div>';
+            return;
+        }
+        container.innerHTML = items.map(function(item) {
+            var text = getLocalized(item.lang) || item.text || '';
+            return '<div class="dashboard-item">' +
+                '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-scroll') + '"></i></div>' +
+                '<div class="item-info"><h4>' + text.substring(0, 50) + (text.length > 50 ? '...' : '') + '</h4></div>' +
+                '<button class="btn-action edit" onclick="editTicker(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                '<button class="btn-action delete" onclick="deleteTicker(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                '</div>';
+        }).join('');
+    }
+
+    function renderDocumentsAdmin() {
+        var grid = document.getElementById('documentsAdminGrid');
+        if (grid) {
+            var items = DATA.documentsAdmin || [];
+            if (items.length === 0) {
+                grid.innerHTML = '<div class="no-content">Aucun document</div>';
+                return;
+            }
+            grid.innerHTML = items.map(function(doc) {
+                var title = getLocalized(doc.title) || 'Document';
+                var desc = getLocalized(doc.description) || '';
+                return '<div class="menu-card" style="border-left-color:' + (doc.color || 'var(--primary)') + ';">' +
+                    '<div class="card-icon" style="color:' + (doc.color || 'var(--primary)') + ';"><i class="fas ' + (doc.icon || 'fa-file-pdf') + '"></i></div>' +
+                    '<h3>' + title + '</h3>' +
+                    '<p>' + desc + '</p>' +
+                    '<a href="#" class="btn btn-sm" style="padding:6px 18px;font-size:0.8rem;margin-top:10px;background:' + (doc.color || 'var(--primary)') + ';border-color:' + (doc.color || 'var(--primary)') + ';">' +
+                    '<i class="fas fa-download"></i> ' + (currentLang === 'ar' ? 'تحميل' : 'Télécharger') +
+                    '</a>' +
+                    '</div>';
+            }).join('');
+        }
+        
+        var list = document.getElementById('documentsAdminList');
+        if (list) {
+            var items = DATA.documentsAdmin || [];
+            if (items.length === 0) {
+                list.innerHTML = '<div class="no-content">Aucun document</div>';
+                return;
+            }
+            list.innerHTML = items.map(function(item) {
+                var title = getLocalized(item.title) || 'Document';
+                return '<div class="dashboard-item">' +
+                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-file-pdf') + '" style="color:' + (item.color || 'var(--primary)') + ';"></i></div>' +
+                    '<div class="item-info"><h4>' + title + '</h4><small>' + (item.description ? Object.values(item.description).join(' | ') : '') + '</small></div>' +
+                    '<button class="btn-action edit" onclick="editDocumentAdmin(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                    '<button class="btn-action delete" onclick="deleteDocumentAdmin(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                    '</div>';
+            }).join('');
+        }
+    }
+
+    // ============================================================
+    // STATS
+    // ============================================================
+    function updateStats() {
+        var total = Math.floor(Math.random() * 50) + 10;
+        document.getElementById('totalVisitorsStat').textContent = total;
+        document.getElementById('totalVisitors').textContent = total;
+        document.getElementById('onlineVisitors').textContent = Math.floor(Math.random() * 5) + 1;
+        document.getElementById('lastVisit').textContent = new Date().toLocaleString();
+        
+        document.getElementById('totalMediaStat').textContent = (DATA.gallery.length + DATA.videos.length);
+        document.getElementById('totalTextsStat').textContent = DATA.texts.length;
+        document.getElementById('totalTickerStat').textContent = DATA.ticker.length;
+    }
+
+    // ============================================================
+    // NAVIGATION
+    // ============================================================
+    function showSection(id) {
+        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+        var target = document.getElementById(id);
+        if (target) target.classList.add('active');
+        document.querySelectorAll('#mainMenu a').forEach(l => l.classList.remove('active'));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showDashboardSection(type) {
+        document.querySelectorAll('.dashboard-section-content').forEach(s => s.classList.remove('active'));
+        var target = document.getElementById(type + 'Dashboard');
+        if (target) target.classList.add('active');
+        document.querySelectorAll('.sidebar-menu a').forEach(l => l.classList.remove('active'));
+        document.querySelectorAll('.sidebar-menu a').forEach(l => {
+            if (l.getAttribute('data-page') === type || l.getAttribute('data-section') === type) {
+                l.classList.add('active');
+            }
+        });
+    }
+
+    // ============================================================
+    // MOT DE PASSE
+    // ============================================================
+    function showPasswordModal() {
+        document.getElementById('passwordModal').classList.add('active');
+    }
+
+    function closePasswordModal() {
+        document.getElementById('passwordModal').classList.remove('active');
+        document.getElementById('currentPasswordInput').value = '';
+        document.getElementById('newPasswordInput').value = '';
+        document.getElementById('confirmPasswordInput').value = '';
+    }
+
+    function changePassword() {
+        var current = document.getElementById('currentPasswordInput').value;
+        var newPwd = document.getElementById('newPasswordInput').value;
+        var confirm = document.getElementById('confirmPasswordInput').value;
+        if (!current || !newPwd || !confirm) { 
+            showAlert('Tous les champs sont requis', 'error'); 
+            return; 
+        }
+        if (newPwd !== confirm) { 
+            showAlert('Les mots de passe ne correspondent pas', 'error'); 
+            return; 
+        }
+        closePasswordModal();
+        showAlert('Mot de passe changé', 'success');
+    }
+
+    // ============================================================
+    // ALERTES
+    // ============================================================
+    function showAlert(message, type) {
+        var div = document.createElement('div');
+        div.className = 'alert ' + (type || 'info');
+        var icon = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle';
+        div.innerHTML = '<i class="fas fa-' + icon + '"></i> ' + message;
+        document.body.appendChild(div);
+        setTimeout(function() { div.remove(); }, 4000);
+    }
+
+    // ============================================================
+    // EXPORT / RESET
+    // ============================================================
+    function exportToJSON() {
+        var data = JSON.stringify(DATA, null, 2);
+        var blob = new Blob([data], { type: 'application/json' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'ansfal_data.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        showAlert('Données exportées', 'success');
+    }
+
+    function resetAllData() {
+        if (!confirm('⚠️ Effacer toutes les données ? Cette action est irréversible !')) return;
+        
+        var tables = ['ticker', 'texts', 'offres', 'produits', 'arbres', 'betail', 'eau', 'sagia', 'gallery', 'videos', 'documents_admin'];
+        
+        Promise.all(tables.map(async function(table) {
             try {
-                showLoading(true);
-                
                 const { error } = await supabaseClient
                     .from(table)
                     .delete()
-                    .eq('id', id);
+                    .neq('id', 0);
                 
-                if (error) throw error;
-                
-                showAlert('🗑️ Élément supprimé avec succès', 'success');
-                await loadAllData();
-                showLoading(false);
-                return true;
-            } catch (error) {
-                console.error('Erreur suppression:', error);
-                showAlert('❌ Erreur lors de la suppression: ' + error.message, 'error');
-                showLoading(false);
-                return false;
+                if (error) console.warn('Erreur reset ' + table + ':', error);
+            } catch (e) {
+                console.warn('Erreur reset ' + table + ':', e);
             }
-        }
-
-        // ============================================================
-        // GESTION ADMIN
-        // ============================================================
-        function updateAdminVisibility() {
-            var isAdmin = DATA.isAdmin;
-            
-            var dashboardSection = document.getElementById('dashboard');
-            if (dashboardSection) {
-                if (isAdmin) {
-                    dashboardSection.classList.add('visible');
-                } else {
-                    dashboardSection.classList.remove('visible');
-                }
-            }
-            
-            var menuDashboard = document.getElementById('menuDashboard');
-            if (menuDashboard) {
-                if (isAdmin) {
-                    menuDashboard.classList.remove('hidden');
-                } else {
-                    menuDashboard.classList.add('hidden');
-                }
-            }
-            
-            var docAdminSection = document.getElementById('documents-admin');
-            if (docAdminSection) {
-                if (isAdmin) {
-                    docAdminSection.classList.add('visible');
-                } else {
-                    docAdminSection.classList.remove('visible');
-                }
-            }
-            
-            var menuDocAdmin = document.getElementById('menuDocumentsAdmin');
-            if (menuDocAdmin) {
-                if (isAdmin) {
-                    menuDocAdmin.classList.remove('hidden');
-                } else {
-                    menuDocAdmin.classList.add('hidden');
-                }
-            }
-            
-            if (isAdmin) {
-                document.body.classList.add('admin-mode');
-                document.getElementById('addBtn').style.display = 'flex';
-                document.getElementById('loginBtn').style.display = 'none';
-            } else {
-                document.body.classList.remove('admin-mode');
-                document.getElementById('addBtn').style.display = 'none';
-                document.getElementById('loginBtn').style.display = 'flex';
-            }
-        }
-
-        // ============================================================
-        // AUTHENTIFICATION
-        // ============================================================
-        function login() {
-            var user = document.getElementById('username').value.trim();
-            var pass = document.getElementById('password').value.trim();
-            if (!user || !pass) { 
-                showAlert('Veuillez remplir tous les champs', 'error'); 
-                return; 
-            }
-            
-            if (user === 'admin' && pass === 'admin') {
-                DATA.isAdmin = true;
-                showAlert('✅ Connexion réussie - Mode Admin activé', 'success');
-                document.getElementById('loginForm').classList.add('hidden');
-                document.getElementById('userInfo').classList.remove('hidden');
-                document.getElementById('userName').textContent = user;
-                updateAdminVisibility();
-                renderAll();
-                showSection('dashboard');
-            } else {
-                showAlert('❌ Identifiants incorrects', 'error');
-            }
-        }
-
-        function logout() {
-            if (!confirm('Déconnexion ?')) return;
-            DATA.isAdmin = false;
-            document.getElementById('loginForm').classList.remove('hidden');
-            document.getElementById('userInfo').classList.add('hidden');
-            updateAdminVisibility();
-            renderAll();
-            showSection('home');
-            showAlert('Déconnecté', 'info');
-        }
-
-        // ============================================================
-        // TÉLÉPHONE
-        // ============================================================
-        function updatePhoneDisplay() {
-    var phone = DATA.phoneNumber || '06 25 93 13 19';
-    var elements = ['headerPhoneNumber', 'heroPhoneNumber', 'contactPhoneNumber', 'footerPhoneNumber'];
-    elements.forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) {
-            el.textContent = phone;
-            // Forcer l'affichage LTR pour les numéros
-            el.setAttribute('dir', 'ltr');
-            el.style.direction = 'ltr';
-            el.style.unicodeBidi = 'bidi-override';
-            el.style.display = 'inline-block';
-        }
-    });
-    var settingsInput = document.getElementById('settingsPhoneInput');
-    if (settingsInput) {
-        settingsInput.value = phone;
-        settingsInput.setAttribute('dir', 'ltr');
-        settingsInput.style.direction = 'ltr';
-        settingsInput.style.textAlign = 'left';
+        })).then(function() {
+            showAlert('Toutes les données ont été effacées', 'info');
+            loadAllData();
+        });
     }
-}
-        }
-    });
-    var settingsInput = document.getElementById('settingsPhoneInput');
-    if (settingsInput) {
-        settingsInput.value = phone;
-        if (!settingsInput.hasAttribute('dir')) {
-            settingsInput.setAttribute('dir', 'ltr');
-        }
-    }
-}
-            
-            try {
-                showLoading(true);
-                
-                // Vérifier si un enregistrement existe
-                const { data: existing, error: checkError } = await supabaseClient
-                    .from('settings')
-                    .select('id')
-                    .limit(1);
-                
-                if (checkError) throw checkError;
-                
-                if (existing && existing.length > 0) {
-                    // Mise à jour
-                    const { error } = await supabaseClient
-                        .from('settings')
-                        .update({ phone_number: phone, updated_at: new Date().toISOString() })
-                        .eq('id', existing[0].id);
-                    
-                    if (error) throw error;
-                } else {
-                    // Insertion
-                    const { error } = await supabaseClient
-                        .from('settings')
-                        .insert([{ phone_number: phone, created_at: new Date().toISOString() }]);
-                    
-                    if (error) throw error;
-                }
-                
-                DATA.phoneNumber = phone;
-                updatePhoneDisplay();
-                showAlert('✅ Numéro de téléphone mis à jour', 'success');
-                showLoading(false);
-            } catch (error) {
-                console.error('Erreur:', error);
-                showAlert('❌ Erreur: ' + error.message, 'error');
-                showLoading(false);
-            }
-        }
 
-        // ============================================================
-        // CRUD - TEXTES
-        // ============================================================
-        function showTextModal(data) {
-            currentEditType = 'text';
-            currentEditId = data ? data.id : null;
-            document.getElementById('textModalTitle').textContent = data ? 'Modifier le texte' : 'Ajouter un texte';
-            document.getElementById('textTitleInput').value = data ? (data.title && data.title.fr || '') : '';
-            document.getElementById('textContentInput').value = data ? (data.content && data.content.fr || '') : '';
-            document.getElementById('textModal').classList.add('active');
-        }
+    // ============================================================
+    // INITIALISATION
+    // ============================================================
+    document.addEventListener('DOMContentLoaded', async function() {
+        try {
+            var saved = localStorage.getItem('ansfal_lang');
+            if (saved) switchLanguage(saved);
+        } catch(e) {}
 
-        function closeTextModal() {
-            document.getElementById('textModal').classList.remove('active');
-            currentEditId = null;
-            currentEditType = null;
-        }
-
-        async function saveText() {
-            var title = document.getElementById('textTitleInput').value.trim();
-            var content = document.getElementById('textContentInput').value.trim();
-            if (!title || !content) { 
-                showAlert('Veuillez remplir tous les champs', 'error'); 
-                return; 
-            }
-            
-            const data = {
-                title: { fr: title, ar: title },
-                content: { fr: content, ar: content }
-            };
-            
-            await saveToSupabase('texts', data, currentEditId);
-            closeTextModal();
-            currentEditId = null;
-        }
-
-        function deleteText(id) {
-            if (!confirm('Supprimer ce texte ?')) return;
-            deleteFromSupabase('texts', id);
-        }
-
-        function editText(id) {
-            var item = DATA.texts.find(t => t.id === id);
-            if (item) showTextModal(item);
-        }
-
-        // ============================================================
-        // CRUD - TICKER
-        // ============================================================
-        function showTickerModal(data) {
-            currentEditType = 'ticker';
-            currentEditId = data ? data.id : null;
-            document.getElementById('tickerModalTitle').textContent = data ? 'Modifier l\'annonce' : 'Ajouter une annonce';
-            document.getElementById('tickerTextInput').value = data ? (data.text || '') : '';
-            document.getElementById('tickerIconInput').value = data ? (data.icon || 'fa-star') : 'fa-star';
-            document.getElementById('tickerModal').classList.add('active');
-        }
-
-        function closeTickerModal() {
-            document.getElementById('tickerModal').classList.remove('active');
-            currentEditId = null;
-            currentEditType = null;
-        }
-
-        async function saveTicker() {
-            var text = document.getElementById('tickerTextInput').value.trim();
-            var icon = document.getElementById('tickerIconInput').value.trim() || 'fa-star';
-            if (!text) { 
-                showAlert('Veuillez entrer un texte', 'error'); 
-                return; 
-            }
-            
-            const data = {
-                text: text,
-                icon: icon,
-                lang: { fr: text, ar: text }
-            };
-            
-            await saveToSupabase('ticker', data, currentEditId);
-            closeTickerModal();
-            currentEditId = null;
-        }
-
-        function deleteTicker(id) {
-            if (!confirm('Supprimer cette annonce ?')) return;
-            deleteFromSupabase('ticker', id);
-        }
-
-        function editTicker(id) {
-            var item = DATA.ticker.find(t => t.id === id);
-            if (item) showTickerModal(item);
-        }
-
-        // ============================================================
-        // CRUD - OFFRES
-        // ============================================================
-        function showOffreModal(data) {
-            closeGenericModal();
-            showAlert('Fonctionnalité en cours de développement', 'info');
-        }
-
-        function deleteOffre(id) {
-            if (!confirm('Supprimer cette offre ?')) return;
-            deleteFromSupabase('offres', id);
-        }
-
-        function editOffre(id) {
-            showAlert('Fonctionnalité en cours de développement', 'info');
-        }
-
-        // ============================================================
-        // CRUD - PRODUITS
-        // ============================================================
-        function showProduitModal(data) {
-            closeGenericModal();
-            showAlert('Fonctionnalité en cours de développement', 'info');
-        }
-
-        function deleteProduit(id) {
-            if (!confirm('Supprimer ce produit ?')) return;
-            deleteFromSupabase('produits', id);
-        }
-
-        function editProduit(id) {
-            showAlert('Fonctionnalité en cours de développement', 'info');
-        }
-
-        // ============================================================
-        // CRUD - ARBRES
-        // ============================================================
-        function showArbreModal(data) {
-            closeGenericModal();
-            showAlert('Fonctionnalité en cours de développement', 'info');
-        }
-
-        function deleteArbre(id) {
-            if (!confirm('Supprimer cette localité ?')) return;
-            deleteFromSupabase('arbres', id);
-        }
-
-        function editArbre(id) {
-            showAlert('Fonctionnalité en cours de développement', 'info');
-        }
-
-        // ============================================================
-        // CRUD - BETAIL
-        // ============================================================
-        function showBetailModal(data) {
-            closeGenericModal();
-            showAlert('Fonctionnalité en cours de développement', 'info');
-        }
-
-        function deleteBetail(id) {
-            if (!confirm('Supprimer cet élevage ?')) return;
-            deleteFromSupabase('betail', id);
-        }
-
-        function editBetail(id) {
-            showAlert('Fonctionnalité en cours de développement', 'info');
-        }
-
-        // ============================================================
-        // CRUD - EAU
-        // ============================================================
-        function showEauModal(data) {
-            closeGenericModal();
-            showAlert('Fonctionnalité en cours de développement', 'info');
-        }
-
-        function deleteEau(id) {
-            if (!confirm('Supprimer ce projet ?')) return;
-            deleteFromSupabase('eau', id);
-        }
-
-        function editEau(id) {
-            showAlert('Fonctionnalité en cours de développement', 'info');
-        }
-
-        // ============================================================
-        // CRUD - SAGIA
-        // ============================================================
-        function showSagiaModal(data) {
-            closeGenericModal();
-            showAlert('Fonctionnalité en cours de développement', 'info');
-        }
-
-        function deleteSagia(id) {
-            if (!confirm('Supprimer ce SAGIA ?')) return;
-            deleteFromSupabase('sagia', id);
-        }
-
-        function editSagia(id) {
-            showAlert('Fonctionnalité en cours de développement', 'info');
-        }
-
-        // ============================================================
-        // CRUD - DOCUMENTS ADMIN
-        // ============================================================
-        function showDocumentAdminModal(data) {
-            closeGenericModal();
-            showAlert('Fonctionnalité en cours de développement', 'info');
-        }
-
-        function deleteDocumentAdmin(id) {
-            if (!confirm('Supprimer ce document ?')) return;
-            deleteFromSupabase('documents_admin', id);
-        }
-
-        function editDocumentAdmin(id) {
-            showAlert('Fonctionnalité en cours de développement', 'info');
-        }
-
-        function closeGenericModal() {
-            document.getElementById('genericModal').classList.remove('active');
-            currentEditId = null;
-            currentEditType = null;
-        }
-
-        // ============================================================
-        // UPLOAD
-        // ============================================================
-        function showUploadModal(type) {
-            uploadType = type || 'image';
-            document.getElementById('uploadModalTitle').textContent = type === 'video' ? 'Uploader une vidéo' : 'Uploader une image';
-            document.getElementById('uploadModal').classList.add('active');
-            selectedFiles = [];
-            document.getElementById('filePreview').innerHTML = '';
-        }
-
-        function closeUploadModal() {
-            document.getElementById('uploadModal').classList.remove('active');
-            selectedFiles = [];
-        }
-
-        function handleFileSelect(event) {
-            var files = event.target.files;
-            for (var i = 0; i < files.length; i++) {
-                selectedFiles.push(files[i]);
-            }
-            updateFilePreview();
-            event.target.value = '';
-        }
-
-        function updateFilePreview() {
-            var container = document.getElementById('filePreview');
-            if (selectedFiles.length === 0) {
-                container.innerHTML = '';
-                return;
-            }
-            container.innerHTML = selectedFiles.map(function(f, i) {
-                return '<div style="display:inline-block;margin:5px;padding:8px;background:var(--light);border-radius:8px;">' +
-                    '<i class="fas fa-file"></i> ' + f.name + ' (' + (f.size / 1024).toFixed(1) + 'KB) ' +
-                    '<button onclick="removeFile(' + i + ')" style="background:var(--danger);color:white;border:none;border-radius:50%;width:20px;height:20px;cursor:pointer;">×</button>' +
-                    '</div>';
-            }).join('');
-        }
-
-        function removeFile(index) {
-            selectedFiles.splice(index, 1);
-            updateFilePreview();
-        }
-
-        async function uploadFiles() {
-            if (selectedFiles.length === 0) { 
-                showAlert('Sélectionnez des fichiers', 'error'); 
-                return; 
-            }
-            
-            const table = uploadType === 'video' ? 'videos' : 'gallery';
-            let successCount = 0;
-            
-            showLoading(true);
-            
-            for (const file of selectedFiles) {
-                try {
-                    // Upload vers Supabase Storage
-                    const fileName = `${Date.now()}_${file.name}`;
-                    const { data: uploadData, error: uploadError } = await supabaseClient.storage
-                        .from('medias')
-                        .upload(fileName, file);
-                    
-                    if (uploadError) throw uploadError;
-                    
-                    // Obtenir l'URL publique
-                    const { data: urlData } = supabaseClient.storage
-                        .from('medias')
-                        .getPublicUrl(fileName);
-                    
-                    // Sauvegarder dans la base de données
-                    const fileData = {
-                        url: urlData.publicUrl,
-                        title: file.name,
-                        file_name: fileName,
-                        file_size: file.size,
-                        date: new Date().toISOString()
-                    };
-                    
-                    await saveToSupabase(table, fileData);
-                    successCount++;
-                    
-                } catch (error) {
-                    console.error('Erreur upload:', error);
-                    showAlert('❌ Erreur upload: ' + error.message, 'error');
-                }
-            }
-            
-            showLoading(false);
-            selectedFiles = [];
-            closeUploadModal();
-            
-            if (successCount > 0) {
-                showAlert(`✅ ${successCount} fichier(s) uploadé(s) avec succès`, 'success');
-                await loadAllData();
-            }
-        }
-
-        function deleteGallery(id) {
-            if (!confirm('Supprimer cette image ?')) return;
-            deleteFromSupabase('gallery', id);
-        }
-
-        function deleteVideo(id) {
-            if (!confirm('Supprimer cette vidéo ?')) return;
-            deleteFromSupabase('videos', id);
-        }
-
-        function viewMedia(url, type) {
-            var viewer = document.getElementById('fileViewer');
-            var content = document.getElementById('viewerContent');
-            if (type === 'video') {
-                content.innerHTML = '<video controls style="max-width:100%;max-height:60vh;"><source src="' + url + '" type="video/mp4"></video>';
+        document.getElementById('addBtn').addEventListener('click', function() {
+            if (DATA.isAdmin) {
+                showUploadModal('image');
             } else {
-                content.innerHTML = '<img src="' + url + '" style="max-width:100%;max-height:60vh;" />';
+                showAlert('Veuillez vous connecter en tant qu\'admin', 'error');
             }
-            viewer.classList.add('active');
-        }
-
-        function closeFileViewer() {
-            document.getElementById('fileViewer').classList.remove('active');
-        }
-
-        // ============================================================
-        // RENDER
-        // ============================================================
-        function renderAll() {
-            renderTicker();
-            renderTexts();
-            renderOffres();
-            renderProduits();
-            renderArbres();
-            renderBetail();
-            renderEau();
-            renderSagia();
-            renderGallery();
-            renderVideos();
-            renderDashboardLists();
-            renderDocumentsAdmin();
-            updateStats();
-            updatePhoneDisplay();
-            updateAdminVisibility();
-        }
-
-        function renderTicker() {
-            var container = document.getElementById('tickerContent');
-            if (!container) return;
-            var items = DATA.ticker || [];
-            if (items.length === 0) {
-                container.innerHTML = '<span class="ticker-item">Bienvenue sur le site ASSOCIATION ANSFAL</span>';
-                return;
-            }
-            var html = items.map(function(item) {
-                var text = getLocalized(item.lang) || item.text || '';
-                var icon = item.icon || 'fa-star';
-                return '<span class="ticker-item"><i class="fas ' + icon + '"></i> ' + text + ' <span class="sep">|</span></span>';
-            }).join('');
-            container.innerHTML = html + html;
-        }
-
-        function renderTexts() {
-            var container = document.getElementById('textsList');
-            if (!container) return;
-            var items = DATA.texts || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun texte</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var title = getLocalized(item.title) || 'Sans titre';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas fa-file-alt"></i></div>' +
-                    '<div class="item-info"><h4>' + title + '</h4><small>' + (item.content ? Object.values(item.content).join(' | ') : '') + '</small></div>' +
-                    '<button class="btn-action edit" onclick="editText(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteText(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-            
-            // Afficher aussi dans la section documents
-            var docGrid = document.getElementById('documentsGrid');
-            if (docGrid) {
-                docGrid.innerHTML = items.map(function(item) {
-                    var title = getLocalized(item.title) || 'Texte';
-                    var content = getLocalized(item.content) || '';
-                    return '<div class="menu-card">' +
-                        '<div class="card-icon"><i class="fas fa-file-alt"></i></div>' +
-                        '<h3>' + title + '</h3>' +
-                        '<p>' + content.substring(0, 100) + (content.length > 100 ? '...' : '') + '</p>' +
-                        '</div>';
-                }).join('');
-            }
-        }
-
-        function renderOffres() {
-            var container = document.getElementById('offresList');
-            if (!container) return;
-            var items = DATA.offres || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucune offre</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var title = getLocalized(item.title) || 'Offre';
-                var badge = getLocalized(item.badge) || '';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-briefcase') + '"></i></div>' +
-                    '<div class="item-info"><h4>' + title + '</h4><small>' + badge + '</small></div>' +
-                    '<button class="btn-action edit" onclick="editOffre(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteOffre(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-            
-            var grid = document.getElementById('offresGrid');
-            if (grid) {
-                grid.innerHTML = items.map(function(item) {
-                    var title = getLocalized(item.title) || 'Offre';
-                    var desc = getLocalized(item.description) || '';
-                    var badge = getLocalized(item.badge) || '';
-                    return '<div class="menu-card">' +
-                        '<div class="card-icon"><i class="fas ' + (item.icon || 'fa-briefcase') + '"></i></div>' +
-                        '<h3>' + title + '</h3>' +
-                        '<p>' + desc + '</p>' +
-                        '<span class="card-badge badge-green">' + badge + '</span>' +
-                        '</div>';
-                }).join('');
-            }
-        }
-
-        function renderProduits() {
-            var container = document.getElementById('produitsList');
-            if (!container) return;
-            var items = DATA.produits || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun produit</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var title = getLocalized(item.title) || 'Produit';
-                var badge = getLocalized(item.badge) || '';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-apple-alt') + '"></i></div>' +
-                    '<div class="item-info"><h4>' + title + '</h4><small>' + badge + '</small></div>' +
-                    '<button class="btn-action edit" onclick="editProduit(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteProduit(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-            
-            var grid = document.getElementById('produitsGrid');
-            if (grid) {
-                grid.innerHTML = items.map(function(item) {
-                    var title = getLocalized(item.title) || 'Produit';
-                    var desc = getLocalized(item.description) || '';
-                    var badge = getLocalized(item.badge) || '';
-                    return '<div class="menu-card">' +
-                        '<div class="card-icon"><i class="fas ' + (item.icon || 'fa-apple-alt') + '"></i></div>' +
-                        '<h3>' + title + '</h3>' +
-                        '<p>' + desc + '</p>' +
-                        '<span class="card-badge badge-orange">' + badge + '</span>' +
-                        '</div>';
-                }).join('');
-            }
-        }
-
-        function renderArbres() {
-            var container = document.getElementById('arbresList');
-            if (!container) return;
-            var items = DATA.arbres || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucune localité</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var localite = getLocalized(item.localite) || 'Localité';
-                var total = (item.oliviers || 0) + (item.amandiers || 0) + (item.figuiers || 0) + (item.noyers || 0);
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas fa-tree"></i></div>' +
-                    '<div class="item-info"><h4>' + localite + '</h4><small>' + total + ' arbres - ' + (item.habitants || 0) + ' habitants</small></div>' +
-                    '<button class="btn-action edit" onclick="editArbre(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteArbre(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-            
-            var body = document.getElementById('arbresBody');
-            if (body) {
-                body.innerHTML = items.map(function(item) {
-                    var localite = getLocalized(item.localite) || 'Localité';
-                    var total = (item.oliviers || 0) + (item.amandiers || 0) + (item.figuiers || 0) + (item.noyers || 0);
-                    var ratio = item.habitants ? (total / item.habitants).toFixed(1) : '0';
-                    return '<tr>' +
-                        '<td>' + localite + '</td>' +
-                        '<td>' + (item.oliviers || 0) + '</td>' +
-                        '<td>' + (item.amandiers || 0) + '</td>' +
-                        '<td>' + (item.figuiers || 0) + '</td>' +
-                        '<td>' + (item.noyers || 0) + '</td>' +
-                        '<td><strong>' + total + '</strong></td>' +
-                        '<td>' + (item.habitants || 0) + '</td>' +
-                        '<td>' + ratio + '</td>' +
-                        '</tr>';
-                }).join('');
-            }
-        }
-
-        function renderBetail() {
-            var container = document.getElementById('betailList');
-            if (!container) return;
-            var items = DATA.betail || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun élevage</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var title = getLocalized(item.title) || 'Élevage';
-                var badge = getLocalized(item.badge) || '';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-horse') + '"></i></div>' +
-                    '<div class="item-info"><h4>' + title + '</h4><small>' + badge + '</small></div>' +
-                    '<button class="btn-action edit" onclick="editBetail(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteBetail(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-            
-            var grid = document.getElementById('betailGrid');
-            if (grid) {
-                grid.innerHTML = items.map(function(item) {
-                    var title = getLocalized(item.title) || 'Élevage';
-                    var desc = getLocalized(item.description) || '';
-                    var badge = getLocalized(item.badge) || '';
-                    return '<div class="menu-card">' +
-                        '<div class="card-icon"><i class="fas ' + (item.icon || 'fa-horse') + '"></i></div>' +
-                        '<h3>' + title + '</h3>' +
-                        '<p>' + desc + '</p>' +
-                        '<span class="card-badge badge-purple">' + badge + '</span>' +
-                        '</div>';
-                }).join('');
-            }
-        }
-
-        function renderEau() {
-            var container = document.getElementById('eauList');
-            if (!container) return;
-            var items = DATA.eau || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun projet</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var title = getLocalized(item.title) || 'Projet';
-                var badge = getLocalized(item.badge) || '';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-tint') + '"></i></div>' +
-                    '<div class="item-info"><h4>' + title + '</h4><small>' + badge + '</small></div>' +
-                    '<button class="btn-action edit" onclick="editEau(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteEau(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-            
-            var grid = document.getElementById('eauGrid');
-            if (grid) {
-                grid.innerHTML = items.map(function(item) {
-                    var title = getLocalized(item.title) || 'Projet';
-                    var desc = getLocalized(item.description) || '';
-                    var badge = getLocalized(item.badge) || '';
-                    return '<div class="menu-card">' +
-                        '<div class="card-icon"><i class="fas ' + (item.icon || 'fa-tint') + '"></i></div>' +
-                        '<h3>' + title + '</h3>' +
-                        '<p>' + desc + '</p>' +
-                        '<span class="card-badge badge-teal">' + badge + '</span>' +
-                        '</div>';
-                }).join('');
-            }
-        }
-
-        function renderSagia() {
-            var container = document.getElementById('sagiaList');
-            if (!container) return;
-            var items = DATA.sagia || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucun SAGIA</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var name = getLocalized(item.name) || item.code || 'SAGIA';
-                var zone = getLocalized(item.zone) || '';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas fa-list"></i></div>' +
-                    '<div class="item-info"><h4>' + item.code + '</h4><small>' + name + ' - ' + zone + '</small></div>' +
-                    '<button class="btn-action edit" onclick="editSagia(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteSagia(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-            
-            var body = document.getElementById('sagiaBody');
-            if (body) {
-                body.innerHTML = items.map(function(item) {
-                    var name = getLocalized(item.name) || '';
-                    var zone = getLocalized(item.zone) || '';
-                    var status = getLocalized(item.status) || '';
-                    return '<tr>' +
-                        '<td><strong>' + item.code + '</strong></td>' +
-                        '<td>' + name + '</td>' +
-                        '<td>' + zone + '</td>' +
-                        '<td>' + (item.date || '') + '</td>' +
-                        '<td>' + status + '</td>' +
-                        '</tr>';
-                }).join('');
-            }
-        }
-
-        function renderGallery() {
-            var container = document.getElementById('galleryList');
-            if (!container) return;
-            var items = DATA.gallery || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucune image</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas fa-image"></i></div>' +
-                    '<div class="item-info"><h4>' + (item.title || 'Image') + '</h4><small>' + new Date(item.date).toLocaleDateString() + '</small></div>' +
-                    '<button class="btn-action view" onclick="viewMedia(\'' + item.url + '\', \'image\')"><i class="fas fa-eye"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteGallery(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-            
-            var galleryContainer = document.getElementById('galleryContainer');
-            if (galleryContainer) {
-                if (items.length === 0) {
-                    galleryContainer.innerHTML = '<div class="no-content">Aucune photo dans la galerie</div>';
-                    return;
-                }
-                galleryContainer.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:15px;">' +
-                    items.map(function(item) {
-                        return '<div style="cursor:pointer;border-radius:10px;overflow:hidden;box-shadow:var(--shadow);" onclick="viewMedia(\'' + item.url + '\', \'image\')">' +
-                            '<img src="' + item.url + '" alt="' + (item.title || 'Image') + '" style="width:100%;height:200px;object-fit:cover;" />' +
-                            '</div>';
-                    }).join('') +
-                    '</div>';
-            }
-        }
-
-        function renderVideos() {
-            var container = document.getElementById('videosList');
-            if (!container) return;
-            var items = DATA.videos || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucune vidéo</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas fa-video"></i></div>' +
-                    '<div class="item-info"><h4>' + (item.title || 'Vidéo') + '</h4><small>' + new Date(item.date).toLocaleDateString() + '</small></div>' +
-                    '<button class="btn-action view" onclick="viewMedia(\'' + item.url + '\', \'video\')"><i class="fas fa-eye"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteVideo(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-            
-            var videosContainer = document.getElementById('videosContainer');
-            if (videosContainer) {
-                if (items.length === 0) {
-                    videosContainer.innerHTML = '<div class="no-content">Aucune vidéo disponible</div>';
-                    return;
-                }
-                videosContainer.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;">' +
-                    items.map(function(item) {
-                        return '<div style="border-radius:10px;overflow:hidden;box-shadow:var(--shadow);">' +
-                            '<video controls style="width:100%;max-height:250px;">' +
-                            '<source src="' + item.url + '" type="video/mp4">' +
-                            'Votre navigateur ne supporte pas la vidéo' +
-                            '</video>' +
-                            '<div style="padding:10px;"><strong>' + (item.title || 'Vidéo') + '</strong></div>' +
-                            '</div>';
-                    }).join('') +
-                    '</div>';
-            }
-        }
-
-        function renderDashboardLists() {
-            renderGallery();
-            renderVideos();
-            renderTexts();
-            renderTickerList();
-            renderOffres();
-            renderProduits();
-            renderArbres();
-            renderBetail();
-            renderEau();
-            renderSagia();
-        }
-
-        function renderTickerList() {
-            var container = document.getElementById('tickerList');
-            if (!container) return;
-            var items = DATA.ticker || [];
-            if (items.length === 0) {
-                container.innerHTML = '<div class="no-content">Aucune annonce</div>';
-                return;
-            }
-            container.innerHTML = items.map(function(item) {
-                var text = getLocalized(item.lang) || item.text || '';
-                return '<div class="dashboard-item">' +
-                    '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-scroll') + '"></i></div>' +
-                    '<div class="item-info"><h4>' + text.substring(0, 50) + (text.length > 50 ? '...' : '') + '</h4></div>' +
-                    '<button class="btn-action edit" onclick="editTicker(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
-                    '<button class="btn-action delete" onclick="deleteTicker(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
-                    '</div>';
-            }).join('');
-        }
-
-        function renderDocumentsAdmin() {
-            var grid = document.getElementById('documentsAdminGrid');
-            if (grid) {
-                var items = DATA.documentsAdmin || [];
-                if (items.length === 0) {
-                    grid.innerHTML = '<div class="no-content">Aucun document</div>';
-                    return;
-                }
-                grid.innerHTML = items.map(function(doc) {
-                    var title = getLocalized(doc.title) || 'Document';
-                    var desc = getLocalized(doc.description) || '';
-                    return '<div class="menu-card" style="border-left-color:' + (doc.color || 'var(--primary)') + ';">' +
-                        '<div class="card-icon" style="color:' + (doc.color || 'var(--primary)') + ';"><i class="fas ' + (doc.icon || 'fa-file-pdf') + '"></i></div>' +
-                        '<h3>' + title + '</h3>' +
-                        '<p>' + desc + '</p>' +
-                        '<a href="#" class="btn btn-sm" style="padding:6px 18px;font-size:0.8rem;margin-top:10px;background:' + (doc.color || 'var(--primary)') + ';border-color:' + (doc.color || 'var(--primary)') + ';">' +
-                        '<i class="fas fa-download"></i> ' + (currentLang === 'ar' ? 'تحميل' : 'Télécharger') +
-                        '</a>' +
-                        '</div>';
-                }).join('');
-            }
-            
-            var list = document.getElementById('documentsAdminList');
-            if (list) {
-                var items = DATA.documentsAdmin || [];
-                if (items.length === 0) {
-                    list.innerHTML = '<div class="no-content">Aucun document</div>';
-                    return;
-                }
-                list.innerHTML = items.map(function(item) {
-                    var title = getLocalized(item.title) || 'Document';
-                    return '<div class="dashboard-item">' +
-                        '<div class="item-icon"><i class="fas ' + (item.icon || 'fa-file-pdf') + '" style="color:' + (item.color || 'var(--primary)') + ';"></i></div>' +
-                        '<div class="item-info"><h4>' + title + '</h4><small>' + (item.description ? Object.values(item.description).join(' | ') : '') + '</small></div>' +
-                        '<button class="btn-action edit" onclick="editDocumentAdmin(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
-                        '<button class="btn-action delete" onclick="deleteDocumentAdmin(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
-                        '</div>';
-                }).join('');
-            }
-        }
-
-        // ============================================================
-        // STATS
-        // ============================================================
-        function updateStats() {
-            var total = Math.floor(Math.random() * 50) + 10;
-            document.getElementById('totalVisitorsStat').textContent = total;
-            document.getElementById('totalVisitors').textContent = total;
-            document.getElementById('onlineVisitors').textContent = Math.floor(Math.random() * 5) + 1;
-            document.getElementById('lastVisit').textContent = new Date().toLocaleString();
-            
-            document.getElementById('totalMediaStat').textContent = (DATA.gallery.length + DATA.videos.length);
-            document.getElementById('totalTextsStat').textContent = DATA.texts.length;
-            document.getElementById('totalTickerStat').textContent = DATA.ticker.length;
-        }
-
-        // ============================================================
-        // NAVIGATION
-        // ============================================================
-        function showSection(id) {
-            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-            var target = document.getElementById(id);
-            if (target) target.classList.add('active');
-            document.querySelectorAll('#mainMenu a').forEach(l => l.classList.remove('active'));
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function showDashboardSection(type) {
-            document.querySelectorAll('.dashboard-section-content').forEach(s => s.classList.remove('active'));
-            var target = document.getElementById(type + 'Dashboard');
-            if (target) target.classList.add('active');
-            document.querySelectorAll('.sidebar-menu a').forEach(l => l.classList.remove('active'));
-            document.querySelectorAll('.sidebar-menu a').forEach(l => {
-                if (l.getAttribute('data-page') === type || l.getAttribute('data-section') === type) {
-                    l.classList.add('active');
-                }
-            });
-        }
-
-        // ============================================================
-        // MOT DE PASSE
-        // ============================================================
-        function showPasswordModal() {
-            document.getElementById('passwordModal').classList.add('active');
-        }
-
-        function closePasswordModal() {
-            document.getElementById('passwordModal').classList.remove('active');
-            document.getElementById('currentPasswordInput').value = '';
-            document.getElementById('newPasswordInput').value = '';
-            document.getElementById('confirmPasswordInput').value = '';
-        }
-
-        function changePassword() {
-            var current = document.getElementById('currentPasswordInput').value;
-            var newPwd = document.getElementById('newPasswordInput').value;
-            var confirm = document.getElementById('confirmPasswordInput').value;
-            if (!current || !newPwd || !confirm) { 
-                showAlert('Tous les champs sont requis', 'error'); 
-                return; 
-            }
-            if (newPwd !== confirm) { 
-                showAlert('Les mots de passe ne correspondent pas', 'error'); 
-                return; 
-            }
-            closePasswordModal();
-            showAlert('Mot de passe changé', 'success');
-        }
-
-        // ============================================================
-        // ALERTES
-        // ============================================================
-        function showAlert(message, type) {
-            var div = document.createElement('div');
-            div.className = 'alert ' + (type || 'info');
-            var icon = type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle';
-            div.innerHTML = '<i class="fas fa-' + icon + '"></i> ' + message;
-            document.body.appendChild(div);
-            setTimeout(function() { div.remove(); }, 4000);
-        }
-
-        // ============================================================
-        // EXPORT / RESET
-        // ============================================================
-        function exportToJSON() {
-            var data = JSON.stringify(DATA, null, 2);
-            var blob = new Blob([data], { type: 'application/json' });
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.href = url;
-            a.download = 'ansfal_data.json';
-            a.click();
-            URL.revokeObjectURL(url);
-            showAlert('Données exportées', 'success');
-        }
-
-        function resetAllData() {
-            if (!confirm('⚠️ Effacer toutes les données ? Cette action est irréversible !')) return;
-            
-            var tables = ['ticker', 'texts', 'offres', 'produits', 'arbres', 'betail', 'eau', 'sagia', 'gallery', 'videos', 'documents_admin'];
-            
-            Promise.all(tables.map(async function(table) {
-                try {
-                    const { error } = await supabaseClient
-                        .from(table)
-                        .delete()
-                        .neq('id', 0);
-                    
-                    if (error) console.warn('Erreur reset ' + table + ':', error);
-                } catch (e) {
-                    console.warn('Erreur reset ' + table + ':', e);
-                }
-            })).then(function() {
-                showAlert('Toutes les données ont été effacées', 'info');
-                loadAllData();
-            });
-        }
-
-        // ============================================================
-        // INITIALISATION
-        // ============================================================
-        document.addEventListener('DOMContentLoaded', async function() {
-            try {
-                var saved = localStorage.getItem('ansfal_lang');
-                if (saved) switchLanguage(saved);
-            } catch(e) {}
-
-            // Boutons flottants
-            document.getElementById('addBtn').addEventListener('click', function() {
-                if (DATA.isAdmin) {
-                    showUploadModal('image');
-                } else {
-                    showAlert('Veuillez vous connecter en tant qu\'admin', 'error');
-                }
-            });
-
-            document.getElementById('loginBtn').addEventListener('click', function() {
-                document.getElementById('loginForm').scrollIntoView({ behavior: 'smooth' });
-            });
-
-            // Drag & drop
-            var dropArea = document.querySelector('.upload-area');
-            if (dropArea) {
-                dropArea.addEventListener('dragover', function(e) {
-                    e.preventDefault();
-                    this.style.borderColor = 'var(--success)';
-                    this.style.background = 'rgba(76,175,80,0.1)';
-                });
-                dropArea.addEventListener('dragleave', function(e) {
-                    e.preventDefault();
-                    this.style.borderColor = '#ddd';
-                    this.style.background = 'transparent';
-                });
-                dropArea.addEventListener('drop', function(e) {
-                    e.preventDefault();
-                    this.style.borderColor = '#ddd';
-                    this.style.background = 'transparent';
-                    var files = e.dataTransfer.files;
-                    for (var i = 0; i < files.length; i++) {
-                        selectedFiles.push(files[i]);
-                    }
-                    updateFilePreview();
-                });
-            }
-
-            // Charger les données depuis Supabase
-            await loadAllData();
-            
-            // Afficher la page d'accueil
-            showSection('home');
         });
 
-        // ============================================================
-        // EXPOSER GLOBALEMENT
-        // ============================================================
-        window.switchLanguage = switchLanguage;
-        window.showSection = showSection;
-        window.showDashboardSection = showDashboardSection;
-        window.login = login;
-        window.logout = logout;
-        window.showAlert = showAlert;
-        window.showUploadModal = showUploadModal;
-        window.closeUploadModal = closeUploadModal;
-        window.handleFileSelect = handleFileSelect;
-        window.removeFile = removeFile;
-        window.uploadFiles = uploadFiles;
-        window.viewMedia = viewMedia;
-        window.closeFileViewer = closeFileViewer;
-        window.showTextModal = showTextModal;
-        window.closeTextModal = closeTextModal;
-        window.saveText = saveText;
-        window.deleteText = deleteText;
-        window.editText = editText;
-        window.showTickerModal = showTickerModal;
-        window.closeTickerModal = closeTickerModal;
-        window.saveTicker = saveTicker;
-        window.deleteTicker = deleteTicker;
-        window.editTicker = editTicker;
-        window.showOffreModal = showOffreModal;
-        window.deleteOffre = deleteOffre;
-        window.editOffre = editOffre;
-        window.showProduitModal = showProduitModal;
-        window.deleteProduit = deleteProduit;
-        window.editProduit = editProduit;
-        window.showArbreModal = showArbreModal;
-        window.deleteArbre = deleteArbre;
-        window.editArbre = editArbre;
-        window.showBetailModal = showBetailModal;
-        window.deleteBetail = deleteBetail;
-        window.editBetail = editBetail;
-        window.showEauModal = showEauModal;
-        window.deleteEau = deleteEau;
-        window.editEau = editEau;
-        window.showSagiaModal = showSagiaModal;
-        window.deleteSagia = deleteSagia;
-        window.editSagia = editSagia;
-        window.closeGenericModal = closeGenericModal;
-        window.showPasswordModal = showPasswordModal;
-        window.closePasswordModal = closePasswordModal;
-        window.changePassword = changePassword;
-        window.exportToJSON = exportToJSON;
-        window.resetAllData = resetAllData;
-        window.deleteGallery = deleteGallery;
-        window.deleteVideo = deleteVideo;
-        window.savePhoneNumber = savePhoneNumber;
-        window.showDocumentAdminModal = showDocumentAdminModal;
-        window.deleteDocumentAdmin = deleteDocumentAdmin;
-        window.editDocumentAdmin = editDocumentAdmin;
-    </script>
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            document.getElementById('loginForm').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        var dropArea = document.querySelector('.upload-area');
+        if (dropArea) {
+            dropArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = 'var(--success)';
+                this.style.background = 'rgba(76,175,80,0.1)';
+            });
+            dropArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#ddd';
+                this.style.background = 'transparent';
+            });
+            dropArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#ddd';
+                this.style.background = 'transparent';
+                var files = e.dataTransfer.files;
+                for (var i = 0; i < files.length; i++) {
+                    selectedFiles.push(files[i]);
+                }
+                updateFilePreview();
+            });
+        }
+
+        await loadAllData();
+        showSection('home');
+    });
+
+    // ============================================================
+    // EXPOSER GLOBALEMENT
+    // ============================================================
+    window.switchLanguage = switchLanguage;
+    window.showSection = showSection;
+    window.showDashboardSection = showDashboardSection;
+    window.login = login;
+    window.logout = logout;
+    window.showAlert = showAlert;
+    window.showUploadModal = showUploadModal;
+    window.closeUploadModal = closeUploadModal;
+    window.handleFileSelect = handleFileSelect;
+    window.removeFile = removeFile;
+    window.uploadFiles = uploadFiles;
+    window.viewMedia = viewMedia;
+    window.closeFileViewer = closeFileViewer;
+    window.showTextModal = showTextModal;
+    window.closeTextModal = closeTextModal;
+    window.saveText = saveText;
+    window.deleteText = deleteText;
+    window.editText = editText;
+    window.showTickerModal = showTickerModal;
+    window.closeTickerModal = closeTickerModal;
+    window.saveTicker = saveTicker;
+    window.deleteTicker = deleteTicker;
+    window.editTicker = editTicker;
+    window.showOffreModal = showOffreModal;
+    window.deleteOffre = deleteOffre;
+    window.editOffre = editOffre;
+    window.showProduitModal = showProduitModal;
+    window.deleteProduit = deleteProduit;
+    window.editProduit = editProduit;
+    window.showArbreModal = showArbreModal;
+    window.deleteArbre = deleteArbre;
+    window.editArbre = editArbre;
+    window.showBetailModal = showBetailModal;
+    window.deleteBetail = deleteBetail;
+    window.editBetail = editBetail;
+    window.showEauModal = showEauModal;
+    window.deleteEau = deleteEau;
+    window.editEau = editEau;
+    window.showSagiaModal = showSagiaModal;
+    window.deleteSagia = deleteSagia;
+    window.editSagia = editSagia;
+    window.closeGenericModal = closeGenericModal;
+    window.showPasswordModal = showPasswordModal;
+    window.closePasswordModal = closePasswordModal;
+    window.changePassword = changePassword;
+    window.exportToJSON = exportToJSON;
+    window.resetAllData = resetAllData;
+    window.deleteGallery = deleteGallery;
+    window.deleteVideo = deleteVideo;
+    window.savePhoneNumber = savePhoneNumber;
+    window.showDocumentAdminModal = showDocumentAdminModal;
+    window.deleteDocumentAdmin = deleteDocumentAdmin;
+    window.editDocumentAdmin = editDocumentAdmin;
+</script>
 
 </body>
 </html>
