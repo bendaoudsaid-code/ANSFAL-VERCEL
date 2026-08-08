@@ -1608,21 +1608,22 @@ body.rtl [id*="PhoneNumber"] {
     }
 
     function switchLanguage(lang) {
-        currentLang = lang;
-        document.body.classList.toggle('rtl', lang === 'ar');
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector(`.lang-btn[onclick*="${lang}"]`).classList.add('active');
-        
-        var t = LANG[lang];
-        for (var key in t) {
-            var el = document.getElementById(key);
-            if (el) el.textContent = t[key];
-        }
-        
-        updatePhoneDisplay();
-        renderAll();
-        try { localStorage.setItem('ansfal_lang', lang); } catch(e) {}
+    currentLang = lang;
+    document.body.classList.toggle('rtl', lang === 'ar');
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.lang-btn[onclick*="${lang}"]`).classList.add('active');
+    
+    var t = LANG[lang];
+    for (var key in t) {
+        var el = document.getElementById(key);
+        if (el) el.textContent = t[key];
     }
+    
+    updatePhoneDisplay();
+    renderAll();
+    renderWelcomeTexts(); // <--- AJOUTEZ CETTE LIGNE ICI
+    try { localStorage.setItem('ansfal_lang', lang); } catch(e) {}
+}
 
     function showLoading(show) {
         var elements = document.querySelectorAll('.loading');
