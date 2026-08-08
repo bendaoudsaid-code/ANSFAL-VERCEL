@@ -1458,7 +1458,40 @@ body.rtl [id*="PhoneNumber"] {
     <!-- JAVASCRIPT AVEC SUPABASE                     -->
     <!-- ============================================ -->
     <script>
-  
+        // Fonction pour télécharger un document
+function downloadDocument(id) {
+    var doc = DATA.documentsAdmin.find(d => d.id === id);
+    if (!doc) {
+        showAlert('Document non trouvé', 'error');
+        return;
+    }
+    
+    // Créer un fichier PDF fictif (à remplacer par un vrai PDF)
+    var title = getLocalized(doc.title) || 'Document';
+    var content = getLocalized(doc.description) || '';
+    
+    // Créer un blob avec le contenu
+    var blob = new Blob([
+        'Document: ' + title + '\n\n',
+        'Description: ' + content + '\n\n',
+        'Téléchargé depuis le site ASSOCIATION ANSFAL\n',
+        'Date: ' + new Date().toLocaleDateString()
+    ], { type: 'application/pdf' });
+    
+    // Créer un lien de téléchargement
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = title.replace(/[^a-zA-Z0-9]/g, '_') + '.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showAlert('✅ Téléchargement de "' + title + '" démarré', 'success');
+}
+
+        
     // ============================================================
     // CONFIGURATION SUPABASE
     // ============================================================
