@@ -2739,13 +2739,75 @@ body.rtl [id*="PhoneNumber"] {
     }
 
     function renderDocumentsAdmin() {
-        var grid = document.getElementById('documentsAdminGrid');
-        if (grid) {
-            var items = DATA.documentsAdmin || [];
-            if (items.length === 0) {
-                grid.innerHTML = '<div class="no-content">Aucun document</div>';
-                return;
-            }
+    var grid = document.getElementById('documentsAdminGrid');
+    if (grid) {
+        var items = DATA.documentsAdmin || [];
+        if (items.length === 0) {
+            grid.innerHTML = '<div class="no-content">Aucun document</div>';
+            return;
+        }
+        grid.innerHTML = items.map(function(doc) {
+            var title = getLocalized(doc.title) || 'Document';
+            var desc = getLocalized(doc.description) || '';
+            var color = doc.color || 'var(--primary)';
+            var icon = doc.icon || 'fa-file-pdf';
+            
+            return '<div class="menu-card" style="border-left-color:' + color + ';">' +
+                '<div class="card-icon" style="color:' + color + ';"><i class="fas ' + icon + '"></i></div>' +
+                '<h3>' + title + '</h3>' +
+                '<p>' + desc + '</p>' +
+                '<a href="#" class="btn btn-sm" style="padding:6px 18px;font-size:0.8rem;margin-top:10px;background:' + color + ';border-color:' + color + ';" onclick="downloadDocument(' + doc.id + ')">' +
+                '<i class="fas fa-download"></i> ' + (currentLang === 'ar' ? 'تحميل' : 'Télécharger') +
+                '</a>' +
+                '</div>';
+        }).join('');
+    }
+    
+    // AFFICHER LES DOCUMENTS DANS LA SECTION "Documents association"
+    var docGrid = document.getElementById('documentsGrid');
+    if (docGrid) {
+        var items = DATA.documentsAdmin || [];
+        if (items.length === 0) {
+            docGrid.innerHTML = '<div class="no-content">Aucun document disponible</div>';
+            return;
+        }
+        docGrid.innerHTML = items.map(function(doc) {
+            var title = getLocalized(doc.title) || 'Document';
+            var desc = getLocalized(doc.description) || '';
+            var color = doc.color || 'var(--primary)';
+            var icon = doc.icon || 'fa-file-pdf';
+            
+            return '<div class="menu-card" style="border-left-color:' + color + ';">' +
+                '<div class="card-icon" style="color:' + color + ';"><i class="fas ' + icon + '"></i></div>' +
+                '<h3>' + title + '</h3>' +
+                '<p>' + desc + '</p>' +
+                '<a href="#" class="btn btn-sm" style="padding:6px 18px;font-size:0.8rem;margin-top:10px;background:' + color + ';border-color:' + color + ';" onclick="downloadDocument(' + doc.id + ')">' +
+                '<i class="fas fa-download"></i> ' + (currentLang === 'ar' ? 'تحميل' : 'Télécharger') +
+                '</a>' +
+                '</div>';
+        }).join('');
+    }
+    
+    var list = document.getElementById('documentsAdminList');
+    if (list) {
+        var items = DATA.documentsAdmin || [];
+        if (items.length === 0) {
+            list.innerHTML = '<div class="no-content">Aucun document</div>';
+            return;
+        }
+        list.innerHTML = items.map(function(item) {
+            var title = getLocalized(item.title) || 'Document';
+            var color = item.color || 'var(--primary)';
+            var icon = item.icon || 'fa-file-pdf';
+            return '<div class="dashboard-item">' +
+                '<div class="item-icon"><i class="fas ' + icon + '" style="color:' + color + ';"></i></div>' +
+                '<div class="item-info"><h4>' + title + '</h4><small>' + (item.description ? Object.values(item.description).join(' | ') : '') + '</small></div>' +
+                '<button class="btn-action edit" onclick="editDocumentAdmin(' + item.id + ')"><i class="fas fa-edit"></i></button>' +
+                '<button class="btn-action delete" onclick="deleteDocumentAdmin(' + item.id + ')"><i class="fas fa-trash"></i></button>' +
+                '</div>';
+        }).join('');
+    }
+}
             grid.innerHTML = items.map(function(doc) {
                 var title = getLocalized(doc.title) || 'Document';
                 var desc = getLocalized(doc.description) || '';
