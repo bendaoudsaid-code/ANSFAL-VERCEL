@@ -1062,7 +1062,10 @@ body.rtl [id*="PhoneNumber"] {
                             <label>Téléphone</label>
                             <input type="text" id="settingsPhoneInput" value="06 25 93 13 18" style="width:100%;padding:10px;border:2px solid #ddd;border-radius:8px;font-size:1rem;" />
                         </div>
-                        <button class="btn-import" onclick="savePhoneNumber()" style="background:var(--info);"><i class="fas fa-save"></i> Enregistrer</button>
+                        <!-- Dans le Dashboard > Paramètres -->
+<button class="btn-import" onclick="savePhoneNumber()" style="background:var(--info);">
+    <i class="fas fa-save"></i> Enregistrer
+</button>
                     </div>
                     <div class="section-actions">
                         <button class="btn-import" onclick="showPasswordModal()"><i class="fas fa-key"></i> Changer mot de passe</button>
