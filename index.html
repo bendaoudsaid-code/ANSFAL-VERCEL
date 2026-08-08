@@ -977,8 +977,83 @@ body.rtl [id*="PhoneNumber"] {
 
     <!-- Les autres sections -->
     <section id="offres"><div class="container"><div class="section-header"><h2 id="offresTitle"><i class="fas fa-briefcase"></i> Offres d'emploi</h2></div><div class="menu-grid" id="offresGrid"><div class="loading"><i class="fas fa-spinner"></i> Chargement...</div></div></div></section>
-    <section id="meteo"><div class="container"><div class="section-header"><h2 id="meteoTitle"><i class="fas fa-cloud-sun"></i> Prévision météo</h2></div><div class="menu-grid" id="meteoGrid"><div class="loading"><i class="fas fa-spinner"></i> Chargement...</div></div></div></section>
-    <section id="conseil"><div class="container"><div class="section-header"><h2 id="conseilTitle"><i class="fas fa-users-cog"></i> Conseil de l'association</h2></div><div class="menu-grid" id="conseilGrid"><div class="loading"><i class="fas fa-spinner"></i> Chargement...</div></div></div></section>
+    <section id="meteo">
+    <div class="container">
+        <div class="section-header">
+            <h2 id="meteoTitle"><i class="fas fa-cloud-sun"></i> Prévision météo</h2>
+            <p>Bulletin météo de la région</p>
+        </div>
+        <div id="meteoGrid" class="menu-grid">
+            <div class="menu-card" style="border-left-color:var(--info);">
+                <div class="card-icon" style="color:var(--info);"><i class="fas fa-sun"></i></div>
+                <h3>Météo du jour</h3>
+                <p>🌤️ Ensoleillé - 28°C</p>
+                <span class="card-badge badge-green">Aujourd'hui</span>
+            </div>
+            <div class="menu-card" style="border-left-color:var(--orange);">
+                <div class="card-icon" style="color:var(--orange);"><i class="fas fa-cloud"></i></div>
+                <h3>Demain</h3>
+                <p>⛅ Partiellement nuageux - 25°C</p>
+                <span class="card-badge badge-orange">Demain</span>
+            </div>
+            <div class="menu-card" style="border-left-color:var(--teal);">
+                <div class="card-icon" style="color:var(--teal);"><i class="fas fa-cloud-rain"></i></div>
+                <h3>Après-demain</h3>
+                <p>🌧️ Pluie possible - 22°C</p>
+                <span class="card-badge badge-teal">Prévision</span>
+            </div>
+            <div class="menu-card" style="border-left-color:var(--purple);">
+                <div class="card-icon" style="color:var(--purple);"><i class="fas fa-wind"></i></div>
+                <h3>Vent</h3>
+                <p>💨 Nord-Est - 15 km/h</p>
+                <span class="card-badge badge-purple">Aujourd'hui</span>
+            </div>
+        </div>
+    </div>
+</section>   <section id="conseil">
+    <div class="container">
+        <div class="section-header">
+            <h2 id="conseilTitle"><i class="fas fa-users-cog"></i> Conseil de l'association</h2>
+            <p>Composition du bureau et des membres du conseil d'administration</p>
+        </div>
+        <div class="menu-grid" id="conseilGrid">
+            <div class="menu-card" style="border-left-color:var(--gold);">
+                <div class="card-icon" style="color:var(--gold);"><i class="fas fa-user-tie"></i></div>
+                <h3>Président</h3>
+                <p><strong>Nom du Président</strong></p>
+                <p>Président fondateur de l'association</p>
+                <span class="card-badge badge-gold">Président</span>
+            </div>
+            <div class="menu-card" style="border-left-color:var(--teal);">
+                <div class="card-icon" style="color:var(--teal);"><i class="fas fa-user"></i></div>
+                <h3>Vice-Président</h3>
+                <p><strong>Nom du Vice-Président</strong></p>
+                <p>Vice-Président de l'association</p>
+                <span class="card-badge badge-teal">Vice-Président</span>
+            </div>
+            <div class="menu-card" style="border-left-color:var(--info);">
+                <div class="card-icon" style="color:var(--info);"><i class="fas fa-file-invoice"></i></div>
+                <h3>Secrétaire Général</h3>
+                <p><strong>Nom du Secrétaire</strong></p>
+                <p>Secrétaire général de l'association</p>
+                <span class="card-badge badge-green">Secrétaire</span>
+            </div>
+            <div class="menu-card" style="border-left-color:var(--orange);">
+                <div class="card-icon" style="color:var(--orange);"><i class="fas fa-coins"></i></div>
+                <h3>Trésorier</h3>
+                <p><strong>Nom du Trésorier</strong></p>
+                <p>Trésorier de l'association</p>
+                <span class="card-badge badge-orange">Trésorier</span>
+            </div>
+            <div class="menu-card" style="border-left-color:var(--purple);">
+                <div class="card-icon" style="color:var(--purple);"><i class="fas fa-user-friends"></i></div>
+                <h3>Membres du Conseil</h3>
+                <p>6 membres actifs</p>
+                <span class="card-badge badge-purple">Membres</span>
+            </div>
+        </div>
+    </div>
+</section>
     <section id="adherents"><div class="container"><div class="section-header"><h2 id="adherentsTitle"><i class="fas fa-user-plus"></i> Habitants adhérents</h2></div><table class="data-table" id="adherentsTable"><thead><tr><th>Nom</th><th>Localité</th><th>Date</th><th>Statut</th></tr></thead><tbody id="adherentsBody"><tr><td colspan="4" class="loading"><i class="fas fa-spinner"></i> Chargement...</td></tr></tbody></table></div></section>
     <section id="documents"><div class="container"><div class="section-header"><h2 id="documentsTitle"><i class="fas fa-file-pdf"></i> Documents association</h2></div><div class="menu-grid" id="documentsGrid"><div class="loading"><i class="fas fa-spinner"></i> Chargement...</div></div></div></section>
     <section id="produits"><div class="container"><div class="section-header"><h2 id="produitsTitle"><i class="fas fa-apple-alt"></i> Produits de terroir</h2></div><div class="menu-grid" id="produitsGrid"><div class="loading"><i class="fas fa-spinner"></i> Chargement...</div></div></div></section>
@@ -994,7 +1069,52 @@ body.rtl [id*="PhoneNumber"] {
     <section id="videos"><div class="container"><div class="section-header"><h2 id="videosTitle">Vidéos</h2></div><div id="videosContainer"><div class="loading"><i class="fas fa-spinner"></i> Chargement...</div></div></div></section>
 
     <!-- PROJETS -->
-    <section id="projects"><div class="container"><div class="section-header"><h2 id="projectsTitle">Nos Projets</h2></div><div id="articlesContainer"><div class="loading"><i class="fas fa-spinner"></i> Chargement...</div></div></div></section>
+    <section id="projects">
+    <div class="container">
+        <div class="section-header">
+            <h2 id="projectsTitle"><i class="fas fa-project-diagram"></i> Nos Projets</h2>
+            <p>Découvrez nos projets en cours et à venir</p>
+        </div>
+        <div id="articlesContainer" class="menu-grid">
+            <div class="menu-card" style="border-left-color:var(--primary);">
+                <div class="card-icon" style="color:var(--primary);"><i class="fas fa-tree"></i></div>
+                <h3>Projet de Reboisement</h3>
+                <p>Plantation de 1000 arbres dans la région pour lutter contre la désertification</p>
+                <span class="card-badge badge-green">En cours</span>
+            </div>
+            <div class="menu-card" style="border-left-color:var(--teal);">
+                <div class="card-icon" style="color:var(--teal);"><i class="fas fa-tint"></i></div>
+                <h3>Projet Eau Potable</h3>
+                <p>Installation de forages et de points d'eau dans les villages isolés</p>
+                <span class="card-badge badge-teal">À venir</span>
+            </div>
+            <div class="menu-card" style="border-left-color:var(--orange);">
+                <div class="card-icon" style="color:var(--orange);"><i class="fas fa-graduation-cap"></i></div>
+                <h3>Projet Éducatif</h3>
+                <p>Soutien scolaire, alphabétisation et formation professionnelle</p>
+                <span class="card-badge badge-orange">En préparation</span>
+            </div>
+            <div class="menu-card" style="border-left-color:var(--purple);">
+                <div class="card-icon" style="color:var(--purple);"><i class="fas fa-hand-holding-heart"></i></div>
+                <h3>Projet Social</h3>
+                <p>Aide aux familles nécessiteuses et distribution alimentaire</p>
+                <span class="card-badge badge-purple">Permanent</span>
+            </div>
+            <div class="menu-card" style="border-left-color:var(--gold);">
+                <div class="card-icon" style="color:var(--gold);"><i class="fas fa-seedling"></i></div>
+                <h3>Projet Agricole</h3>
+                <p>Soutien à l'agriculture biologique et aux coopératives</p>
+                <span class="card-badge badge-gold">En cours</span>
+            </div>
+            <div class="menu-card" style="border-left-color:var(--red);">
+                <div class="card-icon" style="color:var(--red);"><i class="fas fa-heartbeat"></i></div>
+                <h3>Projet Santé</h3>
+                <p>Campagnes de sensibilisation et caravanes médicales</p>
+                <span class="card-badge badge-red">À venir</span>
+            </div>
+        </div>
+    </div>
+</section>
 
     <!-- CONTACT -->
     <section id="contact">
