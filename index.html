@@ -1449,7 +1449,7 @@ body.rtl [id*="PhoneNumber"] {
     <!-- JAVASCRIPT AVEC SUPABASE                     -->
     <!-- ============================================ -->
     <script>
-       
+    <script>
     // ============================================================
     // CONFIGURATION SUPABASE
     // ============================================================
@@ -1608,22 +1608,22 @@ body.rtl [id*="PhoneNumber"] {
     }
 
     function switchLanguage(lang) {
-    currentLang = lang;
-    document.body.classList.toggle('rtl', lang === 'ar');
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-    document.querySelector(`.lang-btn[onclick*="${lang}"]`).classList.add('active');
-    
-    var t = LANG[lang];
-    for (var key in t) {
-        var el = document.getElementById(key);
-        if (el) el.textContent = t[key];
+        currentLang = lang;
+        document.body.classList.toggle('rtl', lang === 'ar');
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.lang-btn[onclick*="${lang}"]`).classList.add('active');
+        
+        var t = LANG[lang];
+        for (var key in t) {
+            var el = document.getElementById(key);
+            if (el) el.textContent = t[key];
+        }
+        
+        updatePhoneDisplay();
+        renderAll();
+        renderWelcomeTexts();
+        try { localStorage.setItem('ansfal_lang', lang); } catch(e) {}
     }
-    
-    updatePhoneDisplay();
-    renderAll();
-    renderWelcomeTexts(); // <--- AJOUTEZ CETTE LIGNE ICI
-    try { localStorage.setItem('ansfal_lang', lang); } catch(e) {}
-}
 
     function showLoading(show) {
         var elements = document.querySelectorAll('.loading');
@@ -1633,9 +1633,217 @@ body.rtl [id*="PhoneNumber"] {
     }
 
     // ============================================================
+    // SITE TEXTS - CHARGEMENT DES TEXTES DEPUIS SUPABASE
+    // ============================================================
+    var SITE_TEXTS = {
+        welcome_title: { fr: '', ar: '' },
+        welcome_subtitle: { fr: '', ar: '' },
+        welcome_badge: { fr: '', ar: '' },
+        welcome_status: { fr: '', ar: '' },
+        welcome_launch: { fr: '', ar: '' }
+    };
+
+    async function loadSiteTexts() {
+        try {
+            const { data, error } = await supabaseClient
+                .from('site_texts')
+                .select('key, fr, ar');
+            
+            if (error) throw error;
+            
+            if (data && data.length > 0) {
+                data.forEach(item => {
+                    if (SITE_TEXTS[item.key]) {
+                        SITE_TEXTS[item.key] = { fr: item.fr, ar: item.ar };
+                    }
+                });
+            }
+            
+            console.log('✅ Textes du site chargés depuis Supabase');
+            renderWelcomeTexts();
+        } catch (error) {
+            console.error('❌ Erreur chargement des textes:', error);
+            renderWelcomeTexts();
+        }
+    }
+
+    function renderWelcomeTexts() {
+        const lang = currentLang || 'fr';
+        
+        const badge = document.getElementById('welcomeBadge');
+        if (badge) {
+            badge.textContent = SITE_TEXTS.welcome_badge[lang] || '🚧 Site en construction';
+        }
+        
+        const title = document.getElementById('welcomeTitle');
+        if (title) {
+            title.textContent = SITE_TEXTS.welcome_title[lang] || '🌟 Bienvenue sur le nouveau site de l\'Association ANSFAL';
+        }
+        
+        const subtitle = document.getElementById('welcomeSubtitle');
+        if (subtitle) {
+            subtitle.textContent = SITE_TEXTS.welcome_subtitle[lang] || 'Notre site est actuellement en cours de construction...';
+        }
+        
+        const statusEl = document.getElementById('welcomeStatus');
+        if (statusEl) {
+            statusEl.textContent = SITE_TEXTS.welcome_status[lang] || 'En construction';
+        }
+        
+        const launchEl = document.getElementById('welcomeLaunch');
+        if (launchEl) {
+            launchEl.textContent = SITE_TEXTS.welcome_launch[lang] || 'Lancement prochain';
+        }
+    }
+
+    async function updateWelcomeText(key, fr, ar) {
+        try {
+            const { data, error } = await supabaseClient
+                .from('site_texts')
+                .upsert({ 
+                    key: key, 
+                    fr: fr, 
+                    ar: ar,
+                    updated_at: new Date().toISOString()
+                })
+                .select();
+            
+            if (error) throw error;
+            
+            SITE_TEXTS[key] = { fr: fr, ar: ar };
+            renderWelcomeTexts();
+            showAlert('✅ Texte mis à jour avec succès', 'success');
+            return true;
+        } catch (error) {
+            console.error('Erreur mise à jour:', error);
+            showAlert('❌ Erreur: ' + error.message, 'error');
+            return false;
+        }
+    }
+
+    async function saveWelcomeTexts() {
+        const texts = [
+            { key: 'welcome_title', fr: document.getElementById('welcomeTitleFr').value, ar: document.getElementById('welcomeTitleAr').value },
+            { key: 'welcome_subtitle', fr: document.getElementById('welcomeSubtitleFr').value, ar: document.getElementById('welcomeSubtitleAr').value },
+            { key: 'welcome_badge', fr: document.getElementById('welcomeBadgeFr').value, ar: document.getElementById('welcomeBadgeAr').value },
+            { key: 'welcome_status', fr: document.getElementById('welcomeStatusFr').value, ar: document.getElementById('welcomeStatusAr').value },
+            { key: 'welcome_launch', fr: document.getElementById('welcomeLaunchFr').value, ar: document.getElementById('welcomeLaunchAr').value }
+        ];
+        
+        showLoading(true);
+        let allSuccess = true;
+        
+        for (const text of texts) {
+            const success = await updateWelcomeText(text.key, text.fr, text.ar);
+            if (!success) allSuccess = false;
+        }
+        
+        showLoading(false);
+        if (allSuccess) {
+            showAlert('✅ Tous les textes ont été mis à jour', 'success');
+        }
+        renderWelcomeTexts();
+    }
+
+    // ============================================================
     // FONCTIONS SUPABASE
     // ============================================================
-    async function loadAllData(
+    async function loadAllData() {
+        try {
+            showLoading(true);
+            
+            // Charger les textes du site
+            await loadSiteTexts();
+            
+            const { data: settingsData, error: settingsError } = await supabaseClient
+                .from('settings')
+                .select('phone_number')
+                .limit(1);
+            
+            if (!settingsError && settingsData && settingsData.length > 0) {
+                DATA.phoneNumber = settingsData[0].phone_number || DATA.phoneNumber;
+            }
+
+            const tables = [
+                { key: 'ticker', table: 'ticker' },
+                { key: 'texts', table: 'texts' },
+                { key: 'offres', table: 'offres' },
+                { key: 'produits', table: 'produits' },
+                { key: 'arbres', table: 'arbres' },
+                { key: 'betail', table: 'betail' },
+                { key: 'eau', table: 'eau' },
+                { key: 'sagia', table: 'sagia' },
+                { key: 'gallery', table: 'gallery' },
+                { key: 'videos', table: 'videos' },
+                { key: 'documentsAdmin', table: 'documents_admin' }
+            ];
+
+            for (const { key, table } of tables) {
+                const { data, error } = await supabaseClient
+                    .from(table)
+                    .select('*')
+                    .order('id', { ascending: true });
+                
+                if (error) {
+                    console.warn(`⚠️ Erreur chargement ${table}:`, error);
+                    continue;
+                }
+                
+                DATA[key] = data && data.length > 0 ? data : [];
+            }
+
+            console.log('✅ Données chargées depuis Supabase');
+            renderAll();
+            renderWelcomeTexts();
+            showLoading(false);
+            
+        } catch (error) {
+            console.error('❌ Erreur chargement des données:', error);
+            showAlert('Erreur de chargement des données', 'error');
+            showLoading(false);
+        }
+    }
+
+    async function saveToSupabase(table, data, id = null) {
+        try {
+            showLoading(true);
+            let result;
+            
+            if (id) {
+                data.updated_at = new Date().toISOString();
+                const { data: updated, error } = await supabaseClient
+                    .from(table)
+                    .update(data)
+                    .eq('id', id)
+                    .select();
+                
+                if (error) throw error;
+                result = updated;
+                showAlert('✅ Élément mis à jour avec succès', 'success');
+            } else {
+                data.created_at = new Date().toISOString();
+                const { data: inserted, error } = await supabaseClient
+                    .from(table)
+                    .insert([data])
+                    .select();
+                
+                if (error) throw error;
+                result = inserted;
+                showAlert('✅ Élément ajouté avec succès', 'success');
+            }
+            
+            await loadAllData();
+            showLoading(false);
+            return result;
+        } catch (error) {
+            console.error('Erreur sauvegarde:', error);
+            showAlert('❌ Erreur lors de la sauvegarde: ' + error.message, 'error');
+            showLoading(false);
+            return null;
+        }
+    }
+
+    async function deleteFromSupabase(table, id) {
         try {
             showLoading(true);
             
@@ -1794,126 +2002,7 @@ body.rtl [id*="PhoneNumber"] {
             showLoading(false);
         }
     }
-// ============================================================
-// CHARGEMENT DES TEXTES DEPUIS SUPABASE
-// ============================================================
 
-// Variables pour stocker les textes
-var SITE_TEXTS = {
-    welcome_title: { fr: '', ar: '' },
-    welcome_subtitle: { fr: '', ar: '' },
-    welcome_badge: { fr: '', ar: '' },
-    welcome_status: { fr: '', ar: '' },
-    welcome_launch: { fr: '', ar: '' }
-};
-
-// Charger les textes depuis Supabase
-async function loadSiteTexts() {
-    try {
-        const { data, error } = await supabaseClient
-            .from('site_texts')
-            .select('key, fr, ar');
-        
-        if (error) throw error;
-        
-        if (data && data.length > 0) {
-            data.forEach(item => {
-                if (SITE_TEXTS[item.key]) {
-                    SITE_TEXTS[item.key] = { fr: item.fr, ar: item.ar };
-                }
-            });
-        }
-        
-        console.log('✅ Textes du site chargés depuis Supabase');
-        renderWelcomeTexts();
-    } catch (error) {
-        console.error('❌ Erreur chargement des textes:', error);
-        // Utiliser les textes par défaut en cas d'erreur
-        renderWelcomeTexts();
-    }
-}
-
-// Afficher les textes de bienvenue
-function renderWelcomeTexts() {
-    const lang = currentLang || 'fr';
-    
-    // Mettre à jour le badge
-    const badge = document.getElementById('welcomeBadge');
-    if (badge) {
-        badge.textContent = SITE_TEXTS.welcome_badge[lang] || '🚧 Site en construction';
-    }
-    
-    // Mettre à jour le titre
-    const title = document.getElementById('welcomeTitle');
-    if (title) {
-        title.textContent = SITE_TEXTS.welcome_title[lang] || '🌟 Bienvenue sur le nouveau site de l\'Association ANSFAL';
-    }
-    
-    // Mettre à jour le sous-titre
-    const subtitle = document.getElementById('welcomeSubtitle');
-    if (subtitle) {
-        subtitle.textContent = SITE_TEXTS.welcome_subtitle[lang] || 'Notre site est actuellement en cours de construction...';
-    }
-    
-    // Mettre à jour les statuts
-    const statusEl = document.getElementById('welcomeStatus');
-    if (statusEl) {
-        statusEl.textContent = SITE_TEXTS.welcome_status[lang] || 'En construction';
-    }
-    
-    const launchEl = document.getElementById('welcomeLaunch');
-    if (launchEl) {
-        launchEl.textContent = SITE_TEXTS.welcome_launch[lang] || 'Lancement prochain';
-    }
-}
-
-// Fonction pour mettre à jour les textes depuis l'admin
-async function updateWelcomeText(key, fr, ar) {
-    try {
-        const { data, error } = await supabaseClient
-            .from('site_texts')
-            .upsert({ 
-                key: key, 
-                fr: fr, 
-                ar: ar,
-                updated_at: new Date().toISOString()
-            })
-            .select();
-        
-        if (error) throw error;
-        
-        // Mettre à jour les variables locales
-        SITE_TEXTS[key] = { fr: fr, ar: ar };
-        renderWelcomeTexts();
-        showAlert('✅ Texte mis à jour avec succès', 'success');
-    } catch (error) {
-        console.error('Erreur mise à jour:', error);
-        showAlert('❌ Erreur: ' + error.message, 'error');
-    }
-}
-
-async function saveWelcomeTexts() {
-    const texts = [
-        { key: 'welcome_title', fr: document.getElementById('welcomeTitleFr').value, ar: document.getElementById('welcomeTitleAr').value },
-        { key: 'welcome_subtitle', fr: document.getElementById('welcomeSubtitleFr').value, ar: document.getElementById('welcomeSubtitleAr').value },
-        { key: 'welcome_badge', fr: document.getElementById('welcomeBadgeFr').value, ar: document.getElementById('welcomeBadgeAr').value },
-        { key: 'welcome_status', fr: document.getElementById('welcomeStatusFr').value, ar: document.getElementById('welcomeStatusAr').value },
-        { key: 'welcome_launch', fr: document.getElementById('welcomeLaunchFr').value, ar: document.getElementById('welcomeLaunchAr').value }
-    ];
-    
-    showLoading(true);
-    
-    for (const text of texts) {
-        await updateWelcomeText(text.key, text.fr, text.ar);
-    }
-    
-    showLoading(false);
-    renderWelcomeTexts();
-    showAlert('✅ Tous les textes ont été mis à jour', 'success');
-}
-
-
-        
     // ============================================================
     // CRUD - TEXTES
     // ============================================================
@@ -2904,6 +2993,5 @@ async function saveWelcomeTexts() {
     window.deleteDocumentAdmin = deleteDocumentAdmin;
     window.editDocumentAdmin = editDocumentAdmin;
 </script>
-
 </body>
 </html>
